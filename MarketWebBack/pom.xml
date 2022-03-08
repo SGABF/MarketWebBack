@@ -65,6 +65,14 @@
 		</dependency>
 		<!-- Gson 종료 -->
 
+		<!-- jwt사용 시작 -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+		<!-- jwt사용 종료 -->
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
