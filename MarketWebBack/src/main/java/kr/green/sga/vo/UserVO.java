@@ -31,5 +31,7 @@ public class UserVO {
 	private String user_email;
 	private String user_phone;
 	private String user_insertdate;
+	private String user_col1;
+	private String user_col2;
 	private int user_banned;
 }

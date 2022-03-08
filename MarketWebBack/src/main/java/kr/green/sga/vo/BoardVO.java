@@ -36,6 +36,9 @@ public class BoardVO {
 	private Date board_regDate;
 	private int board_category;
 	private int board_auctionOnOff;
+	private String boardCol1;
+	private String boardCol2;
+	private String boardCol3;
 	private String board_content;
 	private int user_idx;
 	

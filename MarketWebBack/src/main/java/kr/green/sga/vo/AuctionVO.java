@@ -26,4 +26,7 @@ public class AuctionVO {
 	private int auction_endTime;
 	private int board_idx;
 	private int reply_idx;
+	private String auctionCol1;
+	private String auctionCol2;
+	private String auctionCol3;
 }

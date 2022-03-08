@@ -22,5 +22,8 @@ public class ReplyImageVO {
 	private int replyImage_idx;
 	private String replyImage_saveName;
 	private String replyImage_oriName;
+	private String replyImage_col1;
+	private String replyImage_col2;
+	private String replyImage_col3;
 	private int reply_idx;
 }

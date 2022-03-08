@@ -23,6 +23,9 @@ auction_endTime		int 				경매종료
 public class AuctionOrderVO {
 	private int auctionOrder_idx;
 	private int auctionOrder_used;
+	private String auctionOrderCol1;
+	private String auctionOrderCol2;
+	private String auctionOrderCol3;
 	private int auction_idx;
 	private int user_idx;
 }

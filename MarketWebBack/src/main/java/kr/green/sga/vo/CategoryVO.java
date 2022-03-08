@@ -18,4 +18,7 @@ category_name	String	10
 public class CategoryVO {
 	private int category_idx;
 	private String category_name;
+	private String categoryCol1;
+	private String categoryCol2;
+	private String categoryCol3;
 }

@@ -21,6 +21,9 @@ reply_content	String	4000	not null
 public class ReplyVO {
 	private int reply_idx;
 	private String reply_content;
+	private String reply_col1;
+	private String reply_col2;
+	private String reply_col3;
 	private int board_idx;
 	private int user_idx;
 }
