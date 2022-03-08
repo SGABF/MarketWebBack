@@ -373,3 +373,66 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- ------------------------------------------------------
+
+
+INSERT into user(
+	user_id,
+	user_password,
+	user_name,
+	user_birth,
+	user_email,
+	user_phone 
+	)
+values(
+	'chlehddh',
+	'1234',
+	'최동오',
+	'19940520',
+	'chlehddh8062@gmail.com',
+	'01072318062'
+);
+
+
+SELECT * FROM `user` u ;
+
+-- <!-- 1. insert_저장하기(회원가입하기) -->
+INSERT into user(
+		user_id,
+		user_password,
+		user_name,
+		user_birth,
+		user_email,
+		user_phone,
+		userCol1,
+		userCol2
+		)
+		values(
+		'testuser44',
+		'1234',
+		'테스터',
+		'19940520',
+		'sgagkmarket@gmail.com',
+		'01072318062',
+		'',
+		''
+		)
+		
+		
+-- <!-- 2. select_1개 얻기 -->
+select * from `user` where user_idx=2
+	
+		
+-- <!-- 3. update_수정하기(회원정보수정하기) -->
+UPDATE `user` SET 
+	user_phone = '01012345679'
+WHERE 
+	user_idx = 2
+
+-- 	<!-- 4. delete_삭제하기(회원탈퇴하기) -->
+delete from user where user_idx=6
+
+			
+		
+		
+		
