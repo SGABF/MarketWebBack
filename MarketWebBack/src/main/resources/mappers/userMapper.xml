@@ -52,11 +52,4 @@
 			user_idx=#{user_idx }
 	</delete>
 	
-	<!-- 5. delete_삭제하기(회원탈퇴하기) -->
-	<delete id="deleteUser" parameterType="int">
-		delete from user 
-		where 
-			user_idx=#{user_idx }
-	</delete>
-
 </mapper>
