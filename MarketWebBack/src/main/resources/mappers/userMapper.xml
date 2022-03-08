@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.green.sga.dao.UserDAO">
+
+	<select id="selectToday" resultType="java.util.Date">
+		select NOW();
+	</select>
+
+	<!-- 1. insert_저장하기(회원가입하기) -->
+	<insert id="insertUser" parameterType="UserVO">
+		INSERT into user(
+		user_id,
+		user_password,
+		user_name,
+		user_birth,
+		user_email,
+		user_phone,
+		userCol1,
+		userCol2
+		)
+		values(
+		#{user_id },
+		#{user_password },
+		#{user_name },
+		#{user_birth },
+		#{user_email },
+		#{user_phone },
+		'',
+		''
+		)
+	</insert>
+
+	<!-- 2. select_1개 얻기 -->
+	<select id="selectByIdx" parameterType="int" resultType="UserVO">
+		select * from member where user_idx=#{user_idx}
+	</select>
+
+	<!-- 3. update_수정하기(회원정보수정하기) -->
+	<update id="updateUser" parameterType="UserVO">
+		UPDATE `user` SET 
+			user_phone = #{user_phone }
+		WHERE 
+			user_idx = #{user_idx }
+	</update>
+	
+	<!-- 4. delete_삭제하기(회원탈퇴하기) -->
+	<delete id="deleteUser" parameterType="int">
+		delete from user 
+		where 
+			user_idx=#{user_idx }
+	</delete>
+
+</mapper>
