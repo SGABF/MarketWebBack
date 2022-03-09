@@ -25,10 +25,4 @@ public class UserController {
 		return "/";
 	}
 	
-	@RequestMapping(value = "/test")
-	public String test(Model model) {
-		return userService.selectToday().toString();
-	}
-	
-	
 }
