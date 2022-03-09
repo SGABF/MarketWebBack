@@ -3,11 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.green.sga.dao.UserDAO">
-
-	<select id="selectToday" resultType="java.util.Date">
-		select NOW();
-	</select>
-
 	<!-- 1. insert_저장하기(회원가입하기) -->
 	<insert id="insertUser" parameterType="UserVO">
 		INSERT into user(
@@ -39,17 +34,23 @@
 
 	<!-- 3. update_수정하기(회원정보수정하기) -->
 	<update id="updateUser" parameterType="UserVO">
-		UPDATE `user` SET 
-			user_phone = #{user_phone }
-		WHERE 
-			user_idx = #{user_idx }
+		UPDATE `user` SET
+		user_phone = #{user_phone }
+		WHERE
+		user_idx = #{user_idx }
 	</update>
-	
+
 	<!-- 4. delete_삭제하기(회원탈퇴하기) -->
 	<delete id="deleteUser" parameterType="int">
-		delete from user 
-		where 
-			user_idx=#{user_idx }
+		delete from user
+		where
+		user_idx=#{user_idx }
 	</delete>
 	
+	<!-- 12. ID로 가져오기 -->
+	<select id="selectUserId" parameterType="string" resultType="UserVO">
+		select * from member where userid=#{userid}
+	</select>
+	
+
 </mapper>
