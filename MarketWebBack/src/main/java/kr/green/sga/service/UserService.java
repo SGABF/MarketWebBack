@@ -28,10 +28,6 @@ public interface UserService {
 	// selectByUserId 사용		(user_id, user_phone)
 	UserVO findPw(UserVO UserVO);
 	
-	// <!-- 10. update_유저 벤 하기 -->
-	// Hashmap 사용 			(user_banned, user_idx)
-	void BannedUser(UserVO UserVO);
-	
 	// <!-- 11. update_비밀번호 변경하기 -->
 	void updatePassword(UserVO userVO);
 }
