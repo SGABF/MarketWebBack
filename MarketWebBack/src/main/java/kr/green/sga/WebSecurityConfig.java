@@ -14,7 +14,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
-
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -28,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		http.authorizeRequests()
+		http.csrf().disable().authorizeRequests()
 				// main 요청은 로그인 필요
 				.antMatchers("/main/**").authenticated()
 				// /admin 요청은 Admin 권한 필요

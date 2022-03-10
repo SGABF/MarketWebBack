@@ -441,6 +441,11 @@ select * from user where user_name='최동오' and user_phone='01072318062'
 -- 성공 // <!-- 9. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
 select * from user where user_id='chlehddh' and user_phone='01072318062'
 
+SELECT * FROM user;
+
+-- 성공 // <!-- 10. update_유저 벤 하기-->
+update user set user_banned=#{user_banned} where user_idx=#{user_idx}
+
 -- 성공 // <!-- 11. update_비밀번호 변경하기 -->
 update user set user_password='123' where user_id='chlehddh'
 

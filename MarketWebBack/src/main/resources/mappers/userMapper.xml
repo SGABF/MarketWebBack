@@ -29,7 +29,7 @@
 
 	<!-- 2. select_1개 얻기 -->
 	<select id="selectByIdx" parameterType="int" resultType="UserVO">
-		select * from member where user_idx=#{user_idx}
+		select * from user where user_idx=#{user_idx}
 	</select>
 
 	<!-- 3. update_수정하기(회원정보수정하기) -->
@@ -61,6 +61,11 @@
 	<select id="selectByUserId" parameterType="hashmap" resultType="UserVO">
 		select * from user where user_id=#{user_id} and user_phone=#{user_phone}
 	</select>
+	
+	<!-- 10. update_유저 벤 하기 -->
+	<update id="BannedUser" parameterType="hashmap">
+		update user set user_banned=#{user_banned} where user_idx=#{user_idx}
+	</update>
 
 	<!-- 11. update_비밀번호 변경하기 -->
 	<update id="updatePassword" parameterType="hashmap">

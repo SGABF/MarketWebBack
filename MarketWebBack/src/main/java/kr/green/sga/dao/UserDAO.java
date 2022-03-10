@@ -29,10 +29,14 @@ public interface UserDAO {
 	// <!-- 9. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
 	UserVO selectByUserId(HashMap<String, String> map);
 
+	// <!-- 10. update_유저 벤 하기 -->
+	void BannedUser(HashMap<String, Integer> map);
+	
 	// <!-- 11. update_비밀번호 변경하기 -->
 	void updatePassword(HashMap<String, String> map);
 
 	// <!-- 12. ID로 가져오기 -->
 	UserVO selectUserId(String userid);
+
 
 }

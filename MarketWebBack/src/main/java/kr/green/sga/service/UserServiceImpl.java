@@ -115,4 +115,19 @@ public class UserServiceImpl implements UserService {
 		userDAO.updatePassword(map);
 	}
 
+	@Override
+	// <!-- 10. update_유저 벤 하기 -->
+	// Hashmap 사용 			(user_banned, user_idx)
+	public void BannedUser(UserVO userVO) {
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		if(userVO.getUser_banned()==0) {
+			map.put("user_banned", 1);
+			map.put("user_idx", userVO.getUser_idx());
+			userDAO.BannedUser(map);
+		}else {
+			map.put("user_banned", 0);
+			map.put("user_idx", userVO.getUser_idx());
+			userDAO.BannedUser(map);
+		}
+	}
 }
