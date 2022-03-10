@@ -29,7 +29,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
         		.apiInfo(this.apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("kr.green.sga.service"))
+                .apis(RequestHandlerSelectors.basePackage("kr.green.sga"))
                 .paths(PathSelectors.any())
                 .build();
     }
