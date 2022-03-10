@@ -7,10 +7,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-public class MarketWebBackApplication {
+public class SpringBootSecurityReactApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MarketWebBackApplication.class, args);
+		SpringApplication.run(SpringBootSecurityReactApplication.class, args);
 	}
 
 }

@@ -46,11 +46,33 @@
 		where
 		user_idx=#{user_idx }
 	</delete>
-	
+
+	<!-- 7. select_아디 중복 확인_0:없음/사용가능_1:있음/사용불가 -->
+	<select id="selectCountUserId" parameterType="int" resultType="String">
+		select count(*) from user where user_id=#{user_id}
+	</select>
+
+	<!-- 8. select_이름과 전화번호로 가져오기(아이디찾기 사용) -->
+	<select id="selectByUsername" parameterType="hashmap" resultType="UserVO">
+		select * from user where user_name=#{user_name} and user_phone=#{user_phone}
+	</select>
+
+	<!-- 9. select_아이디와 전화번호로 가져오기(비번찾기 사용) -->
+	<select id="selectByUserId" parameterType="hashmap" resultType="UserVO">
+		select * from user where user_id=#{user_id} and user_phone=#{user_phone}
+	</select>
+
+	<!-- 11. update_비밀번호 변경하기 -->
+	<update id="updatePassword" parameterType="hashmap">
+		update user set user_password=#{user_password} where user_id=#{user_id}
+	</update>
+
 	<!-- 12. ID로 가져오기 -->
 	<select id="selectUserId" parameterType="string" resultType="UserVO">
-		select * from member where userid=#{userid}
+		select * from user where user_id=#{user_id}
 	</select>
-	
+
+
+
 
 </mapper>

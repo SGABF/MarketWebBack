@@ -20,6 +20,7 @@ USE `gkmdb` ;
 -- -----------------------------------------------------
 -- Table `gkmdb`.`user`
 -- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `gkmdb`.`user` (
   `user_idx` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(10) NOT NULL,
@@ -396,7 +397,7 @@ values(
 
 SELECT * FROM `user` u ;
 
--- <!-- 1. insert_저장하기(회원가입하기) -->
+-- 성공 // <!-- 1. insert_저장하기(회원가입하기) -->
 INSERT into user(
 		user_id,
 		user_password,
@@ -418,21 +419,34 @@ INSERT into user(
 		''
 		)
 		
-		
--- <!-- 2. select_1개 얻기 -->
+-- 성공 // <!-- 2. select_1개 얻기 -->
 select * from `user` where user_idx=2
 	
 		
--- <!-- 3. update_수정하기(회원정보수정하기) -->
+-- 성공 // <!-- 3. update_수정하기(회원정보수정하기) -->
 UPDATE `user` SET 
-	user_phone = '01012345679'
+	user_phone = '01072318062'
 WHERE 
 	user_idx = 2
-
--- 	<!-- 4. delete_삭제하기(회원탈퇴하기) -->
+	
+-- 성공 // <!-- 4. delete_삭제하기(회원탈퇴하기) -->
 delete from user where user_idx=6
 
-			
+-- 성공 // <!-- 7. select_아디 중복 확인_0:없음/사용가능_1:있음/사용불가 -->
+select count(*) from user where user_id='chlehddh'
+
+-- 성공 // <!-- 8. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
+select * from user where user_name='최동오' and user_phone='01072318062'
+
+-- 성공 // <!-- 9. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
+select * from user where user_id='chlehddh' and user_phone='01072318062'
+
+-- 성공 // <!-- 11. update_비밀번호 변경하기 -->
+update user set user_password='123' where user_id='chlehddh'
+
+-- 성공 // <!-- 12. ID로 가져오기 -->
+select * from user where user_id='chlehddh'
+
 		
 		
 		
