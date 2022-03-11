@@ -18,18 +18,16 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private UserDAO userDAO;
 
-	@RequestMapping(value = "/")
+	@RequestMapping(value = "/index")
 	public String root() throws Exception {
-		UserVO userVO = null;
-		userService.insertUser(userVO);
-		System.out.println(userVO);
-		return "/";
+		System.out.println("root");
+		return "index";
 	}
-	
+
 	@RequestMapping(value = "/idCheck", method = RequestMethod.GET)
 	public String idCheckGET(@RequestParam(required = false) String user_id) {
 		// 추후 업데이트 예정 "잘못된 접근입니다."
@@ -38,7 +36,7 @@ public class UserController {
 
 	@RequestMapping(value = "/idCheck", method = RequestMethod.POST)
 	public String idCheckPOST(@RequestParam(required = false) String user_id) {
-		String userids[] = "chlehddh,admin,root,master,webmaster,administrator".split(","); // 금지 아이디 목록
+		String userids[] = "admin,root,master,webmaster,administrator".split(","); // 금지 아이디 목록
 		int count = 0;
 		for (String id : userids) {
 			if (user_id.equals(id)) {
@@ -46,18 +44,19 @@ public class UserController {
 				break;
 			}
 		}
-		if (count == 0) {
-			count = userService.idCheck(user_id);
+		UserVO userVO = userDAO.selectUserId(user_id);
+		if (count == 0 && userVO != null) {
+			count = 1;
 		}
 		return count + "";
 	}
-	
+
 	@RequestMapping(value = "/BannedUser", method = RequestMethod.GET)
 	public String BannedUserGET(@RequestParam(required = false) int user_idx) {
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
-	
+
 	@RequestMapping(value = "/BannedUser", method = RequestMethod.POST)
 	public String BannedUserPOST(@RequestParam(required = false) int user_idx) {
 		UserVO userVO = userDAO.selectByIdx(user_idx);
