@@ -12,13 +12,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/static/", "classpath:/public/", "classpath:/",
             "classpath:/resources/", "classpath:/META-INF/resources/", "classpath:/META-INF/resources/webjars/" };
 
-	@Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // '/'에 해당하는 url mapping을 지정된 곳으로 forward한다.
-        registry.addViewController( "/" ).setViewName( "forward:/testapi" );
-        // 우선순위를 가장 높게 잡는다.
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
+//	@Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        // '/'에 해당하는 url mapping을 지정된 곳으로 forward한다.
+//        registry.addViewController( "/" ).setViewName( "forward:/testapi" );
+//        // 우선순위를 가장 높게 잡는다.
+//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

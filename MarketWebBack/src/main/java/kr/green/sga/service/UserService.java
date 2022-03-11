@@ -18,7 +18,7 @@ public interface UserService {
 	// ---------------------------------------------
 	// <!-- 7. select_아디 중복 확인(0:없음/사용가능 1:있음/사용불가) -->
 	// selectCountUserId 사용	(user_id)
-	int idCheck(String userid);
+	int idCheck(String user_id);
 	
 	// <!-- 8. select_아디 찾기 -->
 	// selectByUsername 사용	(user_name, user_phone)
@@ -27,6 +27,10 @@ public interface UserService {
 	// <!-- 9. select_비번 찾기 // ID와 전화번호로 가져오기 -->
 	// selectByUserId 사용		(user_id, user_phone)
 	UserVO findPw(UserVO UserVO);
+	
+	// <!-- 10. update_유저 벤 하기 -->
+	// Hashmap 사용 			(user_banned, user_idx)
+	void BannedUser(UserVO UserVO);
 	
 	// <!-- 11. update_비밀번호 변경하기 -->
 	void updatePassword(UserVO userVO);
