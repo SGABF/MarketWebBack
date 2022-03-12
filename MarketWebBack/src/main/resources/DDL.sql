@@ -20,7 +20,6 @@ USE `gkmdb` ;
 -- -----------------------------------------------------
 -- Table `gkmdb`.`user`
 -- -----------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS `gkmdb`.`user` (
   `user_idx` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(10) NOT NULL,
@@ -409,7 +408,7 @@ INSERT into user(
 		userCol2
 		)
 		values(
-		'testuser44',
+		'testuser23',
 		'1234',
 		'테스터',
 		'19940520',
@@ -444,7 +443,7 @@ select * from user where user_id='chlehddh' and user_phone='01072318062'
 SELECT * FROM user;
 
 -- 성공 // <!-- 10. update_유저 벤 하기-->
-update user set user_banned=#{user_banned} where user_idx=#{user_idx}
+update user set user_banned=0 where user_idx=1
 
 -- 성공 // <!-- 11. update_비밀번호 변경하기 -->
 update user set user_password='123' where user_id='chlehddh'
