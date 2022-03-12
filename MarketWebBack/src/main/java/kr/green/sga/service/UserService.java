@@ -7,10 +7,10 @@ public interface UserService {
 	void insertUser(UserVO userVO);
 	
 	// <!-- 2. select_1개 얻기 -->
-	// 서비스로 필요하지 않음.
+	UserVO selectByIdx(int user_idx);
 	
 	// <!-- 3. update_수정하기(회원정보수정하기) -->
-	UserVO updateUser(UserVO userVO);
+	void updateUser(UserVO userVO);
 	
 	// <!-- 4. delete_삭제하기(회원탈퇴하기) -->
 	void deleteUser(UserVO userVO);
