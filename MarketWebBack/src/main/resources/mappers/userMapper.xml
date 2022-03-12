@@ -35,9 +35,9 @@
 	<!-- 3. update_수정하기(회원정보수정하기) -->
 	<update id="updateUser" parameterType="UserVO">
 		UPDATE `user` SET
-		user_phone = #{user_phone }
+			user_phone = #{user_phone }
 		WHERE
-		user_idx = #{user_idx }
+			user_idx = #{user_idx }
 	</update>
 
 	<!-- 4. delete_삭제하기(회원탈퇴하기) -->
