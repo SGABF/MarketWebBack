@@ -1,5 +1,7 @@
 package kr.green.sga.service;
 
+import java.util.HashMap;
+
 import kr.green.sga.vo.UserVO;
 
 public interface UserService {
@@ -34,4 +36,16 @@ public interface UserService {
 	
 	// <!-- 11. update_비밀번호 변경하기 -->
 	void updatePassword(UserVO userVO);
+	
+	// ---------------------------------------------
+	// <!-- 12. ID로 가져오기 -->
+	UserVO selectUserId(String userid);
+
+	// <!-- 12. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
+	UserVO selectByUsername(UserVO userVO);
+	
+	// <!-- 13. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
+	UserVO selectByUserId(UserVO userVO);
+	
+
 }
