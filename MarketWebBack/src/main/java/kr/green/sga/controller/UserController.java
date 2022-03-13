@@ -117,7 +117,7 @@ public class UserController {
 				break;
 			}
 		}
-		UserVO userVO = userDAO.selectUserId(user_id);
+		UserVO userVO = userService.selectUserId(user_id);
 		if (count == 0 && userVO != null) {
 			count = 1;
 		}
@@ -132,9 +132,8 @@ public class UserController {
 
 	@RequestMapping(value = "/BannedUser", method = RequestMethod.POST)
 	public String BannedUserPOST(@RequestParam(required = false) int user_idx) throws JsonProcessingException {
-		UserVO userVO = userDAO.selectByIdx(user_idx);
+		UserVO userVO = userService.selectByIdx(user_idx);
 		userService.BannedUser(userVO);
 		return mapper.writeValueAsString(userVO);
 	}
-
 }
