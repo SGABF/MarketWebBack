@@ -137,16 +137,54 @@ public class UserServiceImpl implements UserService {
 			map.put("user_idx", userVO.getUser_idx());
 			userDAO.BannedUser(map);
 		}
+		log.info("UserServiceImpl-BannedUser 리턴 : " + map);
 	}
 
 	@Override
+	// <!-- 2. select_1개 얻기 -->
 	public UserVO selectByIdx(int user_idx) {
-		log.info("UserServiceImpl-BannedUser 호출 : " + user_idx);
+		log.info("UserServiceImpl-selectByIdx 호출 : " + user_idx);
 		UserVO userVO = null;
 		if(user_idx!=0) {
 			userVO = userDAO.selectByIdx(user_idx);
 		}
-		log.info("UserServiceImpl-BannedUser 리턴 : " + userVO);
+		log.info("UserServiceImpl-selectByIdx 리턴 : " + userVO);
 		return userVO;
+	}
+
+	@Override
+	// <!-- 12. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
+	public UserVO selectByUsername(UserVO userVO) {
+		log.info("UserServiceImpl-selectByUsername 호출 : " + userVO);
+		UserVO vo = null;
+		if(userVO != null) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("user_name", userVO.getUser_name());
+			map.put("user_phone", userVO.getUser_phone());
+			vo = userDAO.selectByUsername(map);
+		}
+		log.info("UserServiceImpl-selectByUsername 리턴 : " + vo);
+		return vo;
+	}
+
+	@Override
+	// <!-- 13. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
+	public UserVO selectByUserId(UserVO userVO) {
+		log.info("UserServiceImpl-selectByUserId 호출 : " + userVO);
+		UserVO vo = null;
+		if(userVO != null) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("user_name", userVO.getUser_id());
+			map.put("user_phone", userVO.getUser_phone());
+			vo = userDAO.selectByUserId(map);
+		}
+		log.info("UserServiceImpl-selectByUserId 리턴 : " + vo);
+		return vo;
+	}
+
+	@Override
+	public UserVO selectUserId(String userid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
