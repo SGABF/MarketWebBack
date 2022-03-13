@@ -53,6 +53,32 @@
 		UserServiceImpl
 		UserController			
 		
+<!-- 5. select_아디 찾기 -->
+	findId
+		UserMapper
+			null
+		UserDAO
+			null
+		UserService
+			parameter = String user_name, String user_phone
+			return	  = UserVO userVO
+		UserServiceImpl
+		UserController	
+	// selectByUsername 사용	(user_name, user_phone)
+	
+
+<!-- 6. select_비번 찾기 -->
+	findPw
+		UserMapper
+			null
+		UserDAO
+			null
+		UserService
+			parameter = String user_id, String user_phone 
+			return	  = UserVO userVO
+		UserServiceImpl
+		UserController
+		
 <!-- 7. select_아디 중복 확인_0:없음/사용가능_1:있음/사용불가 -->
 	selectCountUserId
 		UserMapper
@@ -67,7 +93,7 @@
 		
 	// Controller 단에서 idCheck 내 0, 1 리턴하여 사용
 	
-<!-- 8. select_이름과 전화번호로 가져오기(아이디찾기 사용) -->
+<!-- 8. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
 	selectByUsername
 		UserMapper
 			parameter = Hashmap<String, String> map
@@ -136,8 +162,13 @@
 			parameter = String user_id 
 			return	  = UserVO userVO
 		UserService
+			parameter = String user_id 
+			return	  = UserVO userVO
 		UserServiceImpl
+			parameter = String user_id 
+			return	  = UserVO userVO
 		UserController
+			null
 	//	
 	
 	
