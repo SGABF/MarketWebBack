@@ -48,7 +48,7 @@
 	</delete>
 
 	<!-- 7. select_아디 중복 확인_0:없음/사용가능_1:있음/사용불가 -->
-	<select id="selectCountUserId" parameterType="int" resultType="String">
+	<select id="selectCountUserId" parameterType="String" resultType="int">
 		select count(*) from user where user_id=#{user_id}
 	</select>
 
