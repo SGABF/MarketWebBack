@@ -1,5 +1,6 @@
 넘버링 유저 로직 
-<!-- 1. insert_저장하기(회원가입하기) -->
+
+<!-- 01. insert_저장하기(회원가입하기) -->
 	insertUser
 		UserMapper
 			parameter = UserVO userVO
@@ -14,7 +15,7 @@
 			model.addAttribute("vo", userVO)
 			return	  = mapper.writeValueAsString(userVO)
 		
-<!-- 2. select_1개 얻기 -->
+<!-- 02. select_1개 얻기 -->
 	selectByIdx
 		UserMapper
 			parameter = int user_idx
@@ -31,7 +32,7 @@
 		UserController
 			null
 		
-<!-- 3. update_수정하기(회원정보수정하기) -->
+<!-- 03. update_수정하기(회원정보수정하기) -->
 	updateUser
 		UserMapper
 			parameter = UserVO userVO
@@ -43,17 +44,23 @@
 			parameter = UserVO userVO
 		UserController
 				
-<!-- 4. delete_삭제하기(회원탈퇴하기) -->
+<!-- 04. delete_삭제하기(회원탈퇴하기) -->
 	deleteUser
 		UserMapper
 			parameter = int user_idx
 		UserDAO
 			parameter = int user_idx
 		UserService
+			parameter = UserVO userVO
+			// userDAO.selectUserId(userVO.getUser_id()) 로 userVO 객체 호출
 		UserServiceImpl
-		UserController			
+			parameter = UserVO userVO
+		UserController	
+			parameter = UserVO userVO
+			
+// -----------------------------------------------------------------
 		
-<!-- 5. select_아디 찾기 -->
+<!-- 05. select_아디 찾기 -->
 	findId
 		UserMapper
 			null
@@ -61,13 +68,14 @@
 			null
 		UserService
 			parameter = String user_name, String user_phone
-			return	  = UserVO userVO
+			return	  = String user_id
 		UserServiceImpl
+			
 		UserController	
-	// selectByUsername 사용	(user_name, user_phone)
+	// selectByUserNamePhone 사용	(user_name, user_phone)
 	
 
-<!-- 6. select_비번 찾기 -->
+<!-- 06. select_비번 찾기 -->
 	findPw
 		UserMapper
 			null
@@ -78,8 +86,11 @@
 			return	  = UserVO userVO
 		UserServiceImpl
 		UserController
+	// selectByUsername 사용	(user_name, user_phone)
 		
-<!-- 7. select_아디 중복 확인_0:없음/사용가능_1:있음/사용불가 -->
+// -----------------------------------------------------------------
+		
+<!-- 07. select_아디 중복 확인_0:없음/사용가능_1:있음/사용불가 -->
 	selectCountUserId
 		UserMapper
 			parameter = String user_id
@@ -92,40 +103,7 @@
 		UserController			
 		
 	// Controller 단에서 idCheck 내 0, 1 리턴하여 사용
-	
-<!-- 8. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
-	selectByUsername
-		UserMapper
-			parameter = Hashmap<String, String> map
-				// String user_name, String user_phone
-			return	  = UserVO userVO
-		UserDAO
-			parameter = Hashmap<String, String> map
-				// String user_name, String user_phone
-			return	  = UserVO userVO
-		UserService
-		UserServiceImpl
-		UserController			
-		
-	// Controller 단에서 findId 내 user_id 리턴하여 사용
-	
-<!-- 9. select_아이디와 전화번호로 가져오기(비번찾기 사용) -->
-	selectByUserId
-		UserMapper
-			parameter = Hashmap<String, String> map 
-				// String user_id, String user_phone
-			return	  = UserVO userVO(추후 변동 예정)
-		UserDAO
-			parameter = Hashmap<String, String> map 
-				// String user_id, String user_phone
-			return	  = UserVO userVO(추후 변동 예정)			
-		UserService
-		UserServiceImpl
-		UserController			
-			
-			
-	// Controller 단에서 findPw 내 user_bCrypt 적용 및 임시 비번 사용할 예정
-	
+
 <!-- 10. update_유저 벤 하기 -->
 	BannedUser
 		UserMapper
@@ -143,18 +121,62 @@
 	updatePassword
 		UserMapper
 			parameter = Hashmap<String, String> map
-				 // String user_password, String user_id
+				// String user_password, String user_id
 			return	  = map {user_idx=2, user_banned=0}
 		UserDAO
 			parameter = Hashmap<String, String> map
-				 // String user_password, String user_id
-			return	  = map {user_idx=2, user_banned=0}
+				// String user_password, String user_id
+		UserService
+			parameter = UserVO userVO
+		UserServiceImpl
+		UserController			
+		
+<!-- 12. String_임시 비밀번호 생성하기 -->
+	makePassword
+		UserMapper
+		UserDAO
+		UserService
+			parameter = int length
+		UserServiceImpl
+		UserController
+		
+// -----------------------------------------------------------------
+			
+<!-- 50. select_이름과 전화번호로 userVO 가져오기 -->
+	selectByUsername
+		UserMapper
+			parameter = Hashmap<String, String> map
+				// String user_name, String user_phone
+			return	  = UserVO userVO
+		UserDAO
+			parameter = Hashmap<String, String> map
+				// String user_name, String user_phone
+			return	  = UserVO userVO
+		UserService
+		UserServiceImpl
+		UserController			
+		
+	// Controller 단에서 findId 내 user_id 리턴하여 사용
+	
+<!-- 51. select_아이디와 전화번호로 가져오기(비번찾기 사용) -->
+	selectByUserId
+		UserMapper
+			parameter = Hashmap<String, String> map 
+				// String user_id, String user_phone
+			return	  = UserVO userVO(추후 변동 예정)
+		UserDAO
+			parameter = Hashmap<String, String> map 
+				// String user_id, String user_phone
+			return	  = UserVO userVO(추후 변동 예정)			
 		UserService
 		UserServiceImpl
 		UserController			
 			
-<!-- 12. ID로 가져오기 -->
-	selectUserId	
+	// Controller 단에서 findPw 내 user_bCrypt 적용 및 임시 비번 사용할 예정
+	
+			
+<!-- 52. ID로 VO 가져오기 -->
+	selectUserId
 		UserMapper
 			parameter = String user_id 
 			return	  = UserVO userVO
@@ -169,7 +191,25 @@
 			return	  = UserVO userVO
 		UserController
 			null
-	//	
-	
-	
-	
+			
+	//	호출 목록
+			deleteUser // UserServiceImpl	
+			
+<!-- 53. 이름, 전화번호로 VO 가져오기 -->	
+	selectByUserNamePhone
+		UserMapper
+			parameter = String user_name, String user_phone
+			return	  = UserVO userVO
+		UserDAO
+			parameter = String user_name, String user_phone 
+			return	  = UserVO userVO
+		UserService
+			null
+		UserServiceImpl
+			null
+		UserController
+			null
+	// 호출 목록
+			findId // UserServiceImpl
+			
+// -----------------------------------------------------------------
