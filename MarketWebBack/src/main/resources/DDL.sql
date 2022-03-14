@@ -435,10 +435,10 @@ delete from user where user_idx=6
 select count(*) from user where user_id='chlehddh'
 
 -- 성공 // <!-- 8. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
-select * from user where user_name='최동오' and user_phone='01072318062'
+select * from user where user_email='chlehddh8062@gmail.com' and user_name='gondo';
 
 -- 성공 // <!-- 9. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
-select * from user where user_id='chlehddh' and user_phone='01072318062'
+select * from user where user_id='cdo90' and user_email='chlehddh8062@gmail.com' and user_name='gondo';
 
 SELECT * FROM user;
 
@@ -448,9 +448,13 @@ update user set user_banned=0 where user_idx=1
 -- 성공 // <!-- 11. update_비밀번호 변경하기 -->
 update user set user_password='123' where user_id='chlehddh'
 
--- 성공 // <!-- 12. ID로 가져오기 -->
+-- 성공 // <!-- 52. ID로 VO 가져오기 -->
 select * from user where user_id='chlehddh'
 
+-- 성공 // <!-- 53. 이름, 전화번호로 VO 가져오기 -->
+select * from user where user_name='테스터' and user_phone='01072318062';
+
+SELECT * FROM user;	
 		
-		
+
 		
