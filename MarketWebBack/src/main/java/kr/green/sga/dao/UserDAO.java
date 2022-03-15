@@ -25,10 +25,10 @@ public interface UserDAO {
 	// <!-- 07. select_아디 중복 확인(0:없음/사용가능 1:있음/사용불가)-->
 	int selectCountUserId(String user_id);
 	
-	// <!-- 08. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
+	// <!-- 50. select_이름과 전화번호로 VO 가져오기(아디찾기 사용) -->
 	UserVO selectByUsername(HashMap<String, String> map);
 
-	// <!-- 09. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
+	// <!-- 51. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
 	UserVO selectByUserId(HashMap<String, String> map);
 
 	// <!-- 10. update_유저 벤 하기 -->
@@ -42,15 +42,16 @@ public interface UserDAO {
 	// <!-- 52. ID로 VO 가져오기 -->
 	UserVO selectUserId(String user_id);
 
-	// <!-- 53. 이름, 전화번호로 VO 가져오기 -->	
+	// <!-- 53. 이름, 이메일로 VO 가져오기 -->	
 	// findId
 	UserVO selectByUserNameEmail(String user_name, String user_email);
 	
-	// <!-- 54. 아디, 전화번호로 VO 가져오기 -->	
+	// <!-- 54. 아디, 이름으로, 이메일로 VO 가져오기 -->	
 	// findPw
-	UserVO selectByUserIdNameEmail(String user_id, String user_email, String user_name);
+	int selectCountUserIdNameEmail(String user_id, String user_email, String user_name);
 
-
-
-
+	// <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->	
+	// login
+	int countCheckPassword(HashMap<String, String> map);
+	
 }

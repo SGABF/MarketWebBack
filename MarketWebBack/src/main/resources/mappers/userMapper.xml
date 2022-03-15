@@ -93,8 +93,13 @@
 	</select>
 
 	<!-- 54. 이름, 아디, 이메일로 VO 가져오기 -->
-	<select id="selectByUserIdNameEmail" parameterType="Hashmap" resultType="UserVO">
-		select * from user where user_id=#{user_id} and user_email=#{user_email} and user_name=#{user_name}
+	<select id="selectCountUserIdNameEmail" parameterType="Hashmap" resultType="int">
+		select count(*) from user where user_id=#{user_id} and user_email=#{user_email} and user_name=#{user_name}
 	</select>
-
+	
+	<!-- 55. select_CheckPassword 비밀번호 일치 여부 확인하기 -->
+	<select id="countCheckPassword" parameterType="Hashmap" resultType="int">
+		SELECT * from user WHERE user_id=#{user_id} and user_password=#{user_password} 
+	</select>
+	
 </mapper>

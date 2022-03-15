@@ -18,12 +18,12 @@ public interface UserService {
 // -----------------------------------------------------------------
 	
 	// <!-- 05. select_아디 찾기 -->
-	// selectByUserNameEmail 사용		(user_name, user_email)
+	// selectByUserNameEmail 사용			(user_name, user_email)
 	String findId(String user_name, String user_email);
 	
 	// <!-- 06. select_비번 찾기 -->
-	// selectByUserIdNameEmail 사용		(user_id, user_email, user_name)
-	String findPw(String user_id, String user_email, String user_name);
+	// selectCountUserIdNameEmail 사용		(user_id, user_email, user_name)
+	int findPw(String user_id, String user_email, String user_name);
 	
 	// ---------------------------------------------
 	

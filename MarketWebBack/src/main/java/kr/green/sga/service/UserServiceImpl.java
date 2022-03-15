@@ -68,21 +68,11 @@ public class UserServiceImpl implements UserService {
 	// <!-- 04. delete_삭제하기(회원탈퇴하기) -->
 	public void deleteUser(UserVO userVO) {
 		log.info("UserServiceImpl-deleteUser 호출 : " + userVO);
-		UserVO dbVO = null;
 		// 넘겨받은 userVO가 있다면
 		if (userVO != null) {
-			// 아이디 정보를 담아서 vo에 넣기
-			dbVO = userDAO.selectByIdx(userVO.getUser_idx());
-			if (dbVO != null) {
-				// 암호화된 내용을 db에서 가져옴
-				String dbPassword = dbVO.getUser_password();
-				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), dbPassword)) {
-					log.info("UserServiceImpl-deleteUser-bCryptPasswordEncoder.matches 호출 및 비번 일치확인");
-					// 회원탈퇴
-					userDAO.deleteUser(dbVO.getUser_idx());
-					log.info("UserServiceImpl-deleteUser 회원정보삭제됨 : " + dbVO);
-				}
-			}
+			// 회원탈퇴
+			userDAO.deleteUser(userVO.getUser_idx());
+			log.info("UserServiceImpl-deleteUser 회원정보삭제됨 : " + userVO);
 		}
 	}
 
@@ -100,7 +90,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	// <!-- 08. select_아디 찾기 // 이름과 이메일로 가져오기 -->
+	// <!-- 08. select_아디 찾기 // user_name과 user_email로 VO 가져오기 -->
 	// 53. selectByUserNameEmail 사용
 	public String findId(String user_name, String user_email) {
 		log.info("UserServiceImpl-findId 호출 : " + user_name + ", " + user_email);
@@ -115,16 +105,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	// <!-- 09. select_비번 찾기 // ID와 전화번호로 가져오기 -->
+	// <!-- 09. select_비번 찾기 // user_id, user_email, user_name로 VO 가져오기 -->
 	// 54. selectByUserIdNameEmail 사용
-	public String findPw(String user_id, String user_email, String user_name) {
-		log.info("UserServiceImpl-findPw 호출 : " + user_id + ", " + user_email+ ", " + user_name);
-		UserVO dbVO = null;
+	public int findPw(String user_id, String user_email, String user_name) {
+		log.info("UserServiceImpl-findPw 호출 : " + user_id + ", " + user_email + ", " + user_name);
+		int count = 0;
 		if (user_id != null && user_email != null && user_name != null) {
-			dbVO = userDAO.selectByUserIdNameEmail(user_id, user_email, user_name);
+			count = userDAO.selectCountUserIdNameEmail(user_id, user_email, user_name);
+			if (count == 1) {
+				log.info("UserServiceImpl-findPw 리턴 : " + count + "_회원정보 있음.");
+			} else {
+				log.info("UserServiceImpl-findPw 리턴 : " + count + "_회원정보 없음.");
+			}
 		}
-		log.info("UserServiceImpl-findPw 리턴 : " + dbVO.getUser_password());
-		return dbVO.getUser_password();
+		return count;
 	}
 
 	@Override
@@ -161,7 +155,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	// <!-- 8. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
+	// <!-- 8. select_이름과 전화번호로 VO 가져오기 -->
 	public UserVO selectByUsername(UserVO userVO) {
 		log.info("UserServiceImpl-selectByUsername 호출 : " + userVO);
 		UserVO vo = null;
@@ -176,58 +170,75 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	// <!-- 09. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
-	public UserVO selectByUserId(UserVO userVO) {
-		log.info("UserServiceImpl-selectByUserId 호출 : " + userVO);
-		UserVO vo = null;
-		if (userVO != null) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("user_name", userVO.getUser_id());
-			map.put("user_phone", userVO.getUser_phone());
-			vo = userDAO.selectByUserId(map);
-		}
-		log.info("UserServiceImpl-selectByUserId 리턴 : " + vo);
-		return vo;
-	}
-
-	@Override
 	// <!-- 50. ID로 가져오기 -->
 	public UserVO selectUserId(String user_id) {
 		log.info("UserServiceImpl-selectUserId 호출 : " + user_id);
 		UserVO userVO = null;
 		if (user_id != null) {
 			userVO = userDAO.selectUserId(user_id);
+			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 확인" + userVO);
 		}
-		if (userVO != null) {
-			log.info("UserServiceImpl-selectUserId 리턴 : " + userVO);
+		if (userVO == null) {
+			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 없음" + userVO);
 		}
+		return userVO;
+	}
+
+	// 임시비밀번호를 만들어주는 메서드
+	public String makePassword(int length) {
+		Random random = new Random();
+		String password = "";
+		String str = "~@!#$%^&*+-*";
+		for (int i = 0; i < length; i++) {
+			// case의 개수가 많을수록 나타날 확율이 높아진다.
+			switch (random.nextInt(8)) { // 0(숫자), 1(영어소문자), 2(영어 대문자), 3(특수문자)
+			case 0:
+			case 18:
+			case 19:
+				password += (char) ('0' + random.nextInt(10));
+				break;
+			case 1:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+				password += (char) ('a' + random.nextInt(26));
+				break;
+			case 2:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 17:
+				password += (char) ('A' + random.nextInt(26));
+				break;
+			case 3:
+				password += str.charAt(random.nextInt(str.length()));
+				break;
+			}
+		}
+		return password;
+	}
+
+	@Override // 비번이 일치하는 객체 리턴하기
+	public UserVO selectByUserId(UserVO userVO) {
+		log.info("UserServiceImpl-selectByUserId 호출 : " + userVO);
+		UserVO dbVO = null;
+		if(userVO != null) {
+			dbVO = userDAO.selectUserId(userVO.getUser_id());
+			String dbPassword = dbVO.getUser_password(); // 암호화된 내용을 DB에서 가져옴
+			if (bCryptPasswordEncoder.matches(userVO.getUser_password(), dbPassword)) { // 암호화된 비번 일치여부 확인
+				log.info("UserServiceImpl-selectByUserId 검증 : 사용자 정보 일치!!");
+				return userVO; // 일치하면 vo리턴
+			}
+		}
+		log.info("UserServiceImpl-selectByUserId 리턴 : 사용자 정보 없음.");
 		return null;
 	}
-	
-	
-	// 임시비밀번호를 만들어주는 메서드
-		public String makePassword(int length) {
-			Random random = new Random();
-			String password="";
-			String str="~@!#$%^&*+-*";
-			for(int i=0;i<length;i++) {
-				// case의 개수가 많을수록 나타날 확율이 높아진다.
-				switch (random.nextInt(8)) { // 0(숫자), 1(영어소문자), 2(영어 대문자), 3(특수문자)
-				case 0: case 18: case 19:
-					password += (char)('0' + random.nextInt(10));
-					break;
-				case 1: case 4: case 5: case 6: case 7: case 8: case 9: case 10:
-					password += (char)('a' + random.nextInt(26));
-					break;
-				case 2: case 11: case 12: case 13: case 14: case 15: case 16: case 17:
-					password += (char)('A' + random.nextInt(26));
-					break;
-				case 3:
-					password += str.charAt(random.nextInt(str.length()));
-					break;
-				}
-			}
-			return password;
-		}
-		
+
 }
