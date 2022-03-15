@@ -1,16 +1,11 @@
 package kr.green.sga.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +19,7 @@ import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Controller
 @RestController
 public class UserController {
 
@@ -55,13 +51,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/updateUser", method = RequestMethod.GET)
-	public String updateUserGET(@ModelAttribute UserVO userVO, Model model) throws JsonProcessingException {
+	public String updateUserGET(@RequestBody UserVO userVO, Model model) throws JsonProcessingException {
 		log.info("UserController-updateUserGET 호출 : " + userVO, ", " + model);
 		return "";
 	}
 
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	public String updateUserPOST(@ModelAttribute UserVO userVO, Model model) throws JsonProcessingException {
+		// selectuserid
 		log.info("UserController-updateUserPOST 호출 : " + userVO, ", " + model);
 		if (userVO.getUser_phone() != null) {
 			userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
@@ -80,42 +77,20 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-	public String deleteUserPOST(@ModelAttribute UserVO userVO, HttpServletRequest request, HttpServletResponse response, Model model) throws JsonProcessingException {
-		UserVO dbVO = userService.selectByIdx(userVO.getUser_idx());
-		log.info("UserController-deleteUserPOST 호출 : " + userVO);
+	public String deleteUserPOST(@RequestParam(required = false) String user_id, Model model) throws JsonProcessingException {
+		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
+		UserVO dbVO = userService.selectUserId(user_id);
 		if (dbVO != null) {
-			System.out.println("dbVO:\n" + dbVO);
-			System.out.println("userVO:\n" + userVO);
-			userService.deleteUser(userVO);
-			// 시크리트의 로그인 정보도 지워줘야 한다.
-			// 인증정보를 얻어낸다.
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			// 인증정보가 있다면
-			if (authentication != null) {
-				// 로그아웃을 시킨다.
-				new SecurityContextLogoutHandler().logout(request, response, authentication);
-			}
+			userService.deleteUser(dbVO);
 			model.addAttribute("msg", "정상적으로 탈퇴 되었습니다.");
 			log.info("UserController-deleteUserPOST 리턴 : " + dbVO);
 			return mapper.writeValueAsString(dbVO);
 		} else {
 			model.addAttribute("msg", "회원정보를 찾을 수 없습니다.");
-			log.info("UserController-deleteUserPOST 리턴: " + mapper.writeValueAsString(dbVO));
+			log.info("UserController-deleteUserPOST 리턴 : 회원정보 못찾음_" + mapper.writeValueAsString(dbVO));
 			return "/";
 		}
 	}
-//	
-//	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-//	public String deleteUserPOST(@RequestParam(required = false) UserVO userVO, Model model) throws JsonProcessingException {
-//		log.info("UserController-deleteUserPOST 호출 : " + userVO);
-//		if (userVO != null) {
-//			userService.deleteUser(userVO);
-//			return mapper.writeValueAsString(userVO);
-//		}
-//		model.addAttribute("msg", "정상적으로 탈퇴 되었습니다.");
-//		log.info("UserController-deleteUserPOST 리턴: " + mapper.writeValueAsString(userVO));
-//		return null;
-//	}
 
 	@RequestMapping(value = "/BannedUser", method = RequestMethod.GET)
 	public String BannedUserGET(@RequestParam(required = false) int user_idx) {
@@ -129,6 +104,22 @@ public class UserController {
 		UserVO userVO = userService.selectByIdx(user_idx);
 		userService.BannedUser(userVO);
 		return mapper.writeValueAsString(userVO);
+	}
+
+	// 비밀번호 변경
+	@RequestMapping(value = "/updatePassword", method = RequestMethod.GET)
+	public void updatePasswordGET(@RequestBody UserVO userVO, Model model) throws JsonProcessingException {
+		log.info("UserController-updatePasswordGET 호출 : " + userVO, ", " + model);
+	}
+
+	@RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+	public void updatePasswordPOST(@ModelAttribute UserVO userVO, Model model) throws JsonProcessingException {
+		log.info("UserController-updatePasswordPOST 호출 : userVO_" + userVO);
+		if (userVO != null) {
+			userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
+			userService.updatePassword(userVO);
+			log.info("UserController-updatePasswordPOST 리턴: " + mapper.writeValueAsString(userVO));
+		}
 	}
 
 }

@@ -440,6 +440,10 @@ select * from user where user_email='chlehddh8062@gmail.com' and user_name='gond
 -- 성공 // <!-- 9. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
 select * from user where user_id='cdo90' and user_email='chlehddh8062@gmail.com' and user_name='gondo';
 
+-- 성공 // <!-- 9. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
+-- 1이면 데이터를 찾아줘야 함. 임시 비번 생성 / 업데이트 쿼리 호출 / 임시 비번 전달. 
+select count(*) from user where user_id='cdo90' and user_email='chlehddh8062@gmail.com' and user_name='gondo';
+
 SELECT * FROM user;
 
 -- 성공 // <!-- 10. update_유저 벤 하기-->
@@ -454,7 +458,11 @@ select * from user where user_id='chlehddh'
 -- 성공 // <!-- 53. 이름, 전화번호로 VO 가져오기 -->
 select * from user where user_name='테스터' and user_phone='01072318062';
 
+-- 성공 // <!-- 54. 이름, 아디, 이메일로 VO 가져오기 -->
+select count(*) from user where user_id=#{user_id} and user_email=#{user_email} and user_name=#{user_name}
+
 SELECT * FROM user;	
 		
-
+-- 성공 // <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->
+SELECT COUNT(*) from user WHERE user_id='testuser44' and user_password='1234' 
 		

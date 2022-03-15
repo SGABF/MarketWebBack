@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,15 +43,15 @@ public class NotTokenController {
 		return "/index";
 	}
 
-	@RequestMapping(value = "/insertUser", method = RequestMethod.GET)
+	@RequestMapping(value = "/insertUser", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	public String insertUserGET(@RequestParam(required = false) UserVO userVO) {
 		log.info("UserController-insertUserGET 호출 : " + userVO);
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
 
-	@RequestMapping(value = "/insertUser", method = RequestMethod.POST)
-	public String insertUserPOST(@ModelAttribute UserVO userVO, Model model) throws JsonProcessingException {
+	@RequestMapping(value = "/insertUser", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	public String insertUserPOST(@RequestBody UserVO userVO, Model model) throws JsonProcessingException {
 		log.info("UserController-insertUserPOST 호출 : " + userVO, ", " + model);
 //		userVO.setUser_password(UUID.randomUUID().toString());
 		userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
@@ -60,20 +61,9 @@ public class NotTokenController {
 		return mapper.writeValueAsString(userVO);
 	}
 
-//	insertUser() 메서드 userVO.toString 확인용.
-//	@RequestMapping(value = "/insertUser", method = RequestMethod.POST)
-//	public String insertUserPOST(@ModelAttribute UserVO userVO, Model model) {
-//		log.info("UserController-insertUserPOST 호출 : " + userVO, ", " + model);
-////		userVO.setUser_password(UUID.randomUUID().toString());
-//		userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
-//		userService.insertUser(userVO); // DB에 저장
-//		model.addAttribute("vo", userVO);
-//		return userVO.toString();
-//	}
-
 	@RequestMapping(value = "/idCheck", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	public String idCheckGET(@RequestParam(required = false) String user_id) {
-		log.info("NotTokenController-idCheck 호출 : " + user_id);
+		log.info("NotTokenController-idCheckGET 호출 : " + user_id);
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
@@ -109,21 +99,7 @@ public class NotTokenController {
 		return dbcount + "";
 	}
 
-//
-//	@RequestMapping(value = "/findIdPOST", method = RequestMethod.POST)
-//	public String findIdPOST(@RequestParam(required = false) String user_name, String user_phone, @ModelAttribute Model model) {
-//		log.info("NotTokenController-findIdPOST 호출 : " + "이름:" + user_name + ", 전화번호:" + user_phone);
-//		String user_id = "";
-//		user_id = userService.findId(user_name, user_phone);
-//		System.out.println(model.addAttribute("mvo", user_id));
-////		model.addAttribute("msg", "고객님의 아이디는 " + user_id + "입니다.");
-//		log.info("NotTokenController-findIdPOST 리턴 : " + user_id);
-//		return user_id;
-//	}
-//	
-
-	@RequestMapping(value = "/findIdPOST", method = RequestMethod.POST)
-
+	@RequestMapping(value = "/findIdPOST", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public String findIdPOST(@RequestParam(required = false) String user_name, String user_email, Model model)
 			throws JsonProcessingException {
 		log.info("NotTokenController-findIdPOST 호출 : " + "이름:" + user_name + ", 이메일:" + user_email);
@@ -139,28 +115,42 @@ public class NotTokenController {
 		return mapper.writeValueAsString(user_id);
 	}
 
-	@RequestMapping(value = "/findPwPOST", method = RequestMethod.POST)
+	@RequestMapping(value = "/findPwPOST", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public String findPwPOST(@RequestParam(required = false) String user_id, String user_email, String user_name, Model model)
 			throws JsonProcessingException {
 		log.info("NotTokenController-findPwPOST 호출 : " + user_id + ", " + user_email + ", " + user_name);
-		String user_password = "";
+		int count = 0;
 		String new_password = "";
 		UserVO dbVO = null;
-		user_password = userService.findPw(user_id, user_name, user_email);
+		count = userService.findPw(user_id, user_email, user_name);
 		dbVO = userService.selectUserId(user_id);
-		if(user_password!=null) {
+		if(count==1) {
 			new_password = userService.makePassword(10);
-			log.info("NotTokenController-findIdPOST-임시 비밀번호 생성 : " + new_password);
+			log.info("NotTokenController-findPwPOST-임시 비밀번호 생성 : " + new_password);
 			dbVO.setUser_password(new_password);
 			userService.updatePassword(dbVO);
 			model.addAttribute("msg", "고객님의 임시 비밀번호는 " + new_password + "입니다. \n로그인 후 비밀번호 변경 바랍니다.");
-			log.info("NotTokenController-findIdPOST 리턴 : " + user_password);
-			
+			log.info("NotTokenController-findPwPOST 리턴 : " + new_password);
 		} else {
 			model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
-			log.info("NotTokenController-findIdPOST 고객 정보 없음.");
+			log.info("NotTokenController-findPwPOST 고객 정보 없음.");
 		}
-		return mapper.writeValueAsString(user_password);
+		return mapper.writeValueAsString(new_password);
 	}
-
+	
+	@RequestMapping(value = "/loginPOST", method = RequestMethod.POST)
+	public String loginPOST(@ModelAttribute UserVO userVO, Model model) throws JsonProcessingException {
+		log.info("NotTokenController-loginPOST 호출 : 유저Json_" + userVO);
+		UserVO dbVO = userService.selectUserId(userVO.getUser_id());
+		if(userVO != null) {
+			dbVO = userService.selectByUserId(userVO);
+			if(dbVO == null) {
+				model.addAttribute("msg", "회원 정보를 찾을 수 없습니다.");
+				log.info("NotTokenController-loginPOST 리턴 : 사용자 정보 없음.");
+			}
+		}
+		model.addAttribute("msg", "로그인 성공");
+		log.info("NotTokenController-loginPOST 리턴 : dbVO.getUser_id()_" + dbVO.getUser_id());
+		return dbVO.getUser_id();
+	}
 }
