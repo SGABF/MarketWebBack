@@ -58,14 +58,16 @@ public class UserController {
 
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	public String updateUserPOST(@ModelAttribute UserVO userVO, Model model) throws JsonProcessingException {
-		// selectuserid
-		log.info("UserController-updateUserPOST 호출 : " + userVO, ", " + model);
-		if (userVO.getUser_phone() != null) {
-			userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
+		log.info("UserController-updateUserPOST 호출 : " + userVO);
+		UserVO dbVO = userService.selectUserId(userVO.getUser_id());
+		if (dbVO != null) {
 			userService.updateUser(userVO);
+			model.addAttribute("msg", "회원정보를 정상적으로 수정하였습니다.");
+			log.info("UserController-updateUserPOST 리턴: " + mapper.writeValueAsString(userVO));
 			return mapper.writeValueAsString(userVO);
 		}
-		log.info("UserController-updateUserPOST 리턴: " + mapper.writeValueAsString(userVO));
+		model.addAttribute("msg", "회원정보를 찾을 수 없습니다.");
+		log.info("UserController-updateUserPOST 리턴: null!!!" + mapper.writeValueAsString(userVO));
 		return null;
 	}
 
