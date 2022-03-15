@@ -43,26 +43,47 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-selectByIdx 리턴 : " + userVO);
 		return userVO;
 	}
+	
+//	원본 // 기존 비번 일치하면 수정되는 메서드
+//	@Override
+//	// <!-- 03. update_수정하기(회원정보수정하기) -->
+//	public void updateUser(UserVO userVO) {
+//		log.info("UserServiceImpl-updateUser 호출 : " + userVO);
+//		UserVO dbVO = null;
+//		if (userVO != null) {
+//			// db에서 정보를 받아와 비번이 일치하면 회원정보 수정.
+//			dbVO = userDAO.selectUserId(userVO.getUser_id());
+//			String dbPassword = dbVO.getUser_password();
+//			if (bCryptPasswordEncoder.matches(userVO.getUser_password(), dbPassword)) {
+//				log.info("UserServiceImpl-updateUser 비번 검증 : 사용자정보 일치확인");
+//				// 회원정보 수정
+//				userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
+//				log.info("UserServiceImpl-updateUser 비번 검증 : 업데이트 진행");
+//				userDAO.updateUser(userVO);
+//				// 수정된 정보를 다시 얻는다.
+//				dbVO = userDAO.selectByIdx(userVO.getUser_idx());
+//				log.info("UserServiceImpl-updateUser 회원정보수정완료 : " + dbVO);
+//			}
+//		}
+//	}
 
 	@Override
 	// <!-- 03. update_수정하기(회원정보수정하기) -->
 	public void updateUser(UserVO userVO) {
 		log.info("UserServiceImpl-updateUser 호출 : " + userVO);
+		UserVO dbVO = null;
 		if (userVO != null) {
-			// db에서 정보를 받아와 비번이 일치하면 회원정보 수정.
-			UserVO vo = userDAO.selectByIdx(userVO.getUser_idx());
-			if (vo != null) {
-				String dbPassword = vo.getUser_password();
-				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), dbPassword)) {
-					// 회원정보 수정
-					userDAO.updateUser(userVO);
-					// 수정된 정보를 다시 얻는다.
-					vo = userDAO.selectByIdx(userVO.getUser_idx());
-					log.info("UserServiceImpl-updateUser 리턴 : " + vo);
-				}
-			}
+			dbVO = userDAO.selectUserId(userVO.getUser_id());
+			log.info("UserServiceImpl-updateUser 사용자 정보 확인 : " + dbVO);
+			// 회원정보 수정
+			userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
+			userDAO.updateUser(userVO);
+			// 수정된 정보를 다시 얻는다.
+			dbVO = userDAO.selectUserId(userVO.getUser_id());
+			log.info("UserServiceImpl-updateUser 회원정보수정완료 : " + dbVO);
 		}
 	}
+
 
 	@Override
 	// <!-- 04. delete_삭제하기(회원탈퇴하기) -->
@@ -176,10 +197,10 @@ public class UserServiceImpl implements UserService {
 		UserVO userVO = null;
 		if (user_id != null) {
 			userVO = userDAO.selectUserId(user_id);
-			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 확인" + userVO);
+			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 확인_" + userVO);
 		}
 		if (userVO == null) {
-			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 없음" + userVO);
+			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 없음_" + userVO);
 		}
 		return userVO;
 	}
@@ -229,7 +250,7 @@ public class UserServiceImpl implements UserService {
 	public UserVO selectByUserId(UserVO userVO) {
 		log.info("UserServiceImpl-selectByUserId 호출 : " + userVO);
 		UserVO dbVO = null;
-		if(userVO != null) {
+		if (userVO != null) {
 			dbVO = userDAO.selectUserId(userVO.getUser_id());
 			String dbPassword = dbVO.getUser_password(); // 암호화된 내용을 DB에서 가져옴
 			if (bCryptPasswordEncoder.matches(userVO.getUser_password(), dbPassword)) { // 암호화된 비번 일치여부 확인

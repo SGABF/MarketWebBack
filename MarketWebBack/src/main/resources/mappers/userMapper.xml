@@ -35,9 +35,11 @@
 	<!-- 03. update_수정하기(회원정보수정하기) -->
 	<update id="updateUser" parameterType="UserVO">
 		UPDATE `user` SET
-			user_phone = #{user_phone }
+			user_password = #{user_password},
+			user_phone = #{user_phone },
+			user_email = #{user_email }
 		WHERE
-			user_idx = #{user_idx }
+			user_id = #{user_id }
 	</update>
 
 	<!-- 04. delete_삭제하기(회원탈퇴하기) -->
