@@ -18,8 +18,18 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDAO userDAO;
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Autowired(required = false)
+	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+	
+	@Override
+	public UserVO getUser(UserVO userVO) {
+		log.info("UserServiceImpl-getUser 호출 : " + userVO);
+		UserVO dbVO = null;
+		if(userVO != null) {
+			dbVO = userDAO.selectUserId(userVO.getUser_id());
+		}
+		return dbVO;
+	}
 
 	@Override
 	// <!-- 01. insert_저장하기(회원가입하기) -->
@@ -273,7 +283,7 @@ public class UserServiceImpl implements UserService {
 			if(dbVO!=null) {
 				// 인풋 받은 userVO의 password는 평문이고 평문과 dbVO의 bCryptPassword를 matches 해야 한다.
 				String bCryptPassword = dbVO.getUser_password(); // 암호화된 내용을 DB에서 가져옴
-				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), bCryptPassword)) { // 암호화된 비번 일치여부 확인				String encryptPassword = bCryptPasswordEncoder.encode(userVO.getUser_password());
+				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), bCryptPassword)) { // 암호화된 비번 일치여부 확인				
 					count = 1;
 					log.info("UserServiceImpl-countCheckPassword 리턴 : count_" + count);
 				} else {
@@ -284,4 +294,6 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-countCheckPassword 최종 리턴 : " + count);
 		return count;
 	}
+
+
 }
