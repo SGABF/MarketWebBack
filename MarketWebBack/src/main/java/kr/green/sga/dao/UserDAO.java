@@ -29,6 +29,7 @@ public interface UserDAO {
 	UserVO selectByUsername(HashMap<String, String> map);
 
 	// <!-- 51. select_아디와 전화번호로 가져오기(비번찾기 사용) -->
+	// login : map 에 userVO 를 넣어서 평문'1234'과 bCrypt 비번 matches 확인 및 리턴값 반환 
 	UserVO selectByUserId(HashMap<String, String> map);
 
 	// <!-- 10. update_유저 벤 하기 -->
@@ -51,7 +52,7 @@ public interface UserDAO {
 	int selectCountUserIdNameEmail(String user_id, String user_email, String user_name);
 
 	// <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->	
-	// login
+	// 로그인 성공 후 회원정보 수정 페이지 진입하기 전 비번 재확인  
 	int countCheckPassword(HashMap<String, String> map);
 	
 }

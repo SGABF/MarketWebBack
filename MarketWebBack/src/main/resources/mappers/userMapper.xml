@@ -101,7 +101,7 @@
 	
 	<!-- 55. select_CheckPassword 비밀번호 일치 여부 확인하기 -->
 	<select id="countCheckPassword" parameterType="Hashmap" resultType="int">
-		SELECT * from user WHERE user_id=#{user_id} and user_password=#{user_password} 
+		SELECT count(*) from user WHERE user_id=#{user_id} and user_password=#{user_password}
 	</select>
 	
 </mapper>

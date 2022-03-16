@@ -262,4 +262,26 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	@Override
+	public int countCheckPassword(UserVO userVO) {
+		log.info("UserServiceImpl-countCheckPassword 호출 : " + userVO);
+		int count = 0;
+		UserVO dbVO = null;
+		if(userVO!=null) {
+			dbVO = userDAO.selectUserId(userVO.getUser_id());
+			log.info("UserServiceImpl-countCheckPassword 사용자 db정보확인_" + dbVO);
+			if(dbVO!=null) {
+				// 인풋 받은 userVO의 password는 평문이고 평문과 dbVO의 bCryptPassword를 matches 해야 한다.
+				String bCryptPassword = dbVO.getUser_password(); // 암호화된 내용을 DB에서 가져옴
+				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), bCryptPassword)) { // 암호화된 비번 일치여부 확인				String encryptPassword = bCryptPasswordEncoder.encode(userVO.getUser_password());
+					count = 1;
+					log.info("UserServiceImpl-countCheckPassword 리턴 : count_" + count);
+				} else {
+					log.info("UserServiceImpl-countCheckPassword 최종 리턴 : 입력한 비밀번호로 암호화된 정보 확인하였으나, 비밀번호 불일치");
+				}
+			} 		
+		}
+		log.info("UserServiceImpl-countCheckPassword 최종 리턴 : " + count);
+		return count;
+	}
 }
