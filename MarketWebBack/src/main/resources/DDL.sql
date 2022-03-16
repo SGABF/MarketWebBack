@@ -464,5 +464,7 @@ select count(*) from user where user_id=#{user_id} and user_email=#{user_email} 
 SELECT * FROM user;	
 		
 -- 성공 // <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->
-SELECT COUNT(*) from user WHERE user_id='testuser44' and user_password='1234' 
+SELECT COUNT(*) from user WHERE user_id='cdo90' and user_password='$2a$10$CLfAUUw2wsn65e8LjjGFwuuu.w/yoFfYrAdxYLqJe0WHaXAi1ix.q' 
+
+
 		
