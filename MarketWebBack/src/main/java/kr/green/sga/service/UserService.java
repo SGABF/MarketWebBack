@@ -3,6 +3,10 @@ package kr.green.sga.service;
 import kr.green.sga.vo.UserVO;
 
 public interface UserService {
+	
+	// <!-- 00. select_로그인하기 -->
+	UserVO getUser(UserVO userVO);
+	
 	// <!-- 01. insert_저장하기(회원가입하기) -->
 	void insertUser(UserVO userVO);
 	

@@ -8,6 +8,8 @@ import kr.green.sga.vo.UserVO;
 
 @Mapper
 public interface UserDAO {
+	UserVO getUser(UserVO userVO);
+	
 	// <!-- 01. insert_저장하기(회원가입하기) -->
 	void insertUser(UserVO userVO);
 

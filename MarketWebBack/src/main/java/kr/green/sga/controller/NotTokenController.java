@@ -2,8 +2,6 @@ package kr.green.sga.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -115,7 +113,7 @@ public class NotTokenController {
 		UserVO dbVO = null;
 		count = userService.findPw(user_id, user_email, user_name);
 		dbVO = userService.selectUserId(user_id);
-		if(count==1) {
+		if(count==1) { 
 			new_password = userService.makePassword(10);
 			log.info("NotTokenController-findPwPOST-임시 비밀번호 생성 : " + new_password);
 			dbVO.setUser_password(new_password);
