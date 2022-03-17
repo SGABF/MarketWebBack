@@ -1,0 +1,91 @@
+보드 로직
+	진행	글 쓰기
+	진행	글 1개 읽기
+	진행	글 수정하기
+	진행	글 삭제하기
+	진행	목록 읽기
+
+<!-- 01. insert_글 쓰기 -->
+	insertBoard
+		BoardMapper
+			parameter = BoardVO boardVO
+		BoardDAO
+			parameter = BoardVO boardVO
+		BoardService
+			parameter = BoardVO boardVO
+		BoardServiceImpl
+			parameter = BoardVO boardVO
+		BoardController			
+			parameter = BoardVO boardVO
+
+<!-- 02. select_글 1개 가져오기 -->
+	selectByIdx
+		BoardMapper
+			parameter = int board_idx
+			return    = BoardVO boardVO
+		BoardDAO
+			parameter = int board_idx
+			return    = BoardVO boardVO
+		BoardService
+			parameter = int board_idx
+			return    = BoardVO boardVO
+		BoardServiceImpl
+			parameter = int board_idx
+			return    = BoardVO boardVO
+		BoardController
+			null
+			
+<!-- 03. update_글 수정하기 -->
+	updateBoard
+		BoardMapper
+			parameter = BoardVO boardVO
+		BoardDAO
+			parameter = BoardVO boardVO
+		BoardService
+			parameter = BoardVO boardVO
+		BoardServiceImpl
+			parameter = BoardVO boardVO
+		BoardController
+			parameter = BoardVO boardVO
+			
+<!-- 04. delete_글 삭제하기 -->
+	deleteBoard
+		BoardMapper
+			parameter = int board_idx
+		BoardDAO
+			parameter = int board_idx
+		BoardService
+			parameter = BoardVO boardVO
+			// boardDAO.selectByIdx(boardVO.getBoard_idx()) 로 boardVO 객체 호출
+		BoardServiceImpl
+			parameter = BoardVO boardVO
+		BoardController	
+			parameter = BoardVO boardVO
+
+<!-- 05. select_개수얻기 -->
+	selectCount
+		BoardMapper
+			parameter = int board_idx
+		BoardDAO
+			parameter = int board_idx
+		BoardService
+			parameter = BoardVO boardVO
+			// boardDAO.selectByIdx(boardVO.getBoard_idx()) 로 boardVO 객체 호출
+		BoardServiceImpl
+			parameter = BoardVO boardVO
+		BoardController	
+			parameter = BoardVO boardVO	
+
+<!-- 06. select_한페이지 글 목록 가져오기 -->
+	selectList
+		BoardMapper
+			parameter = int board_idx
+		BoardDAO
+			parameter = int board_idx
+		BoardService
+			parameter = BoardVO boardVO
+			// boardDAO.selectBoardId(boardVO.getBoard_id()) 로 boardVO 객체 호출
+		BoardServiceImpl
+			parameter = BoardVO boardVO
+		BoardController	
+			parameter = BoardVO boardVO			

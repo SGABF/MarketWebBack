@@ -46,12 +46,12 @@ public class UserServiceImpl implements UserService {
 	// <!-- 02. select_1개 얻기 -->
 	public UserVO selectByIdx(int user_idx) {
 		log.info("UserServiceImpl-selectByIdx 호출 : " + user_idx);
-		UserVO userVO = null;
+		UserVO dbVO = null;
 		if (user_idx != 0) {
-			userVO = userDAO.selectByIdx(user_idx);
+			dbVO = userDAO.selectByIdx(user_idx);
 		}
-		log.info("UserServiceImpl-selectByIdx 리턴 : " + userVO);
-		return userVO;
+		log.info("UserServiceImpl-selectByIdx 리턴 : " + dbVO);
+		return dbVO;
 	}
 	
 //	원본 // 기존 비번 일치하면 수정되는 메서드
@@ -189,30 +189,30 @@ public class UserServiceImpl implements UserService {
 	// <!-- 8. select_이름과 전화번호로 VO 가져오기 -->
 	public UserVO selectByUsername(UserVO userVO) {
 		log.info("UserServiceImpl-selectByUsername 호출 : " + userVO);
-		UserVO vo = null;
+		UserVO dbVO = null;
 		if (userVO != null) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("user_name", userVO.getUser_name());
 			map.put("user_phone", userVO.getUser_phone());
-			vo = userDAO.selectByUsername(map);
+			dbVO = userDAO.selectByUsername(map);
 		}
-		log.info("UserServiceImpl-selectByUsername 리턴 : " + vo);
-		return vo;
+		log.info("UserServiceImpl-selectByUsername 리턴 : " + dbVO);
+		return dbVO;
 	}
 
 	@Override
 	// <!-- 50. ID로 가져오기 -->
 	public UserVO selectUserId(String user_id) {
 		log.info("UserServiceImpl-selectUserId 호출 : " + user_id);
-		UserVO userVO = null;
+		UserVO dbVO = null;
 		if (user_id != null) {
-			userVO = userDAO.selectUserId(user_id);
-			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 확인_" + userVO);
+			dbVO = userDAO.selectUserId(user_id);
+			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 확인_" + dbVO);
 		}
-		if (userVO == null) {
-			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 없음_" + userVO);
+		if (dbVO == null) {
+			log.info("UserServiceImpl-selectUserId 리턴 : 사용자 정보 없음_" + dbVO);
 		}
-		return userVO;
+		return dbVO;
 	}
 
 	// 임시비밀번호를 만들어주는 메서드

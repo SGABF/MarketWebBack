@@ -74,10 +74,9 @@
 	<select id="selectByUserId" parameterType="hashmap" resultType="UserVO">
 		select * from user where user_id=#{user_id} and user_email=#{user_email} and user_name=#{user_name}
 	</select>
-	
+
 <!-- ============================================================== --> 
-	
-	
+
 	<!-- 10. update_유저 벤 하기 -->
 	<update id="BannedUser" parameterType="hashmap">
 		update user set user_banned=#{user_banned} where user_idx=#{user_idx}
@@ -104,10 +103,11 @@
 	<select id="selectCountUserIdNameEmail" parameterType="Hashmap" resultType="int">
 		select count(*) from user where user_id=#{user_id} and user_email=#{user_email} and user_name=#{user_name}
 	</select>
-	
+
 	<!-- 55. select_CheckPassword 비밀번호 일치 여부 확인하기 -->
 	<select id="countCheckPassword" parameterType="Hashmap" resultType="int">
 		SELECT count(*) from user WHERE user_id=#{user_id} and user_password=#{user_password}
 	</select>
 	
 </mapper>
+
