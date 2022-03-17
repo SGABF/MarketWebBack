@@ -2,6 +2,8 @@ package kr.green.sga.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,17 +31,8 @@ public class NotTokenController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@RequestMapping(value = "/login")
-	public String LoginPage() {
-		return "/login-form";
-	}
-
-	@RequestMapping(value = "/test")
-	public String testPage() {
-		return "/index";
-	}
-
 	@RequestMapping(value = "/insertUser", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@GetMapping
 	public String insertUserGET(@RequestParam(required = false) UserVO userVO) {
 		log.info("UserController-insertUserGET 호출 : " + userVO);
 		// 추후 업데이트 예정 "잘못된 접근입니다."
@@ -47,6 +40,7 @@ public class NotTokenController {
 	}
 
 	@RequestMapping(value = "/insertUser", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@PostMapping
 	public String insertUserPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-insertUserPOST 호출 : " + userVO);
 //		userVO.setUser_password(UUID.randomUUID().toString());
@@ -57,6 +51,7 @@ public class NotTokenController {
 	}
 
 	@RequestMapping(value = "/idCheck", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@GetMapping
 	public String idCheckGET(@RequestParam(required = false) String user_id) {
 		log.info("NotTokenController-idCheckGET 호출 : " + user_id);
 		// 추후 업데이트 예정 "잘못된 접근입니다."
@@ -64,6 +59,7 @@ public class NotTokenController {
 	}
 
 	@RequestMapping(value = "/idCheck", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@PostMapping
 	public String idCheckPOST(@RequestParam(required = false) String user_id) {
 		// 0:없음/사용가능 1:있음/사용불가
 		log.info("NotTokenController-idCheckPOST 호출 : " + user_id);
@@ -91,6 +87,7 @@ public class NotTokenController {
 	}
 
 	@RequestMapping(value = "/findIdPOST", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@PostMapping
 	public String findIdPOST(@RequestParam(required = false) String user_name, String user_email)
 			throws JsonProcessingException {
 		log.info("NotTokenController-findIdPOST 호출 : " + "이름:" + user_name + ", 이메일:" + user_email);
@@ -105,6 +102,7 @@ public class NotTokenController {
 	}
 
 	@RequestMapping(value = "/findPwPOST", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@PostMapping
 	public String findPwPOST(@RequestParam(required = false) String user_id, String user_email, String user_name)
 			throws JsonProcessingException {
 		log.info("NotTokenController-findPwPOST 호출 : " + user_id + ", " + user_email + ", " + user_name);
@@ -126,6 +124,7 @@ public class NotTokenController {
 	}
 	
 	@RequestMapping(value = "/loginPOST", method = RequestMethod.POST)
+	@PostMapping
 	public String loginPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("NotTokenController-loginPOST 호출 : 유저Json_" + userVO);
 		UserVO dbVO = userService.selectUserId(userVO.getUser_id());

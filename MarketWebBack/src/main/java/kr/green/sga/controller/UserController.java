@@ -3,7 +3,9 @@ package kr.green.sga.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,31 +32,15 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@RequestMapping(value = "/index")
-	public String root() throws Exception {
-		System.out.println("root");
-		return "index";
-	}
-
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public String rootGET() {
-		System.out.println("get");
-		return "get";
-	}
-
-	@RequestMapping(value = "/post", method = RequestMethod.POST)
-	public String rootPOST() {
-		System.out.println("post");
-		return "post";
-	}
-
 	@RequestMapping(value = "/updateUser", method = RequestMethod.GET)
+	@GetMapping
 	public String updateUserGET(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updateUserGET 호출 : " + userVO);
 		return "";
 	}
 
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+	@PostMapping
 	public String updateUserPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updateUserPOST 호출 : " + userVO);
 		UserVO dbVO = userService.selectUserId(userVO.getUser_id());
@@ -68,6 +54,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
+	@GetMapping
 	public String deleteUserGET(@RequestParam(required = false) UserVO userVO)
 			throws JsonProcessingException {
 		log.info("UserController-deleteUserGET 호출 : " + userVO);
@@ -75,6 +62,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+	@PostMapping
 	public String deleteUserPOST(@RequestParam(required = false) String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
 		UserVO dbVO = userService.selectUserId(user_id);
@@ -89,12 +77,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/BannedUser", method = RequestMethod.GET)
+	@GetMapping
 	public String BannedUserGET(@RequestParam(required = false) int user_idx) {
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
 
 	@RequestMapping(value = "/BannedUser", method = RequestMethod.POST)
+	@PostMapping
 	public String BannedUserPOST(@RequestParam(required = false) int user_idx) throws JsonProcessingException {
 		log.info("UserController-BannedUserPOST 호출 : " + user_idx);
 		UserVO userVO = userService.selectByIdx(user_idx);
@@ -104,11 +94,13 @@ public class UserController {
 
 	// 비밀번호 변경
 	@RequestMapping(value = "/updatePassword", method = RequestMethod.GET)
+	@GetMapping
 	public void updatePasswordGET(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updatePasswordGET 호출 : " + userVO);
 	}
 
 	@RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+	@PostMapping
 	public void updatePasswordPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updatePasswordPOST 호출 : userVO_" + userVO);
 		if (userVO != null) {
@@ -120,12 +112,14 @@ public class UserController {
 	
 	// 비밀번호 확인
 	@RequestMapping(value = "/checkPassword", method = RequestMethod.GET)
+	@GetMapping
 	public String checkPasswordGET(@RequestBody UserVO userVO) throws JsonProcessingException {
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
 	
 	@RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
+	@PostMapping
 	public String checkPasswordPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-checkPasswordPOST 호출 : userVO_" + userVO);
 		int count = 0;

@@ -22,4 +22,4 @@ public class BackQnaVO {
 	private String back_Qna_Col1;
 	private String back_Qna_Col2;
 	private String back_Qna_Col3;
-	}
+}

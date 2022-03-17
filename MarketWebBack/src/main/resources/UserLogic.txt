@@ -1,4 +1,4 @@
-넘버링 유저 로직 
+유저 로직 
 
 <!-- 01. insert_저장하기(회원가입하기) -->
 	insertUser
@@ -11,8 +11,7 @@
 		UserServiceImpl
 			parameter = UserVO userVO
 		UserController
-			parameter = UserVO userVO, Model model
-			model.addAttribute("vo", userVO)
+			parameter = UserVO userVO
 			return	  = mapper.writeValueAsString(userVO)
 		
 <!-- 02. select_1개 얻기 -->
