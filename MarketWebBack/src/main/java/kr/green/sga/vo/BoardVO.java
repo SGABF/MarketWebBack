@@ -32,8 +32,8 @@ create table board(
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @XmlRootElement
+@Data
 public class BoardVO {
 	private int board_idx;
 	private String board_name;
@@ -50,10 +50,8 @@ public class BoardVO {
 	private String boardCol3;
 	private int user_idx;
 	
-	// 첨부파일
-	private List<BoardImageVO> boardImageList; 
-	private List<ReplyVO> replyList; 
-	private AuctionVO auctionVO; 
+	private List<BoardImageVO> BoardImageList; 
+
 }
 
 

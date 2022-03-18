@@ -19,15 +19,15 @@
 		board_content
 		)
 		values (
-		board_name = #{board_Name},
-		board_price = #{board_price},
-		board_soldout = #{board_soldout},
-		board_hit = #{board_hit},
-		board_sell_category = #{board_sell_category},
-		board_category = #{board_category},
-		board_auctionOnOff = #{board_auctionOnOff},
-		user_idx = #{user_idx},
-		board_content = #{board_content}
+		#{board_name},
+		#{board_price},
+		#{board_soldout},
+		#{board_hit},
+		#{board_sell_category},
+		#{board_category},
+		#{board_auctionOnOff},
+		#{user_idx},
+		#{board_content}
 		)
 	</insert>
 
@@ -66,7 +66,6 @@
 	<!-- 51. select_한페이지 글 목록 가져오기 -->
 	<select id="selectList" parameterType="hashmap" resultType="BoardVO">
 		select * from board order by board_idx desc
-		limit #{startNo}, #{pageSize}
 	</select>
 	
 	<!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->

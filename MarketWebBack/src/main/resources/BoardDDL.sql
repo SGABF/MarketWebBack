@@ -75,6 +75,9 @@ create table auctionOrder(
    foreign key (auction_idx) references auction(auction_idx),
    foreign key (user_idx) references user(user_idx)
 );
+
+
+
 CREATE table boardimage(
    boardImage_idx int auto_increment primary key,
    boardImage_saveName varchar(500) not null,
@@ -263,5 +266,12 @@ values (
 	'경매글테스트입니다'
 );
 
+select max(board_idx) from board
 
-		
+select * from board where user_idx=1;
+
+select user_id from board b user
+
+SELECT * FROM boardimage;
+
+SELECT * from board;

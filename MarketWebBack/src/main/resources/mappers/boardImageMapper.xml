@@ -6,7 +6,7 @@
 
 	<!-- 01. insert_첨부이미지 저장하기 -->
 	<insert id="insertBoardImage" parameterType="BoardImageVO">
-		insert into BoardImageVO
+		insert into boardimage
 		(board_idx,boardImage_saveName,boardImage_oriName)
 		values
 		(#{board_idx},#{boardImage_saveName},#{boardImage_oriName})
@@ -14,7 +14,7 @@
 	
 	<!-- 02. select_첨부 이미지 1개 가져오기 -->
 	<select id="selectByIdx" parameterType="int" resultType="BoardImageVO">
-		select * from BoardImageVO where boardImage_idx=#{boardImage_idx}
+		select * from boardimage where boardImage_idx=#{boardImage_idx}
 	</select>
 
 	<!-- 00. update_글 수정하기 -->
@@ -22,12 +22,12 @@
 
 	<!-- 03. delete_첨부 이미지 삭제하기 -->
 	<delete id="delete" parameterType="int">
-		delete from BoardImageVO where boardImage_idx=#{boardImage_idx}
+		delete from boardimage where boardImage_idx=#{boardImage_idx}
 	</delete>
 	
 	<!-- 04. 해당 board_idx의 첨부 이미지 가져오기 --> 
 	<select id="selectByRef" parameterType="int" resultType="BoardImageVO">
-		select * from BoardImageVO where board_idx=#{board_idx}
+		select * from boardimage where board_idx=#{board_idx}
 	</select>
 	
 </mapper>

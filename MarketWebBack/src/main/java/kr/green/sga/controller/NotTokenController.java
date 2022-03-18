@@ -43,10 +43,11 @@ public class NotTokenController {
 	@PostMapping
 	public String insertUserPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-insertUserPOST 호출 : " + userVO);
-//		userVO.setUser_password(UUID.randomUUID().toString());
-		userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
-		userService.insertUser(userVO); // DB에 저장
-		log.info("UserController-insertUserPOST 리턴 : \n userVO : " + userVO);
+		if (userVO != null) {
+			userVO.setUser_password(bCryptPasswordEncoder.encode(userVO.getUser_password())); // 비번 암호화
+			userService.insertUser(userVO); // DB에 저장
+			log.info("UserController-insertUserPOST 리턴 : \n userVO : " + userVO);
+		}
 		return mapper.writeValueAsString(userVO);
 	}
 
@@ -111,7 +112,7 @@ public class NotTokenController {
 		UserVO dbVO = null;
 		count = userService.findPw(user_id, user_email, user_name);
 		dbVO = userService.selectUserId(user_id);
-		if(count==1) { 
+		if (count == 1) {
 			new_password = userService.makePassword(10);
 			log.info("NotTokenController-findPwPOST-임시 비밀번호 생성 : " + new_password);
 			dbVO.setUser_password(new_password);
@@ -122,15 +123,15 @@ public class NotTokenController {
 		}
 		return mapper.writeValueAsString(new_password);
 	}
-	
+
 	@RequestMapping(value = "/loginPOST", method = RequestMethod.POST)
 	@PostMapping
 	public String loginPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("NotTokenController-loginPOST 호출 : 유저Json_" + userVO);
 		UserVO dbVO = userService.selectUserId(userVO.getUser_id());
-		if(userVO != null) {
+		if (userVO != null) {
 			dbVO = userService.selectByUserId(userVO);
-			if(dbVO == null) {
+			if (dbVO == null) {
 				log.info("NotTokenController-loginPOST 리턴 : 사용자 정보 없음.");
 			}
 		}
