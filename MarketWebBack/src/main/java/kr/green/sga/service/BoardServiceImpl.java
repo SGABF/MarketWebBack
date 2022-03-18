@@ -2,7 +2,6 @@ package kr.green.sga.service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,28 +28,46 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardImageDAO boardImageDAO;
 
-	public void insertBoard(BoardVO boardVO) {
-		log.info("BoardServiceImpl-insertBoard 호출 : " + boardVO);
+//	@Autowired
+//	private 
+
+	@Override
+	// <!-- 01. insert_글 쓰기 -->
+	// 토큰 보유시 동작
+	public void insertBoard(BoardVO boardVO, String user_id) {
+		log.info("BoardServiceImpl-insertBoard 호출 : 로그인 계정 " + user_id + " 게시글 작성시도 : " + boardVO + "\n");
+		UserVO originUserVO = null;
+		BoardVO saveBoardVO = null;
 		// boardVO에 넘겨 받은 값이 있다면
 		if (boardVO != null) {
-			boardDAO.insertBoard(boardVO);
-			log.info("BoardServiceImpl-insertBoard 게시글 저장 완료 : " + boardVO);
-			int ref = boardDAO.selectMaxIdx();
-			if (boardVO.getBoardImageList() != null) {
-				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 확인 : " + boardVO.getBoardImageList());
-				for (BoardImageVO boardImageVO : boardVO.getBoardImageList()) {
-					boardImageVO.setBoard_idx(ref);
-					boardImageDAO.insertBoardImage(boardImageVO);
-					log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 저장 완료 : " + boardVO.getBoardImageList());
-				}
+			originUserVO = userDAO.selectUserId(user_id);
+			boardVO.setUser_idx(originUserVO.getUser_idx());
+			log.info("BoardServiceImpl-insertBoard boardVO의 user_idx 외래키 처리 : boardVO.getUser_idx == " + boardVO.getUser_idx() + "originBoardVO.getUser_idx " + originUserVO.getUser_idx()); 
+			if (originUserVO != null && originUserVO.getUser_id().equals(user_id)) {
+				boardDAO.insertBoard(boardVO);
+				log.info("BoardServiceImpl-insertBoard 게시글 저장 완료 : " + boardVO);
 			} else {
-				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 없음. : " + boardVO.getBoardImageList());
-
+				log.info("BoardServiceImpl-insertBoard originUserVO.getUser_idx() != boardVO.getUser_idx()");
 			}
+//			if (boardVO.getBoardImageList() != null) {
+//				int ref = boardDAO.selectMaxIdx();
+//				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 확인 : " + boardVO.getBoardImageList());
+//				for (BoardImageVO boardImageVO : boardVO.getBoardImageList()) {
+//					boardImageVO.setBoard_idx(ref);
+//					boardImageDAO.insertBoardImage(boardImageVO);
+//					log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 저장 완료 : " + ref + " idx 글에 "
+//							+ boardVO.getBoardImageList() + "첨부이미지 저장완료");
+//				}
+//			} else {
+////				saveBoardVO = boardDAO.selectByIdx(selectMaxIdx());
+//				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 없음. 첨부 이미지가 없는 게시글 저장완료 저장된 게시글 : " + saveBoardVO);
+//			}
 		}
 	}
 
 	@Override
+	// <!-- 02. select_글 1개 가져오기 -->
+	// 토큰 보유 / 미보유 둘다 동작
 	public BoardVO selectByIdx(int board_idx) {
 		log.info("BoardServiceImpl-selectByIdx 호출 : " + board_idx);
 		BoardVO boardVO = null;
@@ -66,6 +83,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	// <!-- 03. update_글 수정하기 -->
+	// 토큰 보유시 동작
 	public void updateBoard(BoardVO boardVO, String path, String[] delfile, String user_id) {
 		log.info("BoardServiceImpl-updateBoard 호출 : " + boardVO + "\n 로그인 계정 : " + user_id);
 		BoardVO originBoardVO = null;
@@ -107,6 +126,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	// <!-- 04. delete_글 삭제하기 -->
+	// 토큰 보유시 동작.
 	public void deleteBoard(int board_idx, String path, String user_id) {
 		log.info("BoardServiceImpl-deleteBoard 호출 : " + board_idx + "번째 게시글, 로그인 계정 : " + user_id);
 		BoardVO dbVO = null;
@@ -132,11 +153,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	// <!-- 50. select_전체 개수얻기 -->
+	// 토큰 보유 / 미보유 둘다 동작
 	public int selectCount() {
 		log.info("BoardServiceImpl-selectCount 호출 ");
 		int count = 0;
 		count = boardDAO.selectCount();
-		if(count == 0) {
+		if (count == 0) {
 			log.info("BoardServiceImpl-selectCount 카운트 없음.");
 			;
 		}
@@ -145,6 +168,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	// <!-- 51. select_한페이지 글 목록 가져오기 -->
+	// 토큰 보유 / 미보유 둘다 동작
 	public List<BoardVO> selectList() {
 		log.info("BoardServiceImpl-selectList 호출");
 		List<BoardVO> list = null;
@@ -158,11 +183,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	// <!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	// 토큰 보유 / 미보유 둘다 동작
 	public int selectMaxIdx() {
 		log.info("BoardServiceImpl-selctMaxIdx 호출 ");
 		int maxIdx = 0;
 		maxIdx = boardDAO.selectMaxIdx();
-		if(maxIdx == 0) {
+		if (maxIdx == 0) {
 			log.info("BoardServiceImpl-selctMaxIdx idx 값 0.");
 			;
 		}
