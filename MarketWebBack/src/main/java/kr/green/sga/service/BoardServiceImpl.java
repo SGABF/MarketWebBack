@@ -49,19 +49,19 @@ public class BoardServiceImpl implements BoardService {
 			} else {
 				log.info("BoardServiceImpl-insertBoard originUserVO.getUser_idx() != boardVO.getUser_idx()");
 			}
-//			if (boardVO.getBoardImageList() != null) {
-//				int ref = boardDAO.selectMaxIdx();
-//				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 확인 : " + boardVO.getBoardImageList());
-//				for (BoardImageVO boardImageVO : boardVO.getBoardImageList()) {
-//					boardImageVO.setBoard_idx(ref);
-//					boardImageDAO.insertBoardImage(boardImageVO);
-//					log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 저장 완료 : " + ref + " idx 글에 "
-//							+ boardVO.getBoardImageList() + "첨부이미지 저장완료");
-//				}
-//			} else {
-////				saveBoardVO = boardDAO.selectByIdx(selectMaxIdx());
-//				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 없음. 첨부 이미지가 없는 게시글 저장완료 저장된 게시글 : " + saveBoardVO);
-//			}
+			if (boardVO.getBoardImageList() != null) {
+				int ref = boardDAO.selectMaxIdx();
+				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 확인 : " + boardVO.getBoardImageList());
+				for (BoardImageVO boardImageVO : boardVO.getBoardImageList()) {
+					boardImageVO.setBoard_idx(ref);
+					boardImageDAO.insertBoardImage(boardImageVO);
+					log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 저장 완료 : " + ref + " idx 글에 "
+							+ boardVO.getBoardImageList() + "첨부이미지 저장완료");
+				}
+			} else {
+				saveBoardVO = boardDAO.selectByIdx(selectMaxIdx());
+				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 없음. 첨부 이미지가 없는 게시글 저장완료 저장된 게시글 : " + saveBoardVO);
+			}
 		}
 	}
 
