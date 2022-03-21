@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.BoardImageDAO;
@@ -16,6 +17,7 @@ import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 @Service("boardService")
 public class BoardServiceImpl implements BoardService {
 
@@ -35,14 +37,15 @@ public class BoardServiceImpl implements BoardService {
 	// <!-- 01. insert_글 쓰기 -->
 	// 토큰 보유시 동작
 	public void insertBoard(BoardVO boardVO, String user_id) {
-		log.info("BoardServiceImpl-insertBoard 호출 : 로그인 계정 " + user_id + " 게시글 작성시도 : " + boardVO + "\n");
+		log.info("BoardServiceImpl-insertBoard 호출 : 현 로그인 계정 " + user_id + ", 게시글 작성시도 : " + boardVO + "\n");
 		UserVO originUserVO = null;
 		BoardVO saveBoardVO = null;
 		// boardVO에 넘겨 받은 값이 있다면
 		if (boardVO != null) {
 			originUserVO = userDAO.selectUserId(user_id);
 			boardVO.setUser_idx(originUserVO.getUser_idx());
-			log.info("BoardServiceImpl-insertBoard boardVO의 user_idx 외래키 처리 : boardVO.getUser_idx == " + boardVO.getUser_idx() + "originBoardVO.getUser_idx " + originUserVO.getUser_idx()); 
+			log.info("BoardServiceImpl-insertBoard boardVO의 user_idx 외래키 조회 boardVO.getUser_idx : "
+					+ boardVO.getUser_idx() + ", originBoardVO.getUser_idx : " + originUserVO.getUser_idx());
 			if (originUserVO != null && originUserVO.getUser_id().equals(user_id)) {
 				boardDAO.insertBoard(boardVO);
 				log.info("BoardServiceImpl-insertBoard 게시글 저장 완료 : " + boardVO);
@@ -52,9 +55,9 @@ public class BoardServiceImpl implements BoardService {
 			if (boardVO.getBoardImageList() != null) {
 				int ref = boardDAO.selectMaxIdx();
 				log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 확인 : " + boardVO.getBoardImageList());
-				for (BoardImageVO boardImageVO : boardVO.getBoardImageList()) {
-					boardImageVO.setBoard_idx(ref);
-					boardImageDAO.insertBoardImage(boardImageVO);
+				for (BoardImageVO boardImageFile : boardVO.getBoardImageList()) {
+//					boardImageFile.setBoard_idx(ref);
+					boardImageDAO.insertBoardImage(boardImageFile);
 					log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 저장 완료 : " + ref + " idx 글에 "
 							+ boardVO.getBoardImageList() + "첨부이미지 저장완료");
 				}

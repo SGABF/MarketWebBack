@@ -30,4 +30,9 @@
 		select * from boardimage where board_idx=#{board_idx}
 	</select>
 	
+	<!-- 05. select_한페이지 글 목록 가져오기 -->
+	<select id="selectList" parameterType="hashmap" resultType="BoardVO">
+		select * from boardimage order by boardImage_idx desc
+	</select>
+	
 </mapper>

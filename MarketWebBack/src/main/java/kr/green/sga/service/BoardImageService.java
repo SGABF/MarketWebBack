@@ -1,14 +1,11 @@
-package kr.green.sga.dao;
+package kr.green.sga.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import kr.green.sga.vo.BoardImageVO;
 
-@Mapper
-public interface BoardImageDAO {
-	
+public interface BoardImageService {
+
 	// <!-- 01. insert_첨부이미지 저장하기 -->
 	void insertBoardImage(BoardImageVO boardImageVO);
 	
