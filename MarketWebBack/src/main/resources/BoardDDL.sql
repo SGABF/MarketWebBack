@@ -275,3 +275,41 @@ select user_id from board b user
 SELECT * FROM boardimage;
 
 SELECT * from board;
+
+SELECT * from user;
+
+
+
+INSERT into board (
+		board_name,
+		board_price,
+		board_soldout,
+		board_hit,
+		board_sell_category,
+		board_category,
+		board_auctionOnOff,
+		user_idx,
+		board_content
+		)
+		values (
+		'test',
+		 3000,
+		 1,
+		 null,
+		1,
+		 1,
+		 null,
+		1,
+		'ㅎㅇ'
+		);
+		
+select * from board;
+
+select * from boardimage;
+
+select * from boardimage order by boardImage_idx DESC;
+
+select * from boardimage where board_idx=3;
+
+select * from boardimage where board_idx=1
+	

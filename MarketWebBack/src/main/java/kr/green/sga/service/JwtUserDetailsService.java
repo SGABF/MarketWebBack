@@ -49,15 +49,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 		if (username != null) {
 			dbVO = userService.selectUserId(username);
 			if (dbVO.getUser_banned() != 0) {
-				log.info("JwtUserDetailsService-loadUserByUsername 호출 : 정지된 계정의 로그인 시도");
+				log.info("JwtUserDetailsService-loadUserByUsername 호출 : 정지된 계정의 로그인 시도 \n");
 				throw new UsernameNotFoundException("정지된 계정의 로그인 시도 : " + username);
 			} else {
 				if (dbVO.getUser_id().equals(username)) {
 					// if()
-					log.info("JwtUserDetailsService-loadUserByUsername 호출 : 로그인 성공");
+					log.info("JwtUserDetailsService-loadUserByUsername 호출 : 로그인 성공 \n");
 					return new User(dbVO.getUser_id(), dbVO.getUser_password(), new ArrayList<>());
 				} else {
-					log.info("JwtUserDetailsService-loadUserByUsername 호출 : 사용자 못찾음");
+					log.info("JwtUserDetailsService-loadUserByUsername 호출 : 사용자 못찾음 \n");
 					throw new UsernameNotFoundException("사용자를 찾을 수 없습니다 : " + username);
 				}
 			}

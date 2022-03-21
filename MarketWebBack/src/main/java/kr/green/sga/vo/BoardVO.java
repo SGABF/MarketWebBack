@@ -51,7 +51,6 @@ public class BoardVO {
 	private int user_idx;
 	
 	private List<BoardImageVO> BoardImageList; 
-
 }
 
 
