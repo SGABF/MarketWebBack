@@ -25,14 +25,17 @@ public class BoardImageServiceImpl implements BoardImageService {
 	@Autowired
 	private UserDAO userDAO;
 
+	private String os = System.getProperty("os.name").toLowerCase();
+
 	@Override
 	public void insertBoardImage(BoardImageVO boardImageVO) {
 		log.info("BoardImageServiceImpl-insertBoardImage 호출 : " + boardImageVO);
 		if (boardImageVO != null) {
-				boardImageDAO.insertBoardImage(boardImageVO);
-				log.info("BoardImageServiceImpl-insertBoardImage 리턴 : 게시글 첨부 이미지 저장완료 " + boardImageVO);
-			} 
+			boardImageDAO.insertBoardImage(boardImageVO);
+			log.info("BoardServiceImpl-insertBoard 게시글의 첨부 이미지 저장 완료 : board_idx " + boardImageVO.getBoard_idx() + "번째 글에 " + boardImageVO
+					+ "첨부이미지 저장완료");
 		}
+	}
 
 	@Override
 	public BoardImageVO selectByIdx(int boardImage_idx) {

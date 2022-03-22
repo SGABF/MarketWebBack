@@ -2,6 +2,8 @@ package kr.green.sga.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.green.sga.vo.BoardImageVO;
 
 public interface BoardImageService {

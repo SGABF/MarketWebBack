@@ -26,4 +26,5 @@ public class BoardImageVO {
 	private String boardImageCol2;
 	private String boardImageCol3;
 	private int board_idx;
+	
 }
