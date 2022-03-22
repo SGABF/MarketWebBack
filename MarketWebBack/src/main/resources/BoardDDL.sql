@@ -313,3 +313,11 @@ select * from boardimage where board_idx=3;
 
 select * from boardimage where board_idx=1
 	
+
+select * from boardimage WHERE board_idx=26 
+
+select * from boardimage order by boardImage_idx desc
+
+select * from board order by board_idx desc
+
+select max(board_idx) from boardimage	

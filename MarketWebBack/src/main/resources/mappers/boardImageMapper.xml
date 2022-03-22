@@ -35,4 +35,9 @@
 		select * from boardimage order by boardImage_idx desc
 	</select>
 	
+	<!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	<select id="selectMaxIdx" resultType="int">
+		select max(board_idx) from boardimage	
+	</select>
+	
 </mapper>

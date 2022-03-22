@@ -29,4 +29,7 @@ public interface BoardImageDAO {
 	// <!-- 05.	전체 첨부파일 가져오기 -->
 	List<BoardImageVO> selectList();
 	
+	// <!-- 52. 가장 마지막 idx값 가져오기 -->
+	int selectMaxIdx();
+	
 }
