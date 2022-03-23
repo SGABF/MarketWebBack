@@ -48,7 +48,6 @@ public class BoardVO {
 	private String boardCol2;
 	private String boardCol3;
 	private int user_idx;
-	private String user_id;
 }
 
 

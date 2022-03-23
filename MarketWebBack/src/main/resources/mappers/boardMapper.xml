@@ -72,5 +72,10 @@
 	<select id="selectMaxIdx" resultType="int">
 		select max(board_idx) from board	
 	</select>
-
+	
+	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	<select id="selectDescLimit" parameterType="hashmap" resultType="BoardVO">
+		SELECT * FROM board ORDER BY board_idx DESC LIMIT 0, 8;	
+	</select>
+	
 </mapper>
