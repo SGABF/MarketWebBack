@@ -31,4 +31,8 @@ public interface BoardDAO {
 	
 	// 	<!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
 	int selectMaxIdx();
+	
+	// <!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	List<BoardVO> selectDescLimit();
+	
 }

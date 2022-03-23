@@ -7,9 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.UserService;
@@ -42,16 +41,16 @@ public class BoardController {
 
 	private String os = System.getProperty("os.name").toLowerCase();
 
-	@PostMapping(value = "board/insertBoard", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
-	public BoardVO insertBoardPOST(@RequestBody BoardVO boardVO,
+	@PostMapping(value = "board/insertBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public BoardVO insertBoardPOST(@RequestBody BoardVO boardVO, @RequestParam String user_id,
 			@RequestPart List<MultipartFile> multipartFiles) throws JsonProcessingException {
-		log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + boardVO.getUser_id() + ", 작성 시도 게시글 : " + boardVO);
+		log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
 		log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
-		UserVO dbUserVO = userService.selectUserId(boardVO.getUser_id());
+		UserVO dbUserVO = userService.selectUserId(user_id);
 		String path = "";
-		if (boardVO != null && dbUserVO.getUser_id().equals(boardVO.getUser_id())) {
-			boardService.insertBoard(boardVO, boardVO.getUser_id());
-		} 
+		if (boardVO != null && dbUserVO.getUser_id().equals(user_id)) {
+			boardService.insertBoard(boardVO, user_id);
+		}
 		if (multipartFiles != null) {
 			log.info("" + multipartFiles);
 			for (MultipartFile multipartFile : multipartFiles) {
@@ -68,7 +67,6 @@ public class BoardController {
 						}
 						String saveName = Long.toString(System.nanoTime()) + "_" + multipartFile.getOriginalFilename();
 						log.info("saveName : " + saveName);
-						
 
 						if (path != null && path != "") {
 							File target = new File(path, saveName);
@@ -79,7 +77,7 @@ public class BoardController {
 							boardImageVO.setBoardImage_saveName(saveName);
 							log.info("생성한 BoardImageVO 객체 내 BoardImage_saveName 주입중 : " + boardImageVO);
 							boardImageVO.setBoard_idx(ref);
-							log.info("생성한 BoardImageVO 객체 내 Board_idx 주입중 : " + boardImageVO);
+							log.info("생성한 BoardImageVO 객체 내 Board_idx 작성 게시글의 외래키 주입중 : " + boardImageVO + "\n");
 							boardImageService.insertBoardImage(boardImageVO);
 						}
 					} catch (IOException e) {
@@ -108,6 +106,16 @@ public class BoardController {
 			list = new ArrayList<BoardVO>(); // 빈 배열을 list에 담아 리턴 시킴.
 			return list;
 		}
+	}
+
+	@RequestMapping(value = "board/main", method = RequestMethod.POST)
+	@PostMapping
+	public List<BoardVO> selectDescLimitPOST() throws JsonProcessingException {
+		log.info("BoardController-selectListPOST 호출 : ");
+		UserVO originUserVO = null;
+		List<BoardVO> list = boardService.selectList();
+		log.info("BoardController-selectListPOST 리턴 : " + list);
+		return list;
 	}
 
 }

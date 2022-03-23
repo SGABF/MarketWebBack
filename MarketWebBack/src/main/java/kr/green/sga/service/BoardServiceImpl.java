@@ -177,4 +177,16 @@ public class BoardServiceImpl implements BoardService {
 		return maxIdx;
 	}
 
+	@Override
+	public List<BoardVO> selectDescLimit() {
+		List<BoardVO> list = null;
+		list = boardDAO.selectList();
+		if (list == null) {
+			log.info("BoardServiceImpl-selectList 등록된 글이 없음. 빈 VO객체 리턴함.");
+			list = new ArrayList<BoardVO>();
+		}
+		log.info("BoardServiceImpl-selectList 리턴 : " + list);
+		return list;
+	}
+
 }
