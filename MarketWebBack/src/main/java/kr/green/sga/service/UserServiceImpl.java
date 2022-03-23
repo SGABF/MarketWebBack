@@ -20,12 +20,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired(required = false)
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-	
+
 	@Override
 	public UserVO getUser(UserVO userVO) {
 		log.info("UserServiceImpl-getUser 호출 : " + userVO);
 		UserVO dbVO = null;
-		if(userVO != null) {
+		if (userVO != null) {
 			dbVO = userDAO.selectUserId(userVO.getUser_id());
 		}
 		return dbVO;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-selectByIdx 리턴 : " + dbVO);
 		return dbVO;
 	}
-	
+
 //	원본 // 기존 비번 일치하면 수정되는 메서드
 //	@Override
 //	// <!-- 03. update_수정하기(회원정보수정하기) -->
@@ -94,7 +94,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-
 	@Override
 	// <!-- 04. delete_삭제하기(회원탈퇴하기) -->
 	public void deleteUser(UserVO userVO) {
@@ -127,12 +126,15 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-findId 호출 : " + user_name + ", " + user_email);
 		UserVO dbVO = null;
 		String user_id = "";
-		if (user_name != null && user_email != null) {
-			dbVO = userDAO.selectByUserNameEmail(user_name, user_email);
+		dbVO = userDAO.selectByUserNameEmail(user_name, user_email);
+		if (dbVO != null) {
 			user_id = dbVO.getUser_id();
+			log.info("UserServiceImpl-findId 리턴 : " + user_id);
+			return user_id;
+		} else {
+			log.info("UserServiceImpl-findId 리턴 : " + user_id + " 없는 사용자.");
+			return "";
 		}
-		log.info("UserServiceImpl-findId 리턴 : " + user_id);
-		return user_id;
 	}
 
 	@Override
@@ -277,23 +279,22 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-countCheckPassword 호출 : " + userVO);
 		int count = 0;
 		UserVO dbVO = null;
-		if(userVO!=null) {
+		if (userVO != null) {
 			dbVO = userDAO.selectUserId(userVO.getUser_id());
 			log.info("UserServiceImpl-countCheckPassword 사용자 db정보확인_" + dbVO);
-			if(dbVO!=null) {
+			if (dbVO != null) {
 				// 인풋 받은 userVO의 password는 평문이고 평문과 dbVO의 bCryptPassword를 matches 해야 한다.
 				String bCryptPassword = dbVO.getUser_password(); // 암호화된 내용을 DB에서 가져옴
-				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), bCryptPassword)) { // 암호화된 비번 일치여부 확인				
+				if (bCryptPasswordEncoder.matches(userVO.getUser_password(), bCryptPassword)) { // 암호화된 비번 일치여부 확인
 					count = 1;
 					log.info("UserServiceImpl-countCheckPassword 리턴 : count_" + count);
 				} else {
 					log.info("UserServiceImpl-countCheckPassword 최종 리턴 : 입력한 비밀번호로 암호화된 정보 확인하였으나, 비밀번호 불일치");
 				}
-			} 		
+			}
 		}
 		log.info("UserServiceImpl-countCheckPassword 최종 리턴 : " + count);
 		return count;
 	}
-
 
 }
