@@ -321,3 +321,10 @@ select * from boardimage order by boardImage_idx desc
 select * from board order by board_idx desc
 
 select max(board_idx) from boardimage	
+
+SELECT * FROM board ORDER BY board_idx DESC
+
+SELECT * FROM board ORDER BY board_idx DESC LIMIT 0, 8
+
+select * from user;
+

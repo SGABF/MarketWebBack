@@ -37,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
 	// <!-- 01. insert_글 쓰기 -->
 	// 토큰 보유시 동작
 	public void insertBoard(BoardVO boardVO, String user_id) {
-		log.info("BoardServiceImpl-insertBoard 호출 : 현 로그인 계정 " + user_id + ", 게시글 작성시도 : " + boardVO + "\n");
+		log.info("BoardServiceImpl-insertBoard 호출 : 현 로그인 계정 " + user_id + " 게시글 작성시도 : " + boardVO + "\n");
 		UserVO dbUserVO = userDAO.selectUserId(user_id); // 유저 db VO
 		// boardVO에 넘겨 받은 값이 있다면
 		if (boardVO != null && dbUserVO.getUser_id().equals(user_id)) {
@@ -66,15 +66,17 @@ public class BoardServiceImpl implements BoardService {
 	// <!-- 03. update_글 수정하기 -->
 	// 토큰 보유시 동작
 	public void updateBoard(BoardVO boardVO, String path, String[] delfile, String user_id) {
-		log.info("BoardServiceImpl-updateBoard 호출 : " + boardVO + "\n 로그인 계정 : " + user_id);
-		BoardVO originBoardVO = null;
-		UserVO userVO = null;
-		if (boardVO != null) {
-			originBoardVO = boardDAO.selectByIdx(boardVO.getBoard_idx()); // 보드 디비 원본
-			userVO = userDAO.selectByIdx(boardVO.getUser_idx()); // 현재 접속한 유저의 디비
-//			if (originBoardVO != null && userVO.getUser_id().equals(user_id)) {
-//				log.info("BoardServiceImpl-updateBoard 수정 전 원본 글 확인");
-//				log.info("BoardServiceImpl-updateBoard 원본 글의 작성자와 로그인 계정의 일치여부 확인");
+//	public void updateBoard(BoardVO boardVO, String user_id) {
+//		log.info("BoardServiceImpl-updateBoard 호출1 : 로그인 계정 " + user_id);
+//		log.info("BoardServiceImpl-updateBoard 호출2 : 수정 시도 게시글 " + boardVO);
+//		BoardVO dbBoardVO = null;
+//		UserVO dbUserVO = null;
+//		if (boardVO != null) {
+//			dbBoardVO = boardDAO.selectByIdx(boardVO.getBoard_idx()); // 보드 디비 원본
+//			dbUserVO = userDAO.selectByIdx(boardVO.getUser_idx()); // 현재 접속한 유저의 디비
+//			if (dbBoardVO != null && dbUserVO.getUser_id().equals(user_id)) {
+//				log.info("BoardServiceImpl-updateBoard 수정 전 원본 글 확인 : " + dbBoardVO);
+//				log.info("BoardServiceImpl-updateBoard 원본 글의 작성자와 현 로그인 계정의 일치여부 확인 : " + dbUserVO);
 //				boardDAO.updateBoard(boardVO);
 //				log.info("BoardServiceImpl-updateBoard 게시글 수정 완료 : " + boardVO + " 첨부파일 존재여부 확인시도");
 //				if (boardVO.getBoardImageList() != null) {
@@ -100,10 +102,10 @@ public class BoardServiceImpl implements BoardService {
 //						}
 //					}
 //				}
-			}
-		}
+//			}
+//		}
 //		log.info("BoardServiceImpl-updateBoard 최종 수정완료");
-//	}
+	}
 
 	@Override
 	// <!-- 04. delete_글 삭제하기 -->
@@ -180,7 +182,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardVO> selectDescLimit() {
 		List<BoardVO> list = null;
-		list = boardDAO.selectList();
+		list = boardDAO.selectDescLimit();
 		if (list == null) {
 			log.info("BoardServiceImpl-selectList 등록된 글이 없음. 빈 VO객체 리턴함.");
 			list = new ArrayList<BoardVO>();

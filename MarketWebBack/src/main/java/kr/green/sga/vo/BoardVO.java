@@ -1,6 +1,7 @@
 package kr.green.sga.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -48,6 +49,10 @@ public class BoardVO {
 	private String boardCol2;
 	private String boardCol3;
 	private int user_idx;
+	// 첨부파일을 담을 컬럼.
+	private List<BoardImageVO> boardImageList;
+	// 댓글을 담을 컬럼.
+	private List<ReplyVO> replyList;
 }
 
 

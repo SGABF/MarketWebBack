@@ -1,10 +1,6 @@
 package kr.green.sga.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.UserService;
-import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +25,7 @@ public class NotTokenController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private BoardService boardService;
 
@@ -99,8 +94,7 @@ public class NotTokenController {
 
 	@RequestMapping(value = "/findId", method = RequestMethod.POST)
 	@PostMapping
-	public String findIdPOST(@RequestBody(required = false) UserVO userVO)
-			throws JsonProcessingException {
+	public String findIdPOST(@RequestBody(required = false) UserVO userVO) throws JsonProcessingException {
 		log.info("NotTokenController-findIdPOST 호출 : 이름 " + userVO.getUser_name() + ", 이메일 " + userVO.getUser_email());
 		String user_id = "";
 		if (userVO.getUser_name() != null && userVO.getUser_email() != null) {
@@ -116,8 +110,7 @@ public class NotTokenController {
 
 	@RequestMapping(value = "/findPw", method = RequestMethod.POST)
 	@PostMapping
-	public String findPwPOST(@RequestBody(required = false) UserVO userVO)
-			throws JsonProcessingException {
+	public String findPwPOST(@RequestBody(required = false) UserVO userVO) throws JsonProcessingException {
 		String user_id = userVO.getUser_id();
 		String user_email = userVO.getUser_email();
 		String user_name = userVO.getUser_name();
@@ -153,31 +146,10 @@ public class NotTokenController {
 		log.info("NotTokenController-loginPOST 리턴 : dbVO.getUser_id()_" + dbVO.getUser_id());
 		return dbVO.getUser_id();
 	}
-	
 
-	@RequestMapping(value = "board/main", method = RequestMethod.GET)
+	@RequestMapping(value = "test", method = RequestMethod.GET)
 	@GetMapping
-	public String test(){
+	public String test() {
 		return "hi";
-	}
-	
-	
-	@RequestMapping(value = "board/selectList", method = RequestMethod.POST)
-	@PostMapping
-	public List<BoardVO> selectListPOST() throws JsonProcessingException {
-		log.info("BoardController-selectListPOST 호출 : ");
-		List<BoardVO> list = null;
-			list = boardService.selectList();
-			log.info("BoardController-selectListPOST 게시글 리스트 가져오기 완료");
-			return list;
-	}
-
-	@RequestMapping(value = "board/main", method = RequestMethod.POST)
-	@PostMapping
-	public List<BoardVO> selectDescLimitPOST() throws JsonProcessingException {
-		log.info("BoardController-selectListPOST 호출 : ");
-		List<BoardVO> list = boardService.selectDescLimit();
-		log.info("BoardController-selectListPOST 리턴 : " + list);
-		return list;
 	}
 }
