@@ -7,10 +7,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequestMapping(name = "/board")
 public class BoardController {
 
 	@Autowired
@@ -41,81 +41,121 @@ public class BoardController {
 
 	private String os = System.getProperty("os.name").toLowerCase();
 
-	@PostMapping(value = "board/insertBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public BoardVO insertBoardPOST(@RequestBody BoardVO boardVO, @RequestParam String user_id,
-			@RequestPart List<MultipartFile> multipartFiles) throws JsonProcessingException {
-		log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
-		log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
-		UserVO dbUserVO = userService.selectUserId(user_id);
+	@PostMapping(value = "/insertBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public BoardVO insertBoardPOST(@RequestBody BoardVO boardVO, @RequestBody UserVO userVO,
+			@RequestPart(required = false) List<MultipartFile> multipartFiles) throws JsonProcessingException {
+		UserVO dbUserVO = null;
+		String user_id = null;
 		String path = "";
-		if (boardVO != null && dbUserVO.getUser_id().equals(user_id)) {
+		if (boardVO != null) {
+			dbUserVO = userService.selectUserId(userVO.getUser_id());
+			user_id = dbUserVO.getUser_id();
+			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + userVO.getUser_id() + ", 작성 시도 게시글 : "
+					+ boardVO);
+			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
 			boardService.insertBoard(boardVO, user_id);
-		}
-		if (multipartFiles != null) {
-			log.info("" + multipartFiles);
-			for (MultipartFile multipartFile : multipartFiles) {
-				if (multipartFile != null && multipartFile.getSize() > 0) {
-					BoardImageVO boardImageVO = new BoardImageVO();
-					log.info("새로운 BoardImageVO 객체 생성 완료 : " + boardImageVO);
-					try {
-						if (os.contains("win")) {
-							path = "C:/image/";
-							log.info("wind path");
-						} else {
-							path = "/resources/Back/";
-							log.info("linux path");
-						}
-						String saveName = Long.toString(System.nanoTime()) + "_" + multipartFile.getOriginalFilename();
-						log.info("saveName : " + saveName);
+			if (multipartFiles != null) {
+				List<BoardImageVO> fileList = new ArrayList<>();
+				for (MultipartFile multipartFile : multipartFiles) {
+					if (multipartFile != null && multipartFile.getSize() > 0) {
+						BoardImageVO boardImageVO = new BoardImageVO();
+						log.info("새로운 BoardImageVO 객체 생성 완료 : " + boardImageVO);
+						try {
+							if (os.contains("win")) {
+								path = "C:/image/";
+								log.info("wind path");
+							} else {
+								path = "/resources/Back/";
+								log.info("linux path");
+							}
+							String saveName = Long.toString(System.nanoTime()) + "_"
+									+ multipartFile.getOriginalFilename();
+							log.info("saveName : " + saveName);
 
-						if (path != null && path != "") {
-							File target = new File(path, saveName);
-							int ref = boardService.selectMaxIdx();
-							multipartFile.transferTo(target);
-							boardImageVO.setBoardImage_oriName(multipartFile.getOriginalFilename());
-							log.info("생성한 BoardImageVO 객체 내 BoardImage_oriName 주입중 : " + boardImageVO);
-							boardImageVO.setBoardImage_saveName(saveName);
-							log.info("생성한 BoardImageVO 객체 내 BoardImage_saveName 주입중 : " + boardImageVO);
-							boardImageVO.setBoard_idx(ref);
-							log.info("생성한 BoardImageVO 객체 내 Board_idx 작성 게시글의 외래키 주입중 : " + boardImageVO + "\n");
-							boardImageService.insertBoardImage(boardImageVO);
+							if (path != null && path != "") {
+								File target = new File(path, saveName);
+								int boardMaxIdx = boardService.selectMaxIdx();
+								multipartFile.transferTo(target);
+								boardImageVO.setBoardImage_oriName(multipartFile.getOriginalFilename());
+								log.info("생성한 BoardImageVO 객체 내 BoardImage_oriName set완료 : " + boardImageVO);
+								boardImageVO.setBoardImage_saveName(saveName);
+								log.info("생성한 BoardImageVO 객체 내 BoardImage_saveName set완료 : " + boardImageVO);
+								boardImageVO.setBoard_idx(boardMaxIdx);
+								log.info("생성한 BoardImageVO 객체 내 Board_idx 외래키 set완료 : " + boardImageVO + "\n");
+								fileList.add(boardImageVO);
+								log.info("생성한 List<BoardImageVO> 리스트에 BoardImageVO 최종 add 완료 : " + fileList);
+								boardImageService.insertBoardImage(boardImageVO);
+								log.info("board_idx 외래키 set 작업한 BoardImageVO 저장 \n");
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+					} // if (multipartFile != null && multipartFile.getSize() > 0) {
+				} // for (MultipartFile multipartFile : multipartFiles) {
+			} // if (multipartFiles != null) {
+		} // if (boardVO != null && user_id != null) {
 		log.info("BoardController-insertBoardPOST 리턴 : " + boardVO);
 		return boardVO;
 	}
 
-	@RequestMapping(value = "board/selectList", method = RequestMethod.POST)
-	@PostMapping
-	public List<BoardVO> selectListPOST(@RequestParam(required = false) String user_id) throws JsonProcessingException {
-		log.info("BoardController-selectListPOST 호출 : 현재 로그인 계정 " + user_id + "\n");
-		UserVO originUserVO = null;
-		List<BoardVO> list = null;
-		originUserVO = userService.selectUserId(user_id);
-		if (originUserVO != null && originUserVO.getUser_id().equals(user_id)) {
-			list = boardService.selectList();
-			log.info("BoardController-selectListPOST 게시글 리스트 가져오기 완료");
-			return list;
-		} else {
-			log.info("BoardController-selectListPOST 비정상적인 접근_DB에 현 로그인 계정이 없음 : 빈 목록 출력");
-			list = new ArrayList<BoardVO>(); // 빈 배열을 list에 담아 리턴 시킴.
-			return list;
-		}
+	@PostMapping(value = "/updateBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public BoardVO updateBoardPOST(@RequestBody BoardVO boardVO, @RequestBody UserVO userVO,
+			@RequestPart List<MultipartFile> multipartFiles) throws JsonProcessingException {
+		UserVO dbUserVO = userService.selectUserId(userVO.getUser_id());
+		String user_id = dbUserVO.getUser_id();
+		String path = "";
+		if (boardVO != null && dbUserVO.getUser_id() != null) {
+			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + dbUserVO.getUser_id() + ", 수정 시도 게시글 : "
+					+ boardVO);
+			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
+			boardService.updateBoard(boardVO, user_id, null, path);
+			if (multipartFiles != null) {
+				List<BoardImageVO> fileList = new ArrayList<>();
+				for (MultipartFile multipartFile : multipartFiles) {
+					if (multipartFile != null && multipartFile.getSize() > 0) {
+						BoardImageVO boardImageVO = new BoardImageVO();
+						log.info("새로운 BoardImageVO 객체 생성 완료 : " + boardImageVO);
+						try {
+							if (os.contains("win")) {
+								path = "C:/image/";
+								log.info("wind path");
+							} else {
+								path = "/resources/Back/";
+								log.info("linux path");
+							}
+							String saveName = Long.toString(System.nanoTime()) + "_"
+									+ multipartFile.getOriginalFilename();
+							log.info("saveName : " + saveName);
+
+							if (path != null && path != "") {
+								File target = new File(path, saveName);
+								int boardMaxIdx = boardService.selectMaxIdx();
+								multipartFile.transferTo(target);
+								boardImageVO.setBoardImage_oriName(multipartFile.getOriginalFilename());
+								log.info("생성한 BoardImageVO 객체 내 BoardImage_oriName set완료 : " + boardImageVO);
+								boardImageVO.setBoardImage_saveName(saveName);
+								log.info("생성한 BoardImageVO 객체 내 BoardImage_saveName set완료 : " + boardImageVO);
+								boardImageVO.setBoard_idx(boardMaxIdx);
+								log.info("생성한 BoardImageVO 객체 내 Board_idx 외래키 set완료 : " + boardImageVO + "\n");
+								fileList.add(boardImageVO);
+								log.info("생성한 List<BoardImageVO> 리스트에 BoardImageVO 최종 add 완료 : " + fileList);
+								boardImageService.insertBoardImage(boardImageVO);
+								log.info("board_idx 외래키 set 작업한 BoardImageVO 저장 \n");
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} // if (multipartFile != null && multipartFile.getSize() > 0) {
+				} // for (MultipartFile multipartFile : multipartFiles) {
+			} // if (multipartFiles != null) {
+		} // if (boardVO != null && user_id != null) {
+		log.info("BoardController-insertBoardPOST 리턴 : " + boardVO);
+		return boardVO;
 	}
 
-	@RequestMapping(value = "board/main", method = RequestMethod.POST)
-	@PostMapping
-	public List<BoardVO> selectDescLimitPOST() throws JsonProcessingException {
-		log.info("BoardController-selectListPOST 호출 : ");
-		UserVO originUserVO = null;
-		List<BoardVO> list = boardService.selectList();
-		log.info("BoardController-selectListPOST 리턴 : " + list);
-		return list;
+	@GetMapping(value = "/test")
+	public String test() {
+		return "hi";
 	}
 
 }
