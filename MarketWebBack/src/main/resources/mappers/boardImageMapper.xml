@@ -20,9 +20,14 @@
 	<!-- 00. update_글 수정하기 -->
 	<!-- 이미지는 수정할 일이 없다. 다시 삭제 하고 다시 올리면 된다. -->
 
-	<!-- 03. delete_첨부 이미지 삭제하기 -->
-	<delete id="delete" parameterType="int">
+	<!-- 03. delete_boardImage_idx -->
+	<delete id="deleteByIdx" parameterType="int">
 		delete from boardimage where boardImage_idx=#{boardImage_idx}
+	</delete>
+
+	<!-- 03. delete_board_idx -->
+	<delete id="deleteByBoardIdx" parameterType="int">
+		delete from boardimage where board_idx=#{board_idx}
 	</delete>
 	
 	<!-- 04. 해당 board_idx의 첨부 이미지 가져오기 --> 
@@ -31,7 +36,7 @@
 	</select>
 	
 	<!-- 05. select_한페이지 글 목록 가져오기 -->
-	<select id="selectList" parameterType="hashmap" resultType="BoardVO">
+	<select id="selectList" resultType="BoardVO">
 		select * from boardimage order by boardImage_idx desc
 	</select>
 	

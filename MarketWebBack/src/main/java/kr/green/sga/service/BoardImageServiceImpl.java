@@ -50,14 +50,15 @@ public class BoardImageServiceImpl implements BoardImageService {
 	}
 
 	@Override
-	public void deleteBoardImage(int boardImage_idx) {
-		log.info("BoardImageServiceImpl-deleteBoardImage 호출 : " + boardImage_idx + "번째 첨부파일");
+	public void deleteBoardImage(BoardImageVO boardImageVO, String path) {
+		log.info("BoardImageServiceImpl-deleteBoardImage 호출1 : 삭제 시도하는 board" + boardImageVO.getBoardImage_idx() + "번째 첨부파일 ");
+		log.info("BoardImageServiceImpl-deleteBoardImage 호출2 : 삭제 시도하는 파일 경로 " + path);
 		BoardImageVO dbBoardImageVO = null;
-		dbBoardImageVO = boardImageDAO.selectByIdx(boardImage_idx); //
+		dbBoardImageVO = boardImageDAO.selectByIdx(boardImageVO.getBoardImage_idx()); //
 		if (dbBoardImageVO.getBoard_idx() != 0 && dbBoardImageVO.getBoardImage_idx() != 0) {
-			log.info("BoardServiceImpl-deleteBoard 호출 : " + dbBoardImageVO.getBoard_idx() + "번째 게시글의 " + boardImage_idx
+			log.info("BoardServiceImpl-deleteBoard 호출 : " + dbBoardImageVO.getBoard_idx() + "번째 게시글의 " + boardImageVO.getBoardImage_idx()
 					+ "번째 첨부파일 확인");
-			boardImageDAO.deleteBoardImage(boardImage_idx);
+			boardImageDAO.deleteByIdx(boardImageVO.getBoardImage_idx());
 		} else {
 			log.info("BoardImageServiceImpl-deleteBoardImage 잘못된 접근");
 		}

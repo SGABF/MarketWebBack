@@ -16,7 +16,7 @@ public interface BoardService {
 	void updateBoard(BoardVO boardVO, String path, String[] delfile, String user_id);
 
 	//	<!-- 04. delete_글 삭제하기 -->
-	void deleteBoard(int board_idx, String path, String user_id);
+	void deleteBoard(BoardVO boardVO, String path);
 	
 	//	<!-- 50. select_전체 개수얻기 -->
 	int selectCount();

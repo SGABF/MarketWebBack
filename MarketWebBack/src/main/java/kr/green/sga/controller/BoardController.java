@@ -153,6 +153,31 @@ public class BoardController {
 		return boardVO;
 	}
 
+	@PostMapping(value = "/deleteBoard")
+	public BoardVO deleteBoardPOST(@RequestBody BoardVO boardVO, @RequestBody UserVO userVO)
+			throws JsonProcessingException {
+		log.info("BoardController-deleteBoardPOST 호출1 : 현재 로그인 계정 " + userVO.getUser_id());
+		log.info("BoardController-deleteBoardPOST 호출2 : 삭제 시도 게시글 " + boardVO);
+		if (boardVO != null && userVO != null) {
+		String path = "";
+		UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
+			if(boardUserVO.getUser_id().equals(userVO.getUser_id())) {
+				log.info("BoardController-deleteBoardPOST 게시글의 작성자와 삭제 요청자의 일치 확인");
+				if (os.contains("win")) {
+					path = "C:/image/";
+					log.info("wind path");
+				} else {
+					path = "/resources/Back/";
+					log.info("linux path");
+				}
+				boardService.deleteBoard(boardVO, path);
+			}
+		}
+		log.info("BoardController-deleteBoardPOST 리턴 : 삭제 성공 ");
+		return boardVO;
+	}
+
+	
 	@GetMapping(value = "/test")
 	public String test() {
 		return "hi";

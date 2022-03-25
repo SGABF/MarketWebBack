@@ -18,7 +18,7 @@ public interface BoardImageService {
 	// 이미지는 수정할 일이 없다. 다시 삭제 하고 다시 올리면 된다. 
 	
 	// <!-- 03. delete_첨부 이미지 삭제하기 -->
-	void deleteBoardImage(int boardImage_idx);
+	void deleteBoardImage(BoardImageVO boardImageVO, String path);
 
 	// --------------------------------------------------
 	
