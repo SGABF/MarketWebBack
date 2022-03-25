@@ -27,7 +27,7 @@ create table board(
    board_idx int auto_increment primary key,
    board_name varchar(10) not null,
    board_price int not null,
-   board_soldout int not null,
+   board_soldout int default 1,
    board_hit int default 0,
    board_sell_category int not null,
    board_regDate Datetime default now(),
@@ -314,7 +314,7 @@ select * from boardimage where board_idx=3;
 select * from boardimage where board_idx=1
 	
 
-select * from boardimage WHERE board_idx=26 
+select * from boardimage WHERE board_idx=4
 
 select * from boardimage order by boardImage_idx desc
 
@@ -328,3 +328,18 @@ SELECT * FROM board ORDER BY board_idx DESC LIMIT 0, 8
 
 select * from user;
 
+SELECT * FROM board;
+
+SELECT * FROM board where board_idx=4
+
+select * from boardimage
+
+select * from board where board_idx=14
+
+delete from board where board_idx=4
+
+select * from reply r 
+
+insert into reply (reply_content, board_idx, user_idx) values ('이걸 누가 삼 ㄹㅇㅋㅋ', 4, 1)
+
+delete from reply where board_idx=4

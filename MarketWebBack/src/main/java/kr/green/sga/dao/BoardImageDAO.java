@@ -18,8 +18,11 @@ public interface BoardImageDAO {
 	// <!-- 00. update_글 수정하기 -->
 	// 이미지는 수정할 일이 없다. 다시 삭제 하고 다시 올리면 된다. 
 	
-	// <!-- 03. delete_첨부 이미지 삭제하기 -->
-	void deleteBoardImage(int boardImage_idx);
+	// <!-- 03. delete_이미지 boardImage_idx 삭제하기 -->
+	void deleteByIdx(int boardImage_idx);
+	
+	// <!-- 03. delete_board_idx -->
+	void deleteByBoardIdx(int board_idx);
 
 	// --------------------------------------------------
 	
