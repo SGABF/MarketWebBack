@@ -28,7 +28,7 @@
 		set
 		reply_content = #{board_content}
 		where
-		board_idx = #{board_idx}
+		reply_idx = #{reply_idx}
 	</update>
 
 	<!-- 04. delete_글 삭제하기 -->
