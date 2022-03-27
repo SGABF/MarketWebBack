@@ -348,11 +348,17 @@ INSERT into reply (
 		reply_content, board_idx, user_idx
 		)
 		values (
-		'1번 게시물의 댓글입니다. 난 빅맥 시렁 베토디 좋아',
-		1,
+		'1번 게시물의 댓글입니다. 여래신장을 누가 사냐 ㅋㅋ',
+		4,
 		1
 		)
 
 select * from reply;
 
-select * from reply where reply_idx = 3
+select * from reply where board_idx = 4
+
+select * from board where board_idx =4;
+
+select * from board
+
+select * from reply where board_idx = 4

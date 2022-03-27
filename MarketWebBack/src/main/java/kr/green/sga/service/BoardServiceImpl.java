@@ -178,14 +178,14 @@ public class BoardServiceImpl implements BoardService {
 	// <!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
 	// 토큰 보유 / 미보유 둘다 동작
 	public int selectMaxIdx() {
-		log.info("BoardServiceImpl-selctMaxIdx 호출 ");
+		log.info("BoardServiceImpl-selectMaxIdx 호출 ");
 		int maxIdx = 0;
 		maxIdx = boardDAO.selectMaxIdx();
 		if (maxIdx == 0) {
-			log.info("BoardServiceImpl-selctMaxIdx idx 값 0.");
+			log.info("BoardServiceImpl-selectMaxIdx idx 값 0.");
 			;
 		}
-		log.info("BoardServiceImpl-selctMaxIdx 리턴 " + maxIdx);
+		log.info("BoardServiceImpl-selectMaxIdx 리턴 " + maxIdx);
 		return maxIdx;
 	}
 
