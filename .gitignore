@@ -2,3 +2,6 @@
 MarketWebBack/src/main/resources/application.properties
 *.json
 *.bak
+MarketWebBack/src/main/resources/application.properties
+*.properties
+*.properties
