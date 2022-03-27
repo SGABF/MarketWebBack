@@ -343,3 +343,16 @@ select * from reply r
 insert into reply (reply_content, board_idx, user_idx) values ('이걸 누가 삼 ㄹㅇㅋㅋ', 4, 1)
 
 delete from reply where board_idx=4
+
+INSERT into reply (
+		reply_content, board_idx, user_idx
+		)
+		values (
+		'1번 게시물의 댓글입니다. 난 빅맥 시렁 베토디 좋아',
+		1,
+		1
+		)
+
+select * from reply;
+
+select * from reply where reply_idx = 3
