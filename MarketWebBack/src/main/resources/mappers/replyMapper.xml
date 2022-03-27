@@ -6,76 +6,56 @@
 <mapper namespace="kr.green.sga.dao.ReplyDAO">
 
 	<!-- 01. insert_글 쓰기 -->
-	<insert id="insertReply" parameterType="BoardVO">
-		INSERT into board (
-		board_name,
-		board_price,
-		board_soldout,
-		board_hit,
-		board_sell_category,
-		board_category,
-		board_auctionOnOff,
-		user_idx,
-		board_content
+	<insert id="insertReply" parameterType="ReplyVO">
+		INSERT into reply (
+		reply_content, board_idx, user_idx
 		)
 		values (
-		#{board_name},
-		#{board_price},
-		#{board_soldout},
-		#{board_hit},
-		#{board_sell_category},
-		#{board_category},
-		#{board_auctionOnOff},
-		#{user_idx},
-		#{board_content}
+		#{reply_content},
+		#{board_idx},
+		#{user_idx}
 		)
 	</insert>
 
 	<!-- 02. select_글 1개 가져오기 -->
-	<select id="selectByIdx" parameterType="int" resultType="BoardVO">
-		select * from board where board_idx= #{board_idx}
+	<select id="selectByIdx" parameterType="int" resultType="ReplyVO">
+		select * from reply where reply_idx = #{reply_idx}
 	</select>
 
 	<!-- 03. update_글 수정하기 -->
 	<update id="updateReply" parameterType="ReplyVO">
-		update board
+		update reply
 		set
-		board_name = #{board_name},
-		board_content = #{board_content},
-		board_price = #{board_price},
-		board_soldout = #{board_soldout},
-		board_sell_category = #{board_sell_category},
-		board_category = #{board_category},
-		board_auctionOnOff = #{board_auctionOnOff}
+		reply_content = #{board_content}
 		where
 		board_idx = #{board_idx}
 	</update>
 
 	<!-- 04. delete_글 삭제하기 -->
-	<delete id="deleteReply" parameterType="int">
-		delete from board where board_Idx = #{board_Idx}
+	<delete id="deleteByIdx" parameterType="int">
+		delete from reply where reply_idx = #{reply_idx}
 	</delete>
-
+	
+	<!-- 04. delete_board_idx -->
+	<delete id="deleteByBoardIdx" parameterType="int">
+		delete from reply where board_idx=#{board_idx}
+	</delete>
+	
+	<!-- 05. 해당 board_idx의 첨부 이미지 가져오기 --> 
+	<select id="selectByRef" parameterType="int" resultType="ReplyVO">
+		select * from reply where board_idx = #{board_idx}
+	</select>
+	
 	<!-- ========================================================================= -->
 
-	<!-- 50. select_전체 개수얻기 -->
-	<select id="selectCount" resultType="int">
-		select count(*) from board
-	</select>
-
-	<!-- 51. select_한페이지 글 목록 가져오기 -->
-	<select id="selectList" parameterType="hashmap" resultType="BoardVO">
-		select * from board order by board_idx desc
+	<!-- 06. select_한페이지 글 목록 가져오기 -->
+	<select id="selectList" parameterType="hashmap" resultType="ReplyVO">
+		select * from reply order by reply_idx desc
 	</select>
 	
 	<!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
 	<select id="selectMaxIdx" resultType="int">
-		select max(board_idx) from board	
-	</select>
-	
-	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
-	<select id="selectDescLimit" parameterType="hashmap" resultType="BoardVO">
-		SELECT * FROM board ORDER BY board_idx DESC LIMIT 0, 8
+		select max(reply_idx) from reply	
 	</select>
 	
 </mapper>
