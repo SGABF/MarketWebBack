@@ -57,6 +57,6 @@ public interface UserDAO {
 
 	// <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->	
 	// 로그인 성공 후 회원정보 수정 페이지 진입하기 전 비번 재확인  
-	int countCheckPassword(HashMap<String, String> map);
+	int countCheckPassword(String user_id, String user_password);
 	
 }

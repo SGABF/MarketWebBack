@@ -57,6 +57,6 @@ public interface UserService {
 	UserVO selectUserId(String user_id);
 	
 	// <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->
-	int countCheckPassword(UserVO userVO);
+	int countCheckPassword(String user_id, String user_password);
 
 }
