@@ -50,6 +50,19 @@ public class BoardImageServiceImpl implements BoardImageService {
 	}
 
 	@Override
+	public void deleteByIdx(int boardImage_idx) {
+		log.info("BoardImageServiceImpl-deleteByIdx 호출 : 삭제 시도하는 boardImage_idx " + boardImage_idx);
+		BoardImageVO dbBoardImageVO = null;
+		if(boardImage_idx != 0) {
+			dbBoardImageVO = boardImageDAO.selectByIdx(boardImage_idx);
+			if(dbBoardImageVO != null) {
+				boardImageDAO.deleteByIdx(boardImage_idx);
+				log.info("BoardImageServiceImpl-deleteByIdx 리턴 : 삭제 완료 boardImage_idx " + boardImage_idx);
+			}
+		}
+	}
+
+	@Override
 	public void deleteBoardImage(BoardImageVO boardImageVO, String path) {
 		log.info("BoardImageServiceImpl-deleteBoardImage 호출1 : 삭제 시도하는 board" + boardImageVO.getBoardImage_idx() + "번째 첨부파일 ");
 		log.info("BoardImageServiceImpl-deleteBoardImage 호출2 : 삭제 시도하는 파일 경로 " + path);
@@ -88,5 +101,6 @@ public class BoardImageServiceImpl implements BoardImageService {
 		log.info("BoardImageServiceImpl-selectList 리턴 : " + list);
 		return list;
 	}
+
 
 }

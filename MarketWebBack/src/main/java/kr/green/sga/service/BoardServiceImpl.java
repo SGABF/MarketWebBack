@@ -12,10 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.BoardImageDAO;
+import kr.green.sga.dao.ReplyDAO;
 import kr.green.sga.dao.UserDAO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.ReplyImageVO;
+import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +34,11 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	private BoardImageDAO boardImageDAO;
+
+	@Autowired
+	private ReplyDAO replyDAO;
+	
+	private String os = System.getProperty("os.name").toLowerCase();
 
 	@Override
 	// <!-- 01. insert_글 쓰기 -->
@@ -69,46 +76,43 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	// <!-- 03. update_글 수정하기 -->
 	// 토큰 보유시 동작
-	public void updateBoard(BoardVO boardVO, String path, String[] delfile, String user_id) {
-//	public void updateBoard(BoardVO boardVO, String user_id) {
-//		log.info("BoardServiceImpl-updateBoard 호출1 : 로그인 계정 " + user_id);
-//		log.info("BoardServiceImpl-updateBoard 호출2 : 수정 시도 게시글 " + boardVO);
-//		BoardVO dbBoardVO = null;
-//		UserVO dbUserVO = null;
-//		if (boardVO != null) {
-//			dbBoardVO = boardDAO.selectByIdx(boardVO.getBoard_idx()); // 보드 디비 원본
-//			dbUserVO = userDAO.selectByIdx(boardVO.getUser_idx()); // 현재 접속한 유저의 디비
-//			if (dbBoardVO != null && dbUserVO.getUser_id().equals(user_id)) {
-//				log.info("BoardServiceImpl-updateBoard 수정 전 원본 글 확인 : " + dbBoardVO);
-//				log.info("BoardServiceImpl-updateBoard 원본 글의 작성자와 현 로그인 계정의 일치여부 확인 : " + dbUserVO);
-//				boardDAO.updateBoard(boardVO);
-//				log.info("BoardServiceImpl-updateBoard 게시글 수정 완료 : " + boardVO + " 첨부파일 존재여부 확인시도");
-//				if (boardVO.getBoardImageList() != null) {
-//					log.info("BoardServiceImpl-updateBoard 첨부파일 존재확인");
-//					for (BoardImageVO boardImageVO : boardVO.getBoardImageList()) {
-//						boardImageVO.setBoard_idx(boardVO.getBoard_idx());
-//						log.info("BoardServiceImpl-updateBoard 게시글에 이미지 첨부");
-////						boardImageDAO.insertBoardImage(boardImageVO);
-//					}
-//				}
-//				// 기존 서버 내 첨부 파일 삭제로직
-//				log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제로직 진행");
-//				if (delfile != null) {
-//					for (String idx : delfile) {
-//						// db에서 해당 번호 파일의 정보를 읽어온다
-//						BoardImageVO imageVO = boardImageDAO.selectByIdx(Integer.parseInt(idx));
-//						if (imageVO != null) {
-//							// db에서 첨부파일 삭제
-//							boardImageDAO.deleteBoardImage(Integer.parseInt(idx));
-//							// 서버에 저장된 첨부파일 삭제
-//							File file = new File(path + File.separator + imageVO.getBoardImage_saveName());
-//							file.delete();
-//						}
-//					}
-//				}
-//			}
-//		}
-//		log.info("BoardServiceImpl-updateBoard 최종 수정완료");
+	public void updateBoard(BoardVO boardVO, String user_id) {
+		log.info("BoardServiceImpl-updateBoard 호출 : 로그인 계정 " + user_id + " 수정 시도 게시글 " + boardVO);
+		BoardVO dbBoardVO = null;
+		UserVO dbUserVO = null;
+		String path = "";
+		if (boardVO != null) {
+			dbBoardVO = boardDAO.selectByIdx(boardVO.getBoard_idx()); // 보드 디비 원본
+			log.info("BoardServiceImpl-updateBoard 수정 전 원본 글 확인 : " + dbBoardVO);
+			boardDAO.updateBoard(boardVO);
+			log.info("BoardServiceImpl-updateBoard 게시글 수정 완료");
+			// 기존 서버 내 첨부 파일 삭제로직
+			log.info("BoardServiceImpl-updateBoard 기존 저장된 첨부파일 존재 여부를 확인합니다.");
+			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
+			log.info("BoardServiceImpl-updateBoard 첨부파일 확인 " + boardImageList);
+			if (boardImageList != null) {
+				log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제로직 실행");
+				// db에서 첨부파일 삭제
+				for(BoardImageVO dbBoardImageVO : boardImageList) {
+					if(boardImageList != null && boardImageList.size()>0) {
+						log.info("BoardServiceImpl-updateBoard boardImageVO.boardImageList 삭제확인" + boardImageList);
+						boardImageDAO.deleteByBoardIdx(boardVO.getBoard_idx());
+						if (os.contains("win")) {
+							path = "C:/image/";
+							log.info("wind path");
+						} else {
+							path = "/resources/Back/";
+							log.info("linux path");
+						}
+						// 서버에 저장된 첨부파일 삭제
+						File file = new File(path + File.separator + dbBoardImageVO.getBoardImage_saveName());
+						log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제 진행중 file " + file);
+						file.delete();
+					}
+				}
+			}
+		}
+		log.info("BoardServiceImpl-updateBoard 리턴 : 최종 수정 완료 및 첨부파일 삭제 완료.");
 	}
 
 	@Override
@@ -122,6 +126,7 @@ public class BoardServiceImpl implements BoardService {
 			UserVO boardUserVO = userDAO.selectByIdx(boardVO.getUser_idx());
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
 			if (boardImageList != null && boardImageList.size() > 0) {
+				log.info("BoardServiceImpl-deleteBoard 첨부 이미지 리스트 확인 및 삭제 " + boardImageList);
 				for (BoardImageVO boardImageVO : boardImageList) {
 					// DB 파일 삭제
 					boardImageDAO.deleteByIdx(boardImageVO.getBoardImage_idx());
@@ -130,18 +135,15 @@ public class BoardServiceImpl implements BoardService {
 					file.delete();
 				}
 			}
-//			List<ReplyImageVO> replyImageList = replyImageDAO.selectByRef(boardVO.getBoard_idx());
-//			if(replyImageList!=null && replyImageList.size()>0) {
-//				for(ReplyImageVO replyImageVO : replyImageList) {
-//					// DB 파일 삭제
-//					boardImageDAO.deleteByIdx(replyImageVO.getReplyImage_idx());
-//					// 실제 파일삭제
-//					File file = new File(path + File.separator + replyImageVO.getReplyImage_saveName());
-//					file.delete();
-//				}
-//			}
-//			boardDAO.deleteBoard(boardVO.getBoard_idx());
+			List<ReplyVO> replyList = replyDAO.selectByRef(boardVO.getBoard_idx());
+			if (replyList != null) {
+				log.info("BoardServiceImpl-deleteBoard 댓글 리스트 확인 및 삭제 " + replyList);
+				// 댓글 삭제
+				replyDAO.deleteByBoardIdx(boardVO.getBoard_idx());
+			}
 		}
+		boardDAO.deleteBoard(boardVO.getBoard_idx());
+		log.info("BoardServiceImpl-deleteBoard 게시글 삭제 완료 ");
 	}
 
 	@Override
@@ -197,17 +199,18 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-selectDescLimit boardMaxIdx 값 확인 / " + boardMaxIdx);
 		for (int i = 8; i > 0; i--) {
 			BoardVO dbBoardVO = boardDAO.selectByIdx(boardMaxIdx);
-			if(dbBoardVO == null) {
+			if (dbBoardVO == null) {
 				boardMaxIdx--;
 				log.info("BoardServiceImpl-selectDescLimit dbBoardVO == null 로 인한 idx-- 처리 / " + boardMaxIdx);
 				dbBoardVO = boardDAO.selectByIdx(boardMaxIdx);
 			}
-			if(dbBoardVO == null) {
+			if (dbBoardVO == null) {
 				break;
 			}
 			log.info("BoardServiceImpl-selectDescLimit boardMaxIdx로 생성한 dbBoardVO / " + dbBoardVO);
 			List<BoardImageVO> dbBoardImageList = boardImageDAO.selectByRef(boardMaxIdx);
-			log.info("BoardServiceImpl-selectDescLimit boardMaxIdx로 생성한 dbBoardVO의 dbBoardImageList 컬럼 / " + dbBoardImageList);
+			log.info("BoardServiceImpl-selectDescLimit boardMaxIdx로 생성한 dbBoardVO의 dbBoardImageList 컬럼 / "
+					+ dbBoardImageList);
 			dbBoardVO.setBoardImageList(dbBoardImageList);
 			log.info("BoardServiceImpl-selectDescLimit dbBoardImageList 컬럼을 넣은 dbBoardVO / " + dbBoardVO);
 			boardList.add(dbBoardVO);
@@ -230,5 +233,5 @@ public class BoardServiceImpl implements BoardService {
 //		}
 //		return boardList;
 //	}
-	
+
 }

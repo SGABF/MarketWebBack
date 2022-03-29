@@ -13,7 +13,7 @@ public interface BoardService {
 	BoardVO selectByIdx(int board_idx);
 
 	//	<!-- 03. update_글 수정하기 -->
-	void updateBoard(BoardVO boardVO, String path, String[] delfile, String user_id);
+	void updateBoard(BoardVO boardVO, String user_id);
 
 	//	<!-- 04. delete_글 삭제하기 -->
 	void deleteBoard(BoardVO boardVO, String path);
