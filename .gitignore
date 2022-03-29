@@ -5,3 +5,8 @@ MarketWebBack/src/main/resources/application.properties
 MarketWebBack/src/main/resources/application.properties
 *.properties
 *.properties
+*.properties
+*.properties
+MarketWebBack/src/main/resources/application.properties
+MarketWebBack/src/main/resources/application.properties
+application-SGA.properties
