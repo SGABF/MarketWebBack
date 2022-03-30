@@ -37,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	private ReplyDAO replyDAO;
-	
+
 	private String os = System.getProperty("os.name").toLowerCase();
 
 	@Override
@@ -67,6 +67,7 @@ public class BoardServiceImpl implements BoardService {
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
 			log.info("boardImageList 테스트 : " + boardImageList);
 			boardImageList.add(dbBoardImageVO);
+//			boardImageList.get(0).get
 			dbBoardVO.setBoardImageList(boardImageList);
 		}
 		log.info("BoardServiceImpl-selectByIdx 리턴 : " + dbBoardVO);
@@ -93,8 +94,8 @@ public class BoardServiceImpl implements BoardService {
 			if (boardImageList != null) {
 				log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제로직 실행");
 				// db에서 첨부파일 삭제
-				for(BoardImageVO dbBoardImageVO : boardImageList) {
-					if(boardImageList != null && boardImageList.size()>0) {
+				for (BoardImageVO dbBoardImageVO : boardImageList) {
+					if (boardImageList != null && boardImageList.size() > 0) {
 						log.info("BoardServiceImpl-updateBoard boardImageVO.boardImageList 삭제확인" + boardImageList);
 						boardImageDAO.deleteByBoardIdx(boardVO.getBoard_idx());
 						if (os.contains("win")) {
@@ -190,7 +191,19 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-selectMaxIdx 리턴 " + maxIdx);
 		return maxIdx;
 	}
+//
+//	@Override
+//	public List<BoardVO> selectDescLimit() {
+//		List<BoardVO> boardList = new ArrayList<BoardVO>();
+//		int boardMaxIdx = boardDAO.selectMaxIdx();
+//		BoardVO dbBoardVO = boardDAO.selectByIdx(boardMaxIdx);
+//		
+//		
+//		
+//		return boardList;
+//	}
 
+//	원본
 	@Override
 	public List<BoardVO> selectDescLimit() {
 		List<BoardVO> boardList = new ArrayList<BoardVO>();
@@ -222,16 +235,26 @@ public class BoardServiceImpl implements BoardService {
 		return boardList;
 	}
 
-//	@Override
-//	public List<BoardVO> selectDescLimit() {
-//		List<BoardVO> boardList = new ArrayList<BoardVO>();
-//		log.info("BoardServiceImpl-selectDescLimit 호출 : List<BoardVO> 생성 " + boardList + "\n");
-//		if (boardList != null && boardList.size() > 0) {
-//			for (BoardVO dbBoardVO : boardList) {
-//
-//			}
-//		}
-//		return boardList;
-//	}
+	@Override
+	public List<BoardVO> selectSellBoard() {
+		log.info("BoardServiceImpl-selectSellBoard 호출 ");
+		List<BoardVO> sellBoardList = new ArrayList<BoardVO>();
+		sellBoardList = boardDAO.selectSellBoard();
+		return sellBoardList;
+	}
+
+	@Override
+	public List<BoardVO> selectBuyBoard() {
+		List<BoardVO> buyBoardList = new ArrayList<BoardVO>();
+		buyBoardList = boardDAO.selectBuyBoard();
+		return buyBoardList;
+	}
+
+	@Override
+	public List<BoardVO> selectAuctionBoard() {
+		List<BoardVO> auctionBoardList = new ArrayList<BoardVO>();
+		auctionBoardList = boardDAO.selectAuctionBoard();
+		return auctionBoardList;
+	}
 
 }
