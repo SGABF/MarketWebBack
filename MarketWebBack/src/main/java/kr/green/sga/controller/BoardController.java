@@ -51,12 +51,12 @@ public class BoardController {
 	@PostMapping(value = "/insertBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BoardVO insertBoardPOST(@RequestBody BoardVO boardVO, @RequestHeader(value = "user_id") String user_id,
 			@RequestPart(required = false) List<MultipartFile> multipartFiles) throws JsonProcessingException {
-		String path = "";
 		if (boardVO != null && user_id != null) {
 			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
 			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
-			boardService.insertBoard(boardVO, user_id);
 			if (multipartFiles != null) {
+				String path = "";
+				String boardProfile = "";
 				List<BoardImageVO> fileList = new ArrayList<>();
 				for (MultipartFile multipartFile : multipartFiles) {
 					if (multipartFile != null && multipartFile.getSize() > 0) {
@@ -94,7 +94,15 @@ public class BoardController {
 						}
 					} // if (multipartFile != null && multipartFile.getSize() > 0) {
 				} // for (MultipartFile multipartFile : multipartFiles) {
+				// boardImageList의 첫번째 boardImageVO 객체 중 특정 컬럼 값 BoardImage_saveName를 String boardProfile에 담는다.
+				log.info("BoardController-insertBoardPOST boardProfile 값 조회 : " + boardProfile);
+				boardProfile = fileList.get(0).getBoardImage_saveName();
+				log.info("BoardController-insertBoardPOST boardProfile 값 조회 : " + boardProfile);
+				// 
+				boardVO.setBoard_profile(boardProfile);
+				log.info("BoardController-insertBoardPOST boardVO.setBoard_profile 확인 : " + boardVO);
 			} // if (multipartFiles != null) {
+			boardService.insertBoard(boardVO, user_id);
 		} // if (boardVO != null && user_id != null) {
 		log.info("BoardController-insertBoardPOST 리턴 : " + boardVO);
 		return boardVO;
@@ -175,7 +183,7 @@ public class BoardController {
 		String path = "";
 		UserVO loginUserVO = null;
 		if (boardVO != null && user_id != null) {
-			loginUserVO = userService.selectUserId(user_id); 
+			loginUserVO = userService.selectUserId(user_id);
 			UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
 			if (boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
 				log.info("BoardController-deleteBoardPOST 게시글의 작성자와 삭제 요청자가 일치합니다.");

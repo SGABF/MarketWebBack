@@ -29,5 +29,14 @@ public interface BoardService {
 	
 	// 	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
 	List<BoardVO> selectDescLimit();
-
+	
+	// <!-- selectSellBoard-->
+	List<BoardVO> selectSellBoard();
+	
+	// <!-- selectBuyBoard-->
+	List<BoardVO> selectBuyBoard();
+	
+	// <!-- selectAuctionBoard-->
+	List<BoardVO> selectAuctionBoard();
+	
 }

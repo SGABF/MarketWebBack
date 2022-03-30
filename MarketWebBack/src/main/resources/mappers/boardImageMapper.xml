@@ -35,6 +35,11 @@
 		select * from boardimage where board_idx=#{board_idx}
 	</select>
 	
+	<!-- 04. 해당 board_idx의 첨부 이미지 1개 가져오기 -->
+	<select id="selectByRefOne" parameterType="int" resultType="BoardImageVO">
+		SELECT * FROM boardimage WHERE board_idx=#{board_idx} order by boardImage_idx LIMIT 1
+	</select>
+	
 	<!-- 05. select_한페이지 글 목록 가져오기 -->
 	<select id="selectList" resultType="BoardVO">
 		select * from boardimage order by boardImage_idx desc
@@ -44,5 +49,4 @@
 	<select id="selectMaxIdx" resultType="int">
 		select max(board_idx) from boardimage	
 	</select>
-	
 </mapper>
