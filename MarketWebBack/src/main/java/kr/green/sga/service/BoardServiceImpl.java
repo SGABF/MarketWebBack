@@ -191,47 +191,12 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-selectMaxIdx 리턴 " + maxIdx);
 		return maxIdx;
 	}
-//
-//	@Override
-//	public List<BoardVO> selectDescLimit() {
-//		List<BoardVO> boardList = new ArrayList<BoardVO>();
-//		int boardMaxIdx = boardDAO.selectMaxIdx();
-//		BoardVO dbBoardVO = boardDAO.selectByIdx(boardMaxIdx);
-//		
-//		
-//		
-//		return boardList;
-//	}
 
-//	원본
 	@Override
 	public List<BoardVO> selectDescLimit() {
-		List<BoardVO> boardList = new ArrayList<BoardVO>();
-		log.info("BoardServiceImpl-selectDescLimit 호출 : List<BoardVO> 생성 " + boardList + "\n");
-		int boardMaxIdx = boardDAO.selectMaxIdx();
-		log.info("BoardServiceImpl-selectDescLimit boardMaxIdx 값 확인 / " + boardMaxIdx);
-		for (int i = 8; i > 0; i--) {
-			BoardVO dbBoardVO = boardDAO.selectByIdx(boardMaxIdx);
-			if (dbBoardVO == null) {
-				boardMaxIdx--;
-				log.info("BoardServiceImpl-selectDescLimit dbBoardVO == null 로 인한 idx-- 처리 / " + boardMaxIdx);
-				dbBoardVO = boardDAO.selectByIdx(boardMaxIdx);
-			}
-			if (dbBoardVO == null) {
-				break;
-			}
-			log.info("BoardServiceImpl-selectDescLimit boardMaxIdx로 생성한 dbBoardVO / " + dbBoardVO);
-			List<BoardImageVO> dbBoardImageList = boardImageDAO.selectByRef(boardMaxIdx);
-			log.info("BoardServiceImpl-selectDescLimit boardMaxIdx로 생성한 dbBoardVO의 dbBoardImageList 컬럼 / "
-					+ dbBoardImageList);
-			dbBoardVO.setBoardImageList(dbBoardImageList);
-			log.info("BoardServiceImpl-selectDescLimit dbBoardImageList 컬럼을 넣은 dbBoardVO / " + dbBoardVO);
-			boardList.add(dbBoardVO);
-			log.info("BoardServiceImpl-selectDescLimit 해당 dbBoardVO를 BoardList에 추가 / " + boardList);
-			boardMaxIdx--;
-			log.info("BoardServiceImpl-selectDescLimit boardMaxIdx 값 변경 / " + boardMaxIdx);
-		}
-		log.info("BoardServiceImpl-selectDescLimit 최종 리턴 : " + boardList + "\n");
+		log.info("BoardServiceImpl-selectDescLimit 호출 ");
+		List<BoardVO> boardList = boardDAO.selectDescLimit();
+		log.info("BoardServiceImpl-selectDescLimit 리턴 : " + boardList);
 		return boardList;
 	}
 
