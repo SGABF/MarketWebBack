@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequestMapping(name = "/user")
 public class UserController {
 
 	@Autowired
@@ -82,13 +83,13 @@ public class UserController {
 	@PostMapping
 	public String deleteUserPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
-		UserVO dbVO = userService.selectUserId(user_id);
-		if (dbVO != null) {
-			userService.deleteUser(dbVO);
-			log.info("UserController-deleteUserPOST 리턴 : " + dbVO);
-			return mapper.writeValueAsString(dbVO);
+		UserVO dbUserVO = userService.selectUserId(user_id);
+		if (dbUserVO != null) {
+			userService.deleteUser(dbUserVO);
+			log.info("UserController-deleteUserPOST 리턴 : 회원정보 삭제완료");
+			return "1";
 		} else {
-			log.info("UserController-deleteUserPOST 리턴 : 회원정보 못찾음_" + mapper.writeValueAsString(dbVO));
+			log.info("UserController-deleteUserPOST 리턴 : 회원정보 못찾음_" + mapper.writeValueAsString(dbUserVO));
 			return "/";
 		}
 	}

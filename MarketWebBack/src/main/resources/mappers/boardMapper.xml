@@ -76,7 +76,7 @@
 	
 	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
 	<select id="selectDescLimit" parameterType="hashmap" resultType="BoardVO">
-		SELECT * FROM board ORDER BY board_idx DESC LIMIT 0, 8
+		SELECT * FROM board WHERE board_profile is NOT NULL and board_sell_category = 0 ORDER BY board_idx DESC LIMIT 0, 8 
 	</select>
 	
 	<!-- selectSellBoard-->

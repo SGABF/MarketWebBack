@@ -1,6 +1,5 @@
 package kr.green.sga.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +10,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
+import kr.green.sga.service.ReplyService;
+import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.ReplyVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping(value = "/home")
 public class HomeController {
-	
+
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private BoardImageService boardImageService;
+	
+	@Autowired
+	private ReplyService replyService;
 
-	@RequestMapping(value = "boardList", method = RequestMethod.POST)
+	@RequestMapping(value = "/boardList", method = RequestMethod.POST)
 	@PostMapping
 	public List<BoardVO> selectListPOST() throws JsonProcessingException {
 		log.info("BoardController-selectListPOST 호출 : ");
@@ -33,37 +41,50 @@ public class HomeController {
 		return list;
 	}
 
-	@RequestMapping(value = "main", method = RequestMethod.POST)
+	@RequestMapping(value = "/main", method = RequestMethod.POST)
 	@PostMapping
 	public List<BoardVO> selectDescLimitPOST() throws JsonProcessingException {
 		log.info("BoardController-selectDescLimitPOST 호출 : ");
 		List<BoardVO> list = boardService.selectDescLimit();
-//		List<BoardVO> list = new ArrayList<BoardVO>();
 		log.info("BoardController-selectDescLimitPOST 리턴 : 메인페이지 최근 등록된 8개의 게시글 리스트 가져오기 완료 " + list);
 		return list;
 	}
-	
-//	@PostMapping(value = "/selectByIdxBoard")
-//	public BoardVO selectByIdxPOST(@RequestBody BoardVO boardVO)
-//			throws JsonProcessingException {
-//		log.info("HomeController-selectByIdxPOST 호출 : 상세보기 시도 게시글 " + boardVO);
-//		BoardVO dbBoardVO = null;
-//		if (boardVO != null) {
-//			dbBoardVO = boardService.selectByIdx(boardVO.getBoard_idx());
-//		}
-//		log.info("HomeController-selectByIdxPOST 리턴 : 게시글 상세보기 리턴 " + dbBoardVO);
-//		return dbBoardVO;
-//	}
-	
-	
+
 	@PostMapping(value = "/selectByIdxBoard")
-	public BoardVO selectByIdxPOST()
-			throws JsonProcessingException {
-		log.info("HomeController-selectByIdxPOST 호출 : 상세보기 시도 게시글 수진");
-		BoardVO dbBoardVO = null;
-			dbBoardVO = boardService.selectByIdx(14);
+	public BoardVO selectByIdxPOST() throws JsonProcessingException {
+		log.info("HomeController-selectByIdxPOST 호출 : 게시글 상세보기 테스트 시도 ");
+		BoardVO dbBoardVO = boardService.selectByIdx(19);
+		List<BoardImageVO> fileList = boardImageService.selectByRef(dbBoardVO.getBoard_idx());
+		dbBoardVO.setBoardImageList(fileList);
+		List<ReplyVO> replyList = replyService.selectByRef(dbBoardVO.getBoard_idx());
+		dbBoardVO.setReplyList(replyList);
 		log.info("HomeController-selectByIdxPOST 리턴 : 게시글 상세보기 리턴 " + dbBoardVO);
 		return dbBoardVO;
 	}
-	
+
+	@PostMapping(value = "/sellBoard")
+	public List<BoardVO> selectSellBoardPOST() throws JsonProcessingException {
+		log.info("HomeController-selectSellBoardPOST 호출 : 판매글 리스트 조회");
+		List<BoardVO> list = boardService.selectSellBoard();
+		log.info("HomeController-selectSellBoardPOST 리턴 : 판매글 리스트 조회 리턴 " + list);
+		return list;
+	}
+
+	@PostMapping(value = "/buyBoard")
+	public List<BoardVO> selectBuyBoardPOST() throws JsonProcessingException {
+		log.info("HomeController-selectSellBoardPOST 호출 : 구매글 리스트 조회");
+		List<BoardVO> list = boardService.selectBuyBoard();
+		log.info("HomeController-selectSellBoardPOST 리턴 : 구매글 리스트 조회 리턴 " + list);
+		return list;
+	}
+
+
+	@PostMapping(value = "/auctionBoard")
+	public List<BoardVO> selectAuctionBoardPOST() throws JsonProcessingException {
+		log.info("HomeController-selectSellBoardPOST 호출 : 경매글 리스트 조회");
+		List<BoardVO> list = boardService.selectAuctionBoard();
+		log.info("HomeController-selectSellBoardPOST 리턴 : 경매글 리스트 조회 리턴 " + list);
+		return list;
+	}
+
 }

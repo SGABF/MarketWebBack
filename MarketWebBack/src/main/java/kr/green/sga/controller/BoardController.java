@@ -54,9 +54,14 @@ public class BoardController {
 		if (boardVO != null && user_id != null) {
 			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
 			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
+			boardService.insertBoard(boardVO, user_id);
 			if (multipartFiles != null) {
 				String path = "";
-				String boardProfile = "";
+				String boardProfile = Long.toString(System.nanoTime()) + "_" + multipartFiles.get(0).getOriginalFilename();
+				log.info("BoardController-insertBoardPOST 대표이미지 boardProfile 값 조회 : " + boardProfile);
+				boardVO.setBoard_profile(boardProfile);
+				log.info("BoardController-insertBoardPOST boardVO.setBoard_profile 확인 : " + boardVO);
+				boardService.insertBoard(boardVO, user_id);
 				List<BoardImageVO> fileList = new ArrayList<>();
 				for (MultipartFile multipartFile : multipartFiles) {
 					if (multipartFile != null && multipartFile.getSize() > 0) {
@@ -83,27 +88,22 @@ public class BoardController {
 								boardImageVO.setBoardImage_saveName(saveName);
 								log.info("생성한 BoardImageVO 객체 내 BoardImage_saveName set완료 : " + boardImageVO);
 								boardImageVO.setBoard_idx(boardMaxIdx);
-								log.info("생성한 BoardImageVO 객체 내 Board_idx 외래키 set완료 : " + boardImageVO + "\n");
+								log.info("생성한 BoardImageVO 객체 내 Board_idx 외래키 set완료 : " + boardImageVO);
 								fileList.add(boardImageVO);
-								log.info("생성한 List<BoardImageVO> 리스트에 BoardImageVO 최종 add 완료 : " + fileList);
+								log.info("생성한 List<BoardImageVO> fileList에 BoardImageVO add 완료 : " + fileList);
 								boardImageService.insertBoardImage(boardImageVO);
-								log.info("board_idx 외래키 set 작업한 BoardImageVO 저장 \n");
+								log.info("board_idx 외래키 set 작업한 BoardImageVO DB 저장");
+								boardVO.setBoardImageList(fileList);
+								log.info("BoardVO BoardImageList컬럼에 fileList를 최종 set 완료 : " + boardVO);
+								
 							}
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					} // if (multipartFile != null && multipartFile.getSize() > 0) {
 				} // for (MultipartFile multipartFile : multipartFiles) {
-				// boardImageList의 첫번째 boardImageVO 객체 중 특정 컬럼 값 BoardImage_saveName를 String boardProfile에 담는다.
-				log.info("BoardController-insertBoardPOST boardProfile 값 조회 : " + boardProfile);
-				boardProfile = fileList.get(0).getBoardImage_saveName();
-				log.info("BoardController-insertBoardPOST boardProfile 값 조회 : " + boardProfile);
-				// 
-				boardVO.setBoard_profile(boardProfile);
-				log.info("BoardController-insertBoardPOST boardVO.setBoard_profile 확인 : " + boardVO);
-			} // if (multipartFiles != null) {
-			boardService.insertBoard(boardVO, user_id);
-		} // if (boardVO != null && user_id != null) {
+			}
+		}
 		log.info("BoardController-insertBoardPOST 리턴 : " + boardVO);
 		return boardVO;
 	}
