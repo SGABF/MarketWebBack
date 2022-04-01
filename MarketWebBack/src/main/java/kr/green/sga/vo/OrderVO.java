@@ -20,7 +20,7 @@ auction_endTime		int 				경매종료
 @NoArgsConstructor
 @Data
 @XmlRootElement
-public class AuctionOrderVO {
+public class OrderVO {
 	private int auctionOrder_idx;
 	private int auctionOrder_used;
 	private String auctionOrderCol1;

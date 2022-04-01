@@ -23,6 +23,8 @@ CREATE table user(
 
 select * from board;
 
+select * from boardimage b 
+
 create table board(
    board_idx int auto_increment primary key,
    board_name varchar(10) not null,
@@ -357,8 +359,39 @@ select * from reply;
 
 select * from reply where board_idx = 4
 
-select * from board where board_idx =4;
-
-select * from board
+select * from board 
 
 select * from reply where board_idx = 4
+
+SELECT * FROM board WHERE board_profile is NOT NULL and board_sell_category = 0 ORDER BY board_idx DESC LIMIT 0, 8 
+
+SELECT * FROM board WHERE board_profile is NOT NULL and board_sell_category = 0 ORDER BY board_idx DESC LIMIT 0, 8
+
+
+select * from boardimage b 
+
+
+select boardImage_saveName from boardimage b WHERE board_idx=27 order by boardImage_idx limit 0, 1
+
+
+select boardImage_saveName from boardimage WHERE board_idx=27 order by boardImage_idx limit 0, 1
+
+select * from boardimage b 
+
+		
+
+
+INSERT into auction (
+		board_idx,
+		auction_highPrice
+		)
+		values (
+		#{board_idx},
+		#{action_highPrice}
+		)
+		
+		
+
+
+select * from board where board_auctionOnOff=1
+

@@ -398,6 +398,10 @@ values(
 	'01072318062'
 );
 
+select * from board;
+select * from boardimage b ;
+
+
 
 SELECT * FROM `user` u ;
 
@@ -413,12 +417,12 @@ INSERT into user(
 		userCol2
 		)
 		values(
-		'testuser23',
+		'del20',
 		'1234',
 		'테스터',
-		'19940520',
+		'19000101',
 		'sgagkmarket@gmail.com',
-		'01072318062',
+		'01012345678',
 		'',
 		''
 		)
@@ -450,6 +454,9 @@ select * from user where user_id='cdo90' and user_email='chlehddh8062@gmail.com'
 select count(*) from user where user_id='cdo90' and user_email='chlehddh8062@gmail.com' and user_name='gondo';
 
 SELECT * FROM user;
+SELECT * FROM board;
+
+select * from boardimage b  where board_idx=14
 
 -- 성공 // <!-- 10. update_유저 벤 하기-->
 update user set user_banned=0 where user_idx=1
@@ -470,3 +477,50 @@ SELECT * FROM user;
 		
 -- 성공 // <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->
 SELECT COUNT(*) from user WHERE user_id='cdo90' and user_password='$2a$10$CLfAUUw2wsn65e8LjjGFwuuu.w/yoFfYrAdxYLqJe0WHaXAi1ix.q' 
+
+
+-- board_idx 의 boardImage_idx 중 가장 작은 값 가져오기
+SELECT
+	*
+FROM 
+	boardimage b 
+WHERE 
+	board_idx=18
+order by
+	boardImage_idx 
+	LIMIT 1;
+
+
+select * from boardimage b 
+
+select * from board
+
+select * from board where board_sell_category=1
+
+
+INSERT into board (
+		board_name테,
+		board_content,
+		board_price,
+		board_soldout,
+		board_sell_category,
+		board_category,
+		board_auctionOnOff,
+		board_profile,
+		user_idx
+		)
+		values (
+		'가로본능킹냥이',
+		'가로본능 킹냥이 너무 커엽고.',
+		999999999,
+		1,
+		2,
+		3,
+		1,
+		#{board_profile},
+		8
+		)
+		
+		
+select * from user
+		

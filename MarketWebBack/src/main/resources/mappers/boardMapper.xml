@@ -46,7 +46,7 @@
 		board_soldout = #{board_soldout},
 		board_sell_category = #{board_sell_category},
 		board_category = #{board_category},
-		board_auctionOnOff = #{board_auctionOnOff}
+		board_auctionOnOff = #{board_auctionOnOff},
 		board_profile = #{board_profile}
 		where
 		board_idx = #{board_idx}
@@ -74,25 +74,24 @@
 		select max(board_idx) from board	
 	</select>
 	
-	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	<!-- selectDescLimit -->
 	<select id="selectDescLimit" parameterType="hashmap" resultType="BoardVO">
 		SELECT * FROM board WHERE board_profile is NOT NULL and board_sell_category = 0 ORDER BY board_idx DESC LIMIT 0, 8 
 	</select>
 	
-	<!-- selectSellBoard-->
+	<!-- selectSellBoard -->
 	<select id="selectSellBoard" resultType="BoardVO">
 		select * from board where board_sell_category=0
 	</select>
 	
-	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	<!-- selectBuyBoard -->
 	<select id="selectBuyBoard" resultType="BoardVO">
 		select * from board where board_sell_category=1
 	</select>
 	
-	<!-- 53. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	<!-- selectAuctionBoard -->
 	<select id="selectAuctionBoard" resultType="BoardVO">
-		select * from board where board_sell_category=2
+		select * from board where board_auctionOnOff=1
 	</select>
-	
 	
 </mapper>
