@@ -1,11 +1,8 @@
 package kr.green.sga.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.green.sga.service.UserService;
 import kr.green.sga.vo.UserVO;
-import kr.green.sga.vo.loginVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -81,16 +77,14 @@ public class UserController {
 
 	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
 	@PostMapping
-	public String deleteUserPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
+	public void deleteUserPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
 		UserVO dbUserVO = userService.selectUserId(user_id);
 		if (dbUserVO != null) {
 			userService.deleteUser(dbUserVO);
 			log.info("UserController-deleteUserPOST 리턴 : 회원정보 삭제완료");
-			return "1";
 		} else {
-			log.info("UserController-deleteUserPOST 리턴 : 회원정보 못찾음_" + mapper.writeValueAsString(dbUserVO));
-			return "/";
+			log.info("UserController-deleteUserPOST 리턴 : 회원정보 못찾음 " + user_id);
 		}
 	}
 

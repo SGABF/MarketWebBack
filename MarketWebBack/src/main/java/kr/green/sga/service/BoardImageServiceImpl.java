@@ -102,5 +102,12 @@ public class BoardImageServiceImpl implements BoardImageService {
 		return list;
 	}
 
-
+	@Override
+	public String selectProfile(int board_idx) {
+		String boardImage_saveName = "";
+		if(board_idx != 0) {
+			boardImage_saveName = boardImageDAO.selectProfile(board_idx);
+		}
+		return boardImage_saveName;
+	}
 }

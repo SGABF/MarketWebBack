@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +29,7 @@ public class HomeController {
 	
 	@Autowired
 	private BoardImageService boardImageService;
-	
+
 	@Autowired
 	private ReplyService replyService;
 
@@ -44,21 +45,24 @@ public class HomeController {
 	@RequestMapping(value = "/main", method = RequestMethod.POST)
 	@PostMapping
 	public List<BoardVO> selectDescLimitPOST() throws JsonProcessingException {
-		log.info("BoardController-selectDescLimitPOST 호출 : ");
+		log.info("HomeController-selectDescLimitPOST 호출 : ");
 		List<BoardVO> list = boardService.selectDescLimit();
-		log.info("BoardController-selectDescLimitPOST 리턴 : 메인페이지 최근 등록된 8개의 게시글 리스트 가져오기 완료 " + list);
+		log.info("HomeController-selectDescLimitPOST 리턴 : 메인페이지 최근 등록된 8개의 게시글 리스트 가져오기 완료 " + list);
 		return list;
 	}
 
 	@PostMapping(value = "/selectByIdxBoard")
-	public BoardVO selectByIdxPOST() throws JsonProcessingException {
+	public BoardVO selectByIdxPOST(@RequestParam(value = "board_idx") int board_idx) throws JsonProcessingException {
 		log.info("HomeController-selectByIdxPOST 호출 : 게시글 상세보기 테스트 시도 ");
-		BoardVO dbBoardVO = boardService.selectByIdx(19);
-		List<BoardImageVO> fileList = boardImageService.selectByRef(dbBoardVO.getBoard_idx());
-		dbBoardVO.setBoardImageList(fileList);
-		List<ReplyVO> replyList = replyService.selectByRef(dbBoardVO.getBoard_idx());
-		dbBoardVO.setReplyList(replyList);
-		log.info("HomeController-selectByIdxPOST 리턴 : 게시글 상세보기 리턴 " + dbBoardVO);
+		BoardVO dbBoardVO = null;
+		if (board_idx != 0) {
+			dbBoardVO = boardService.selectByIdx(board_idx);
+			List<BoardImageVO> fileList = boardImageService.selectByRef(dbBoardVO.getBoard_idx());
+			dbBoardVO.setBoardImageList(fileList);
+			List<ReplyVO> replyList = replyService.selectByRef(dbBoardVO.getBoard_idx());
+			dbBoardVO.setReplyList(replyList);
+			log.info("HomeController-selectByIdxPOST 리턴 : 게시글 상세보기 리턴 " + dbBoardVO);
+		}
 		return dbBoardVO;
 	}
 
@@ -77,7 +81,6 @@ public class HomeController {
 		log.info("HomeController-selectSellBoardPOST 리턴 : 구매글 리스트 조회 리턴 " + list);
 		return list;
 	}
-
 
 	@PostMapping(value = "/auctionBoard")
 	public List<BoardVO> selectAuctionBoardPOST() throws JsonProcessingException {

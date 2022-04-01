@@ -45,6 +45,4 @@ public interface BoardDAO {
 	List<BoardVO> selectAuctionBoard();
 	
 	
-	
-	
 }

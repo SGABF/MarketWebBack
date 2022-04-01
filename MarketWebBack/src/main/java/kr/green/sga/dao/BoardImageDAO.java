@@ -35,4 +35,7 @@ public interface BoardImageDAO {
 	// <!-- 52. 가장 마지막 idx값 가져오기 -->
 	int selectMaxIdx();
 	
+	// <!-- 보드 대표 이미지 가져오기 -->
+	String selectProfile(int board_idx);
+	
 }

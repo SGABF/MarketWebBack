@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.green.sga.dao.AuctionDAO">
+
+	<!--  Board&Auction 글 등록 -->
+	<insert id="insertAuction" parameterType="AuctionVO">
+		INSERT into auction (
+		board_idx,
+		auction_highPrice
+		)
+		values (
+		#{board_idx},
+		#{action_highPrice}
+		)
+	</insert>
+
+	<!--  회원마다 입찰시 최고가 업데이트 기능 -->
+	<update id="updatePrice" parameterType="AutionVO">
+		UPDATE auction 
+		set 
+		auction_highPrice = (
+		SELECT MAX(auctionOrder_used)
+				from auctionOrder 
+				WHERE auction_idx = #{auction_idx}
+		)
+		WHERE 
+		auction_idx = #{auction_idx}
+		
+	</update>
+	
+	<!-- 최고 입찰자 가져오기 -->
+	<select id="selectHighUser" resultType="int">
+		SELECT
+		user_idx
+		FROM
+		auctionOrder  
+		WHERE 
+		auctionOrder_used = (SELECT MAX(auctionOrder_used)
+				from auctionOrder 
+				WHERE auction_idx = #{auction_idx} )
+		AND
+		auction_idx = #{auction_idx}
+	
+	</select>
+	
+	<!--  입찰 참여 현황 -->
+	<select id="selectCount" resultType="int">
+		select count(*) from auctionOrder where auction_idx= #{auction_idx}
+	</select>
+
+<!-- ================================Order========================================= -->
+	<!-- 입찰신청 기능 -->
+	<insert id="insertOrder" parameterType="OrderVO">
+		INSERT into auctionOrder (
+		auction_idx,
+		auctionOrder_use
+		)
+		values (
+		#{auction_idx},
+		#{auctionOrder_use}
+		)
+	</insert>
+
+	<!-- 회원마다 입찰참여기록 삭제기능 -->
+	<delete id="deleteOrder" parameterType="int">
+		delete from auctionOrder
+		where
+		auctionOrder_idx = #{auctionOrder_idx}
+	</delete>
+
+	<!-- ========================================================================= -->
+
+
+	
+	
+</mapper>
