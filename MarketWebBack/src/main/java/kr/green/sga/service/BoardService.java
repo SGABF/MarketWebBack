@@ -11,7 +11,7 @@ public interface BoardService {
 
 	// 	<!-- 02. select_글 1개 가져오기 -->
 	BoardVO selectByIdx(int board_idx);
-
+	
 	//	<!-- 03. update_글 수정하기 -->
 	void updateBoard(BoardVO boardVO, String user_id);
 
@@ -38,5 +38,7 @@ public interface BoardService {
 	
 	// <!-- selectAuctionBoard-->
 	List<BoardVO> selectAuctionBoard();
+	
+	
 	
 }

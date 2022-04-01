@@ -31,4 +31,6 @@ public interface BoardImageService {
 	// <!-- 05.	전체 첨부파일 가져오기 -->
 	List<BoardImageVO> selectList();
 	
+	// <!-- 보드 대표 이미지 가져오기 -->
+	String selectProfile(int board_idx);
 }

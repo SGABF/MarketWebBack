@@ -49,4 +49,10 @@
 	<select id="selectMaxIdx" resultType="int">
 		select max(board_idx) from boardimage	
 	</select>
+		
+	<!-- 보드 대표 이미지 가져오기 -->
+	<select id="selectProfile" resultType="String">
+		select boardImage_saveName from boardimage WHERE board_idx=#{board_idx} order by boardImage_idx limit 0, 1
+	</select>
+	
 </mapper>

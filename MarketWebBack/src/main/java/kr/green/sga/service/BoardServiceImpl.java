@@ -1,14 +1,12 @@
 package kr.green.sga.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.BoardImageDAO;
@@ -16,7 +14,6 @@ import kr.green.sga.dao.ReplyDAO;
 import kr.green.sga.dao.UserDAO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
-import kr.green.sga.vo.ReplyImageVO;
 import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
 	private ReplyDAO replyDAO;
 
 	private String os = System.getProperty("os.name").toLowerCase();
-
+	
 	@Override
 	// <!-- 01. insert_글 쓰기 -->
 	// 토큰 보유시 동작
@@ -79,41 +76,35 @@ public class BoardServiceImpl implements BoardService {
 	// 토큰 보유시 동작
 	public void updateBoard(BoardVO boardVO, String user_id) {
 		log.info("BoardServiceImpl-updateBoard 호출 : 로그인 계정 " + user_id + " 수정 시도 게시글 " + boardVO);
-		BoardVO dbBoardVO = null;
-		UserVO dbUserVO = null;
-		String path = "";
 		if (boardVO != null) {
-			dbBoardVO = boardDAO.selectByIdx(boardVO.getBoard_idx()); // 보드 디비 원본
-			log.info("BoardServiceImpl-updateBoard 수정 전 원본 글 확인 : " + dbBoardVO);
 			boardDAO.updateBoard(boardVO);
 			log.info("BoardServiceImpl-updateBoard 게시글 수정 완료");
-			// 기존 서버 내 첨부 파일 삭제로직
-			log.info("BoardServiceImpl-updateBoard 기존 저장된 첨부파일 존재 여부를 확인합니다.");
-			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
-			log.info("BoardServiceImpl-updateBoard 첨부파일 확인 " + boardImageList);
-			if (boardImageList != null) {
-				log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제로직 실행");
-				// db에서 첨부파일 삭제
-				for (BoardImageVO dbBoardImageVO : boardImageList) {
-					if (boardImageList != null && boardImageList.size() > 0) {
-						log.info("BoardServiceImpl-updateBoard boardImageVO.boardImageList 삭제확인" + boardImageList);
-						boardImageDAO.deleteByBoardIdx(boardVO.getBoard_idx());
-						if (os.contains("win")) {
-							path = "C:/image/";
-							log.info("wind path");
-						} else {
-							path = "/resources/Back/";
-							log.info("linux path");
-						}
-						// 서버에 저장된 첨부파일 삭제
-						File file = new File(path + File.separator + dbBoardImageVO.getBoardImage_saveName());
-						log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제 진행중 file " + file);
-						file.delete();
-					}
-				}
-			}
+//			// 기존 서버 내 첨부 파일 삭제로직
+//			log.info("BoardServiceImpl-updateBoard 기존 저장된 첨부파일 존재 여부를 확인합니다.");
+//			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
+//			log.info("BoardServiceImpl-updateBoard 첨부파일 확인 " + boardImageList);
+//			if (boardImageList != null) {
+//				log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제로직 실행");
+//				// db에서 첨부파일 삭제
+//				for (BoardImageVO dbBoardImageVO : boardImageList) {
+//					if (boardImageList != null && boardImageList.size() > 0) {
+//						log.info("BoardServiceImpl-updateBoard boardImageVO.boardImageList 삭제확인" + boardImageList);
+//						boardImageDAO.deleteByBoardIdx(boardVO.getBoard_idx());
+//						if (os.contains("win")) {
+//							path = "C:/image/";
+//							log.info("wind path");
+//						} else {
+//							path = "/resources/Back/";
+//							log.info("linux path");
+//						}
+//						// 서버에 저장된 첨부파일 삭제
+//						File file = new File(path + File.separator + dbBoardImageVO.getBoardImage_saveName());
+//						log.info("BoardServiceImpl-updateBoard 기존 서버 내 첨부 파일 삭제 진행중 file " + file);
+//						file.delete();
+//					}
+//				}
+//			}
 		}
-		log.info("BoardServiceImpl-updateBoard 리턴 : 최종 수정 완료 및 첨부파일 삭제 완료.");
 	}
 
 	@Override
