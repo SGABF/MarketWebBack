@@ -3,7 +3,6 @@ package kr.green.sga.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -91,15 +90,4 @@ public class HomeController {
 		return list;
 	}
 
-	@GetMapping("/searchBoardList")
-	private List<BoardVO> searchBoardListGET(
-			@RequestParam(value = "type") String type,
-			@RequestParam(value = "keyword") String keyword
-			) throws Exception{
-		BoardVO boardVO = new BoardVO();
-		boardVO.setType(type);
-		boardVO.setKeyword(keyword);
-		return boardService.searchBoardList(boardVO.getType(), boardVO.getKeyword());
-	}
-	
 }

@@ -44,9 +44,5 @@ public interface BoardDAO {
 	// <!-- selectAuctionBoard-->
 	List<BoardVO> selectAuctionBoard();
 	
-// =======================================
-	
-	// <!-- 게시글 검색-->
-	List<BoardVO> searchBoardList(String type, String keyword);
 	
 }
