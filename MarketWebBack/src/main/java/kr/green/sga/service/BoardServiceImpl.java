@@ -213,4 +213,19 @@ public class BoardServiceImpl implements BoardService {
 		return auctionBoardList;
 	}
 
+	@Override
+	public List<BoardVO> searchBoardList(String type, String keyword) {
+		log.info("BoardServiceImpl-searchBoardList 호출 : type_" + type + ", 검색키워드_" + keyword);
+		if(type !=null && keyword != null) {
+			List<BoardVO> searchList = new ArrayList<BoardVO>();
+			searchList = boardDAO.searchBoardList(type, keyword);
+			log.info("BoardServiceImpl-searchBoardList 리턴 : " + searchList);
+			return searchList;
+		} else {
+			log.info("BoardServiceImpl-searchBoardList 리턴 : 검색 값이 없습니다! 빈 List<BoardVO> 를 리턴합니다.");
+			List<BoardVO> searchList = new ArrayList<BoardVO>();
+			return searchList;
+		}
+	}
+
 }

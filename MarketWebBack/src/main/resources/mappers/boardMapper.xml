@@ -94,4 +94,19 @@
 		select * from board where board_auctionOnOff=1
 	</select>
 	
+	<!-- 게시글 검색-->
+	<select id="searchBoardList" parameterType="BoardVO" resultType="BoardVO">
+		select * from board 
+		where
+		<choose>
+			<when test="type!=null and type.equals('board_name')">
+			board_name like concat('%', #{keyword}, '%')
+			</when>
+			<when test="type!=null and type.equals('board_content')">
+			board_content like concat('%', #{keyword}, '%')
+			</when>
+		</choose>
+		order by board_regDate desc 
+	</select>
+	
 </mapper>
