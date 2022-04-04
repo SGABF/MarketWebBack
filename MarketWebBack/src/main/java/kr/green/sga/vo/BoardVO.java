@@ -18,7 +18,7 @@ create table board(
    board_price 			int not null,
    board_soldout 		int not null,			0, 판매중 1, 예약중 2, 판매완료
    board_hit 			int default 0,			추후 수량 체크시 사용할 컬럼
-   board_sell_category 	int not null,			0:판매글 1:구매글
+   board_sell_category 	int not null,			0:판매글 1:구매글 2:경매글
    board_regDate 		Datetime default now(),	
    board_category 		int not null,			남성패션, 여성패션, 전자기기
    board_auctionOnOff	int default 0,			0:경매 비활성화/1:경매 활성화
@@ -53,6 +53,9 @@ public class BoardVO {
 	private List<BoardImageVO> boardImageList;
 	// 댓글을 담을 컬럼.
 	private List<ReplyVO> replyList;
+	// 경매
+	private AuctionVO auctionVO;
+	// 검색 필터
+	private String type;
+	private String keyword;
 }
-
-
