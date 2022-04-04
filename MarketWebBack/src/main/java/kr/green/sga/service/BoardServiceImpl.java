@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.green.sga.dao.AuctionDAO;
 import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.BoardImageDAO;
 import kr.green.sga.dao.ReplyDAO;
 import kr.green.sga.dao.UserDAO;
+import kr.green.sga.vo.AuctionVO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.ReplyVO;
@@ -35,8 +37,13 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private ReplyDAO replyDAO;
 
-	private String os = System.getProperty("os.name").toLowerCase();
+	@Autowired
+	private AuctionDAO auctionDAO;
 	
+	
+
+	private String os = System.getProperty("os.name").toLowerCase();
+
 	@Override
 	// <!-- 01. insert_글 쓰기 -->
 	// 토큰 보유시 동작
@@ -58,14 +65,25 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-selectByIdx 호출 : " + board_idx);
 		BoardVO dbBoardVO = null;
 		BoardImageVO dbBoardImageVO = null;
+		AuctionVO auctionVO = null;
+		UserVO userVO = null;
 		if (board_idx != 0) {
 			// dbBoardVO에 게시글 하나의 객체를 담는다.
 			dbBoardVO = boardDAO.selectByIdx(board_idx);
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
-			log.info("boardImageList 테스트 : " + boardImageList);
-			boardImageList.add(dbBoardImageVO);
-//			boardImageList.get(0).get
 			dbBoardVO.setBoardImageList(boardImageList);
+			List<ReplyVO> replyList = replyDAO.selectByRef(dbBoardVO.getBoard_idx());
+			dbBoardVO.setReplyList(replyList);
+			//----------옥션----------------//
+			auctionVO = auctionDAO.selectByIdx(board_idx);
+			//----- 최고입찰자 -------------//
+			int ref = auctionDAO.selectHighUser(auctionVO.getAuction_idx());
+			userVO = userDAO.selectByIdx(ref);
+			auctionVO.setAuction_highUser(userVO.getUser_id());
+			//----- 최고입찰자 -------------//
+			dbBoardVO.setAuctionVO(auctionVO);
+			//----------옥션----------------//
+
 		}
 		log.info("BoardServiceImpl-selectByIdx 리턴 : " + dbBoardVO);
 		return dbBoardVO;
@@ -216,7 +234,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardVO> searchBoardList(String type, String keyword) {
 		log.info("BoardServiceImpl-searchBoardList 호출 : type_" + type + ", 검색키워드_" + keyword);
-		if(type !=null && keyword != null) {
+		if (type != null && keyword != null) {
 			List<BoardVO> searchList = new ArrayList<BoardVO>();
 			searchList = boardDAO.searchBoardList(type, keyword);
 			log.info("BoardServiceImpl-searchBoardList 리턴 : " + searchList);

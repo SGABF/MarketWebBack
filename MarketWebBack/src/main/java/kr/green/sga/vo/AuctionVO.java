@@ -21,12 +21,16 @@ auction_endTime		int 				경매종료
 @Data
 @XmlRootElement
 public class AuctionVO {
+	private int auction_idx;
 	private int auction_highPrice;
 	private int auction_startTime;
 	private int auction_endTime;
+	private String auction_highUser;
 	private int board_idx;
 	private int reply_idx;
 	private String auctionCol1;
 	private String auctionCol2;
 	private String auctionCol3;
+	
+	private OrderVO orderVO;
 }

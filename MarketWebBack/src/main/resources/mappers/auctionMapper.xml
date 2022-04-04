@@ -12,7 +12,7 @@
 		auction_highPrice
 		)
 		values (
-		#{board_idx},
+		#{board_ref},
 		#{action_highPrice}
 		)
 	</insert>
@@ -33,6 +33,7 @@
 	
 	<!-- 최고 입찰자 가져오기 -->
 	<select id="selectHighUser" resultType="int">
+	
 		SELECT
 		user_idx
 		FROM
@@ -50,17 +51,24 @@
 	<select id="selectCount" resultType="int">
 		select count(*) from auctionOrder where auction_idx= #{auction_idx}
 	</select>
+	
+	<!-- 1개 옥션 가져오기 -->
+	<select id="selectByIdx" resultType="AuctionVO">
+		select * from auction where board_idx= #{board_idx}
+	</select>
 
 <!-- ================================Order========================================= -->
 	<!-- 입찰신청 기능 -->
 	<insert id="insertOrder" parameterType="OrderVO">
 		INSERT into auctionOrder (
 		auction_idx,
-		auctionOrder_use
+		auctionOrder_used,
+		user_idx
 		)
 		values (
 		#{auction_idx},
-		#{auctionOrder_use}
+		#{auctionOrder_used}
+		#{user_idx}
 		)
 	</insert>
 
