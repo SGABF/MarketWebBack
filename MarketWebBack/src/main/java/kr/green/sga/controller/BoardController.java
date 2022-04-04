@@ -23,6 +23,7 @@ import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.ReplyService;
 import kr.green.sga.service.UserService;
+import kr.green.sga.vo.AuctionVO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
@@ -58,6 +59,15 @@ public class BoardController {
 			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
 			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
 			boardService.insertBoard(boardVO, user_id);
+			
+			//--------옥션저장기능--------//
+			if(boardVO.getBoard_auctionOnOff()!=0) {
+				AuctionVO auctionVO = new AuctionVO();
+				auctionVO.setBoard_idx(boardVO.getBoard_idx());
+				auctionVO.setAuction_highPrice(boardVO.getBoard_price());
+				boardVO.setAuctionVO(auctionVO);
+			}
+			//--------옥션저장기능--------//
 			if (multipartFiles != null) {
 				log.info("BoardController-insertBoardPOST 첨부파일 존재확인");
 				String boardImage_profileName = "";
