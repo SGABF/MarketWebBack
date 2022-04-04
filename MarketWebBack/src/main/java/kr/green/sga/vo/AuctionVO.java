@@ -23,10 +23,8 @@ auction_endTime		int 				경매종료
 public class AuctionVO {
 	private int auction_idx;
 	private int auction_highPrice;
-	private int auction_startTime;
 	private int auction_endTime;
-	private String auction_highUser;
-	private int board_idx;
+	private int board_ref;
 	private int reply_idx;
 	private String auctionCol1;
 	private String auctionCol2;

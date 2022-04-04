@@ -60,6 +60,10 @@ public class BoardVO {
 	
 	
 	//----옥션컬럼(가져오기)-----//
+	private int auction_highPrice;
+	private int auction_endTime;
+	private int reply_idx;
+	
 	private AuctionVO auctionVO;
 	private String highUser_id;
 }

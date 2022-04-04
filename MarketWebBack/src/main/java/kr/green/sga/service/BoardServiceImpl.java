@@ -16,6 +16,7 @@ import kr.green.sga.dao.UserDAO;
 import kr.green.sga.vo.AuctionVO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.OrderVO;
 import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
@@ -79,10 +80,10 @@ public class BoardServiceImpl implements BoardService {
 			//----- 최고입찰자 -------------//
 			int ref = auctionDAO.selectHighUser(auctionVO.getAuction_idx());
 			userVO = userDAO.selectByIdx(ref);
-			auctionVO.setAuction_highUser(userVO.getUser_id());
+			auctionVO.setAuctionCol1(userVO.getUser_id()); 
 			//----- 최고입찰자 -------------//
 			dbBoardVO.setAuctionVO(auctionVO);
-			//----------옥션----------------//
+			//----------옥션----------------//      
 
 		}
 		log.info("BoardServiceImpl-selectByIdx 리턴 : " + dbBoardVO);
@@ -151,6 +152,13 @@ public class BoardServiceImpl implements BoardService {
 				// 댓글 삭제
 				replyDAO.deleteByBoardIdx(boardVO.getBoard_idx());
 			}
+			AuctionVO auctionVO = auctionDAO.selectByIdx(boardVO.getBoard_idx());
+			log.info("auctionVO" + auctionVO);
+			auctionDAO.deleteOrderAll(auctionVO.getAuction_idx());
+			log.info("auctionVO의 idx 호출" + auctionVO.getAuction_idx());
+			auctionDAO.deleteAuction(boardVO.getBoard_idx());
+			log.info("auctionVO의 idx 호출2" + auctionVO.getAuction_idx());
+			
 		}
 		boardDAO.deleteBoard(boardVO.getBoard_idx());
 		log.info("BoardServiceImpl-deleteBoard 게시글 삭제 완료 ");
@@ -246,4 +254,21 @@ public class BoardServiceImpl implements BoardService {
 		}
 	}
 
+	@Override
+	public void startAuction(BoardVO boardVO) {
+		if(boardVO != null) {
+			boardDAO.startAuction(boardVO);
+		}
+		
+	}
+
+	@Override
+	public void endAuction(BoardVO boardVO) {
+		if(boardVO != null) {
+			boardDAO.endAuction(boardVO);
+		}
+		
+	}
+	
+	
 }

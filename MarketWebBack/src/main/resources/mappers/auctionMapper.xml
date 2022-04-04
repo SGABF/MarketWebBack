@@ -18,7 +18,7 @@
 	</insert>
 
 	<!--  회원마다 입찰시 최고가 업데이트 기능 -->
-	<update id="updatePrice" parameterType="AutionVO">
+	<update id="updatePrice" parameterType="AuctionVO">
 		UPDATE auction 
 		set 
 		auction_highPrice = (
@@ -56,6 +56,32 @@
 	<select id="selectByIdx" resultType="AuctionVO">
 		select * from auction where board_idx= #{board_idx}
 	</select>
+	
+	<!-- 옥션 1개 삭제 -->
+	<delete id="deleteAuction" parameterType="int">
+		delete from auction
+		where
+		board_idx = #{board_idx}
+	</delete>
+	
+	<!-- 옥션 시작 -->
+	<update id="startAuction" parameterType="AuctionVO">
+		UPDATE auction 
+		set 
+		auction_startTime = NOW()
+		WHERE 
+		auction_idx = #{auction_idx}
+	</update>
+	
+	<!-- 옥션 종료 -->
+	<update id="endAuction" parameterType="AuctionVO">
+		UPDATE auction 
+		set 
+		auction_endTime = NOW()
+		WHERE 
+		auction_idx = #{auction_idx}
+	</update>
+	
 
 <!-- ================================Order========================================= -->
 	<!-- 입찰신청 기능 -->
@@ -74,10 +100,22 @@
 
 	<!-- 회원마다 입찰참여기록 삭제기능 -->
 	<delete id="deleteOrder" parameterType="int">
-		delete from auctionOrder
+		delete * from auctionOrder
 		where
 		auctionOrder_idx = #{auctionOrder_idx}
 	</delete>
+	
+	<!-- 옥션 한개의 들어간 입찰기록 전체삭제 -->
+	<delete id="deleteOrderAll" parameterType="int">
+		delete from auctionOrder
+		where
+		auction_idx = #{auction_idx}
+	</delete>
+	
+	<!-- 유저의 입찰기록 가져오기 -->
+	<select id="selectByOrder" resultType="OrderVO">
+		select * from auctionOrder where user_idx= #{user_idx}
+	</select>
 
 	<!-- ========================================================================= -->
 

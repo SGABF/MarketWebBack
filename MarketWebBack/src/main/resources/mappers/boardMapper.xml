@@ -56,6 +56,26 @@
 	<delete id="deleteBoard" parameterType="int">
 		delete from board where board_Idx = #{board_Idx}
 	</delete>
+	
+	<!-- 옥션 종료 -->
+	<update id="startAuction" parameterType="BoardVO">
+		UPDATE board
+		set 
+		board_sell_category = 0
+		board_auctionOnOff = 1
+		WHERE 
+		board_idx = #{board_idx}
+	</update>
+	
+	<!-- 옥션 종료 -->
+	<update id="endAuction" parameterType="BoardVO">
+		UPDATE board
+		set 
+		board_sell_category = 2
+		board_auctionOnOff = 0
+		WHERE 
+		board_idx = #{board_idx}
+	</update>
 
 	<!-- ========================================================================= -->
 

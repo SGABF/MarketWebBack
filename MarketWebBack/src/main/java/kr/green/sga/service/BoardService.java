@@ -18,6 +18,12 @@ public interface BoardService {
 	//	<!-- 04. delete_글 삭제하기 -->
 	void deleteBoard(BoardVO boardVO, String path);
 	
+	//옥션 시작
+	void startAuction(BoardVO boardVO);
+	
+	//옥션 종료
+	void endAuction(BoardVO boardVO);
+	
 	//	<!-- 50. select_전체 개수얻기 -->
 	int selectCount();
 

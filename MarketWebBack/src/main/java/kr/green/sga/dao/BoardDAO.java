@@ -20,6 +20,12 @@ public interface BoardDAO {
 	
 	// <!-- 04. delete_글 삭제하기 -->
 	void deleteBoard(int board_idx);
+	
+	// 05. 옥션시작
+	void startAuction(BoardVO boardVO);
+	
+	// 06. 옥션 종료
+	void endAuction(BoardVO boardVO);
 
 // =======================================
 	

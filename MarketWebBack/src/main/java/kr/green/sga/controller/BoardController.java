@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import kr.green.sga.service.AuctionService;
 import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.ReplyService;
@@ -26,6 +27,7 @@ import kr.green.sga.service.UserService;
 import kr.green.sga.vo.AuctionVO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.OrderVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,6 +47,9 @@ public class BoardController {
 
 	@Autowired
 	private ReplyService replyService;
+	
+	@Autowired
+	private AuctionService auctionService;
 
 	private String os = System.getProperty("os.name").toLowerCase();
 
@@ -61,13 +66,13 @@ public class BoardController {
 			boardService.insertBoard(boardVO, user_id);
 			
 			//--------옥션저장기능--------//
-			if(boardVO.getBoard_auctionOnOff()!=0) {
+			if(boardVO.getBoard_sell_category()==2) {
+			
 				AuctionVO auctionVO = new AuctionVO();
-				auctionVO.setBoard_idx(boardVO.getBoard_idx());
 				auctionVO.setAuction_highPrice(boardVO.getBoard_price());
 				boardVO.setAuctionVO(auctionVO);
 			}
-			//--------옥션저장기능--------//
+			//---------------------------//
 			if (multipartFiles != null) {
 				log.info("BoardController-insertBoardPOST 첨부파일 존재확인");
 				String boardImage_profileName = "";
@@ -121,6 +126,74 @@ public class BoardController {
 		}
 		return "return";
 	}
+	// -----------------입찰기능---------------//
+	@PostMapping(value = "/insertOrder")
+	public String insertOrder(
+			@RequestHeader(value = "user_id") String user_id,
+			@RequestPart(value = "boardVO", required = false) BoardVO boardVO,
+			@RequestParam(value = "OrderVO", required = false) OrderVO orderVO)
+			throws JsonProcessingException {
+				auctionService.insertOrder(boardVO, orderVO, user_id);
+				
+		return "/insertOrder";
+	}
+	
+	
+	
+	@PostMapping(value = "/startAuction")
+	public void startAuction(@RequestHeader(value = "user_id") String user_id, @RequestBody BoardVO boardVO)
+			throws JsonProcessingException {
+		if (boardVO.getBoard_auctionOnOff() != 1) {
+
+			UserVO loginUserVO = null;
+			if (boardVO != null && user_id != null) {
+				loginUserVO = userService.selectUserId(user_id);
+				UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
+				if (boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+					boardService.startAuction(boardVO);
+					auctionService.startAuction(boardVO);
+				}
+			}
+		} else {
+			UserVO loginUserVO = null;
+			if (boardVO != null && user_id != null) {
+				loginUserVO = userService.selectUserId(user_id);
+				UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
+				if (boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+					boardService.endAuction(boardVO);
+					auctionService.endAuction(boardVO);
+				}
+			}
+		}
+	}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	@PostMapping(value = "/endAuction")
+	public void endAuction(
+			@RequestHeader(value = "user_id") String user_id,
+			@RequestBody BoardVO boardVO)
+					throws JsonProcessingException {
+		UserVO loginUserVO = null;
+		if(boardVO != null && user_id != null) {
+			loginUserVO = userService.selectUserId(user_id);
+			UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
+			if(boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+				boardService.endAuction(boardVO);
+				auctionService.endAuction(boardVO);
+			}
+		}
+	}
+	
+	// -----------------입찰기능---------------//
 	
 	
 //	@PostMapping(value = "/updateBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -218,6 +291,22 @@ public class BoardController {
 	@GetMapping(value = "/test")
 	public String test() {
 		return "hi";
+	}
+	
+	
+	@PostMapping(value = "/deleteOrder")
+	public void deleteOrder(@RequestBody OrderVO orderVO, @RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		UserVO loginUserVO = null;
+		if(user_id != null) {
+			loginUserVO = userService.selectUserId(user_id);
+			UserVO orderUserVO = userService.selectByIdx(orderVO.getUser_idx());
+			if (orderUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+				auctionService.deleteOrder(orderVO);
+			}
+			
+		}
+		
 	}
 
 }
