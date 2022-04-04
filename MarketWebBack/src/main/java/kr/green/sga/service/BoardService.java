@@ -41,7 +41,7 @@ public interface BoardService {
 
 	// <!-- 게시글 검색-->
 	List<BoardVO> searchBoardList(String keyword);
-	
+
 	// <!-- 판매완료된 판매글 보기 -->
 	List<BoardVO> selectSoldoutSellBoard();
 	

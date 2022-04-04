@@ -286,7 +286,6 @@ INSERT into board (
 		board_name,
 		board_price,
 		board_soldout,
-		board_hit,
 		board_sell_category,
 		board_category,
 		board_auctionOnOff,
@@ -294,17 +293,18 @@ INSERT into board (
 		board_content
 		)
 		values (
-		'test',
+		'빅맥 맛있댜',
 		 3000,
+		 0,
 		 1,
-		 null,
-		1,
+		 3,
 		 1,
-		 null,
-		1,
-		'ㅎㅇ'
+		 1,
+		'맥도날드는 진리 빅맥 모두 드세요 빅맥세트 jmt'
 		);
-		
+	
+select * from user
+	
 select * from board;
 
 select * from boardimage;
@@ -391,7 +391,67 @@ INSERT into auction (
 		)
 		
 		
+		
+		select * from auction a 
+		
+		select * from `user` u 
+		
+		select * from auctionOrder ao 
+		
+		INSERT into auction (
+		board_idx,
+		auction_highPrice,
+		user_idx 
+		)
+		values (
+		2,
+		130000,
+		
+		)
+		
+		
+		
+		INSERT into auctionOrder (
+		auction_idx,
+		auctionOrder_used,
+		user_idx 
+		)
+		values (
+		1,
+		130000,
+		9
+		)
+		
+		UPDATE auction 
+		set 
+		auction_highPrice = (
+		SELECT MAX(auctionOrder_used)
+				from auctionOrder 
+				WHERE auction_idx = 1
+		)
+		WHERE 
+		auction_idx = 1
+		
+		
+		
+		
 
 
 select * from board where board_auctionOnOff=1
+
+
+select * from board where board_name like '%빅맥%'
+
+select * from board where board_ like '%여래%'
+
+select * from board
+
+select * from board 
+where board_name like '%빅맥%'
+order by board_regDate desc 
+
+
+select * from boardimage b 
+
+select * from board
 

@@ -133,5 +133,6 @@
 		board_sell_category=2 AND 
 		board_soldout=0
 	</select>
+
 	
 </mapper>
