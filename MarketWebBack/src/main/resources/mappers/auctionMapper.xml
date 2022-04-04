@@ -18,7 +18,7 @@
 	</insert>
 
 	<!--  회원마다 입찰시 최고가 업데이트 기능 -->
-	<update id="updatePrice" parameterType="AutionVO">
+	<update id="updatePrice" parameterType="AuctionVO">
 		UPDATE auction 
 		set 
 		auction_highPrice = (
