@@ -27,7 +27,7 @@ public class HomeController {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Autowired
 	private BoardImageService boardImageService;
 
@@ -54,14 +54,10 @@ public class HomeController {
 
 	@PostMapping(value = "/selectByIdxBoard")
 	public BoardVO selectByIdxPOST(@RequestParam(value = "board_idx") int board_idx) throws JsonProcessingException {
-		log.info("HomeController-selectByIdxPOST 호출 : 게시글 상세보기 테스트 시도 ");
+		log.info("HomeController-selectByIdxPOST 호출 : 게시글 상세보기 " + board_idx);
 		BoardVO dbBoardVO = null;
 		if (board_idx != 0) {
 			dbBoardVO = boardService.selectByIdx(board_idx);
-			List<BoardImageVO> fileList = boardImageService.selectByRef(dbBoardVO.getBoard_idx());
-			dbBoardVO.setBoardImageList(fileList);
-			List<ReplyVO> replyList = replyService.selectByRef(dbBoardVO.getBoard_idx());
-			dbBoardVO.setReplyList(replyList);
 			log.info("HomeController-selectByIdxPOST 리턴 : 게시글 상세보기 리턴 " + dbBoardVO);
 		}
 		return dbBoardVO;
@@ -90,6 +86,58 @@ public class HomeController {
 		log.info("HomeController-selectSellBoardPOST 리턴 : 경매글 리스트 조회 리턴 " + list);
 		return list;
 	}
+//  // 추후 작업할 검색조건(type) + 키워드(keyword)
+//	@GetMapping("/searchBoardList")
+//	private List<BoardVO> searchBoardListGET(
+//			@RequestParam(value = "type", required = false) String type,
+//			@RequestParam(value = "keyword", required = false) String keyword
+//			) throws Exception {
+//		log.info("HomeController-searchBoardListGET 호출 " + type + ", " + keyword);
+//		if (type != null && keyword != null) {
+//			log.info("HomeController-searchBoardListGET 호출 : 검색 작동");
+//			BoardVO boardVO = new BoardVO();
+//			boardVO.setType(type);
+//			boardVO.setKeyword(keyword);
+//			List<BoardVO> list = boardService.searchBoardList(boardVO.getType(), boardVO.getKeyword());
+//			log.info("HomeController-searchBoardListGET 리턴 : 검색 결과 " + list);
+//			return list;
+//		}
+//		return null;
+//	}
+
+	@GetMapping("/searchBoardList")
+	private List<BoardVO> searchBoardListGET(
+			@RequestParam(value = "keyword", required = false) String keyword
+			) throws Exception {
+		log.info("HomeController-searchBoardListGET 호출 " + keyword);
+		List<BoardVO> list = null;
+		if (keyword != null) {
+			log.info("HomeController-searchBoardListGET 호출 : 검색 작동");
+			BoardVO boardVO = new BoardVO();
+			boardVO.setKeyword(keyword);
+			list = boardService.searchBoardList(boardVO.getKeyword());
+			log.info("HomeController-searchBoardListGET 리턴 : 검색 결과 " + list);
+			return list;
+		}
+		return null;
+	}
+	
+	@PostMapping(value = "/soldoutSellBoard")
+	public List<BoardVO> selectSoldoutSellBoardPOST() throws JsonProcessingException {
+		log.info("HomeController-selectSellBoardPOST 호출 : 판매글 리스트 조회");
+		List<BoardVO> list = boardService.selectSoldoutSellBoard();
+		log.info("HomeController-selectSellBoardPOST 리턴 : 판매글 리스트 조회 리턴 " + list);
+		return list;
+	}
+	
+	@PostMapping(value = "/soldoutAuctionBoard")
+	public List<BoardVO> selectSoldoutAuctionBoardPOST() throws JsonProcessingException {
+		log.info("HomeController-selectSellBoardPOST 호출 : 경매글 리스트 조회");
+		List<BoardVO> list = boardService.selectSoldoutAuctionBoard();
+		log.info("HomeController-selectSellBoardPOST 리턴 : 경매글 리스트 조회 리턴 " + list);
+		return list;
+	}
+
 
 	@GetMapping("/searchBoardList")
 	private List<BoardVO> searchBoardListGET(

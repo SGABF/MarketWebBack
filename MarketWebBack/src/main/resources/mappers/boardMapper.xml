@@ -98,15 +98,41 @@
 	<select id="searchBoardList" parameterType="BoardVO" resultType="BoardVO">
 		select * from board 
 		where
-		<choose>
-			<when test="type!=null and type.equals('board_name')">
-			board_name like concat('%', #{keyword}, '%')
-			</when>
-			<when test="type!=null and type.equals('board_content')">
-			board_content like concat('%', #{keyword}, '%')
-			</when>
-		</choose>
+			board_name  like concat('%', #{keyword}, '%')
 		order by board_regDate desc 
 	</select>
+<!-- 	<select id="searchBoardList" parameterType="BoardVO" resultType="BoardVO"> -->
+<!-- 		select * from board  -->
+<!-- 		where -->
+<!-- 		<choose> -->
+<!-- 			<when test="type!=null and type.equals('board_all')"> -->
+<!-- 			board_name AND board_content like concat('%', #{keyword}, '%') -->
+<!-- 			</when> -->
+<!-- 			<when test="type!=null and type.equals('board_name')"> -->
+<!-- 			board_name like concat('%', #{keyword}, '%') -->
+<!-- 			</when> -->
+<!-- 			<when test="type!=null and type.equals('board_content')"> -->
+<!-- 			board_content like concat('%', #{keyword}, '%') -->
+<!-- 			</when> -->
+<!-- 		</choose> -->
+<!-- 		order by board_regDate desc  -->
+<!-- 	</select> -->
+	
+	<!-- 판매진행중인 판매글 보기 -->
+	<select id="selectSoldoutSellBoard" parameterType="BoardVO" resultType="BoardVO">
+		select * from board 
+		WHERE 
+		board_sell_category=0 AND 
+		board_soldout=0
+	</select>
+	
+	<!-- 경매진행중인 경매글 보기 -->
+	<select id="selectSoldoutAuctionBoard" parameterType="BoardVO" resultType="BoardVO">
+		select * from board 
+		WHERE 
+		board_sell_category=2 AND 
+		board_soldout=0
+	</select>
+
 	
 </mapper>

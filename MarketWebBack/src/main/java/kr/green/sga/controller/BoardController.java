@@ -117,7 +117,11 @@ public class BoardController {
 				updateBoardVO.setBoard_profile(boardImage_profileName);
 				log.info("BoardController-insertBoardPOST updateBoardVO.setBoard_profile : " + updateBoardVO);
 				boardService.updateBoard(updateBoardVO, user_id);
-			} // if (multipartFile != null && multipartFile.getSize() > 0) {
+				if(updateBoardVO.getBoard_auctionOnOff() == 1) {
+				log.info("BoardController-insertBoardPOST 경매글 확인 및 경매 처리 로직 실행");
+				// 
+				}
+			} // if (multipartFiles != null) {
 		}
 		return "return";
 	}
@@ -219,5 +223,7 @@ public class BoardController {
 	public String test() {
 		return "hi";
 	}
+	
+	
 
 }
