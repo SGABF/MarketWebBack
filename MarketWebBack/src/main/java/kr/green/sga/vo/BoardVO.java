@@ -53,15 +53,10 @@ public class BoardVO {
 	private List<BoardImageVO> boardImageList;
 	// 댓글을 담을 컬럼.
 	private List<ReplyVO> replyList;
-	
-	//검색 필터
+	// 검색 필터
 	private String type;
 	private String keyword;
-	
-	
 	//----옥션컬럼(가져오기)-----//
 	private AuctionVO auctionVO;
 	private String highUser_id;
 }
-
-

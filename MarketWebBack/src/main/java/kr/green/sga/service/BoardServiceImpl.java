@@ -40,8 +40,6 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private AuctionDAO auctionDAO;
 	
-	
-
 	private String os = System.getProperty("os.name").toLowerCase();
 
 	@Override
@@ -83,7 +81,6 @@ public class BoardServiceImpl implements BoardService {
 			//----- 최고입찰자 -------------//
 			dbBoardVO.setAuctionVO(auctionVO);
 			//----------옥션----------------//
-
 		}
 		log.info("BoardServiceImpl-selectByIdx 리턴 : " + dbBoardVO);
 		return dbBoardVO;
@@ -132,6 +129,7 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteBoard(BoardVO boardVO, String path) {
 		log.info("BoardServiceImpl-deleteBoard 호출1 : 삭제 시도 게시글 " + boardVO);
 		log.info("BoardServiceImpl-deleteBoard 호출2 : 삭제 시도 경로 " + path);
+		
 		if (boardVO != null && path != null) {
 			UserVO boardUserVO = userDAO.selectByIdx(boardVO.getUser_idx());
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
@@ -183,7 +181,7 @@ public class BoardServiceImpl implements BoardService {
 			list = new ArrayList<BoardVO>();
 		}
 		log.info("BoardServiceImpl-selectList 리턴 : " + list);
-		return list;
+		return list; 
 	}
 
 	@Override
@@ -232,21 +230,22 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardVO> searchBoardList(String type, String keyword) {
-		log.info("BoardServiceImpl-searchBoardList 호출 : type_" + type + ", 검색키워드_" + keyword);
-		if (type != null && keyword != null) {
+	public List<BoardVO> searchBoardList(String keyword) {
+		log.info("BoardServiceImpl-searchBoardList 호출 : 검색키워드_" + keyword);
+		if (keyword != null) {
 			List<BoardVO> searchList = new ArrayList<BoardVO>();
-			searchList = boardDAO.searchBoardList(type, keyword);
+			searchList = boardDAO.searchBoardList(keyword);
 			log.info("BoardServiceImpl-searchBoardList 리턴 : " + searchList);
 			return searchList;
 		} else {
-			log.info("BoardServiceImpl-searchBoardList 리턴 : 검색 값이 없습니다! 빈 List<BoardVO> 를 리턴합니다.");
-			List<BoardVO> searchList = new ArrayList<BoardVO>();
-			return searchList;
+			log.info("BoardServiceImpl-searchBoardList 오류 발생! 빈 List<BoardVO> 를 리턴합니다.");
+			List<BoardVO> boardList = new ArrayList<BoardVO>();
+			return boardList;
 		}
 	}
 
 	@Override
+
 	public void updateForSale(int idx, String user_id) {
 		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id );
 		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
@@ -270,5 +269,22 @@ public class BoardServiceImpl implements BoardService {
 		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
 		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateSoldOut(idx);
 	}
+
+
+	public List<BoardVO> selectSoldoutSellBoard() {
+		log.info("BoardServiceImpl-selectSoldoutSellBoard 호출 : 판매 게시글 중 판매 완료된 게시글 목록 보기");
+		List<BoardVO> SoldoutSellBoard = new ArrayList<BoardVO>();
+		SoldoutSellBoard = boardDAO.selectSoldoutSellBoard();
+		return SoldoutSellBoard;
+	}
+
+	@Override
+	public List<BoardVO> selectSoldoutAuctionBoard() {
+		log.info("BoardServiceImpl-selectSoldoutAuctionBoard 호출 : 경매 게시글 중 경매 완료된 게시글 목록 보기");
+		List<BoardVO> SoldoutAuctionBoard = new ArrayList<BoardVO>();
+		SoldoutAuctionBoard = boardDAO.selectSoldoutSellBoard();
+		return SoldoutAuctionBoard;
+	}
+  
 
 }
