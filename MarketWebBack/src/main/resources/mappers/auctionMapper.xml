@@ -31,8 +31,20 @@
 		
 	</update>
 	
+	<!-- 최고가격 가져오기 -->
+	<select id="getHighPrice" parameterType="int" resultType="int">
+	
+		SELECT
+		auctionCol1
+		FROM
+		auction  
+		WHERE 
+		auction_idx = #{auction_idx}
+	
+	</select>
+	
 	<!-- 최고 입찰자 가져오기 -->
-	<select id="selectHighUser" resultType="int">
+	<select id="selectHighUser" parameterType="int" resultType="int">
 	
 		SELECT
 		user_idx
@@ -47,14 +59,29 @@
 	
 	</select>
 	
+	<!-- 최고입찰자 업데이트 -->
+	<update id="updateHighUser" parameterType="AuctionVO">
+		UPDATE auction 
+		set 
+		auctionCol1 = #{auctionCol1}
+		WHERE
+		auction_idx = #{auction_idx}
+		
+	</update>
+	
 	<!--  입찰 참여 현황 -->
 	<select id="selectCount" resultType="int">
 		select count(*) from auctionOrder where auction_idx= #{auction_idx}
 	</select>
 	
 	<!-- 1개 옥션 가져오기 -->
-	<select id="selectByIdx" resultType="AuctionVO">
-		select * from auction where board_idx= #{board_idx}
+	<select id="selectByIdx" parameterType="int" resultType="AuctionVO">
+		select * from auction where board_idx= #{board_ref}
+	</select>
+	
+	<!-- 1개 옥션 가져오기(auctionIdx) -->
+	<select id="selectAuctionIdx" parameterType="int" resultType="AuctionVO">
+		select * from auction where auction_idx= #{auction_idx}
 	</select>
 	
 	<!-- 옥션 1개 삭제 -->
@@ -82,8 +109,25 @@
 		auction_idx = #{auction_idx}
 	</update>
 	
-
+	<!-- 가격 리셋 -->
+	<update id="resetPrice" parameterType="int">
+		UPDATE auction 
+		set 
+		auction_highPrice = (
+		SELECT
+			board_price
+			from board
+			WHERE board_idx = #{board_idx}
+		)
+		WHERE 
+		board_idx = #{board_idx}
+		
+	</update>
+	
+	
+	
 <!-- ================================Order========================================= -->
+
 	<!-- 입찰신청 기능 -->
 	<insert id="insertOrder" parameterType="OrderVO">
 		INSERT into auctionOrder (
@@ -97,10 +141,32 @@
 		#{user_idx}
 		)
 	</insert>
+	
+	<!-- 입찰 수정 -->
+	<update id="updateOrder" parameterType="OrderVO">
+		UPDATE auctionOrder 
+		set 
+		auctionOrder_used = #{auctionOrder_used}
+		WHERE 
+		auction_idx = #{auction_idx}
+		AND
+		user_idx = #{user_idx}
+	</update>
 
+	<!-- 입찰 포기 -->
+	<update id="giveUp" parameterType="OrderVO">
+		UPDATE auctionOrder
+		set 
+		auctionOrder_used = 0
+		WHERE 
+		auction_idx = #{auction_idx}
+		AND
+		user_idx = #{user_idx}
+	</update>
+	
 	<!-- 회원마다 입찰참여기록 삭제기능 -->
 	<delete id="deleteOrder" parameterType="int">
-		delete * from auctionOrder
+		delete from auctionOrder
 		where
 		auctionOrder_idx = #{auctionOrder_idx}
 	</delete>
@@ -117,6 +183,11 @@
 		select * from auctionOrder where user_idx= #{user_idx}
 	</select>
 
+	<!-- 1개글 입찰기록 가져오기 -->
+	<select id="selectOrderList" resultType="OrderVO">
+		select * from auctionOrder where auction_idx = #{auction_idx}
+	</select>
+	
 	<!-- ========================================================================= -->
 
 

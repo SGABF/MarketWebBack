@@ -9,9 +9,13 @@ public interface AuctionService {
 	// 01. 입찰신청
 	void insertOrder(BoardVO boardVO ,OrderVO orderVO, String user_id);
 	// 02. 입찰취소(삭제)
-	void deleteOrder(OrderVO orderVO);
+//	void deleteOrder(OrderVO orderVO);
 	// 03. 옥션 시작
 	void startAuction(BoardVO boardVO);
 	// 04. 옥션 종료
 	void endAuction(BoardVO boardVO);
+	// 05. 입찰수정
+	void updateOrder(OrderVO orderVO);
+	// 06. 입찰포기
+	void giveupOrder(OrderVO orderVO);
 }

@@ -67,20 +67,24 @@ public class BoardServiceImpl implements BoardService {
 		BoardVO dbBoardVO = null;
 		BoardImageVO dbBoardImageVO = null;
 		AuctionVO auctionVO = null;
+		OrderVO orderVO = null;
 		UserVO userVO = null;
 		if (board_idx != 0) {
 			// dbBoardVO에 게시글 하나의 객체를 담는다.
 			dbBoardVO = boardDAO.selectByIdx(board_idx);
+			auctionVO = auctionDAO.selectByIdx(board_idx);
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
 			dbBoardVO.setBoardImageList(boardImageList);
 			List<ReplyVO> replyList = replyDAO.selectByRef(dbBoardVO.getBoard_idx());
 			dbBoardVO.setReplyList(replyList);
 			//----------옥션----------------//
-			auctionVO = auctionDAO.selectByIdx(board_idx);
+			List<OrderVO> dbOrderVO = auctionDAO.selectOrderList(auctionVO.getAuction_idx());
+			auctionVO.setOrderVO(dbOrderVO);
 			//----- 최고입찰자 -------------//
 			int ref = auctionDAO.selectHighUser(auctionVO.getAuction_idx());
 			userVO = userDAO.selectByIdx(ref);
-			auctionVO.setAuctionCol1(userVO.getUser_id()); 
+			auctionVO.setAuctionCol1(userVO.getUser_id());
+			auctionDAO.updateHighUser(auctionVO);
 			//----- 최고입찰자 -------------//
 			dbBoardVO.setAuctionVO(auctionVO);
 			//----------옥션----------------//      

@@ -47,15 +47,14 @@ public class BoardController {
 
 	@Autowired
 	private ReplyService replyService;
-	
+
 	@Autowired
 	private AuctionService auctionService;
 
 	private String os = System.getProperty("os.name").toLowerCase();
 
 	@PostMapping(value = "/insertBoard")
-	public String insertBoardPOST(
-			@RequestHeader(value = "user_id") String user_id,
+	public String insertBoardPOST(@RequestHeader(value = "user_id") String user_id,
 			@RequestPart(value = "BoardVO", required = false) BoardVO boardVO,
 			@RequestParam(value = "file", required = false) List<MultipartFile> multipartFiles)
 			throws JsonProcessingException {
@@ -64,15 +63,15 @@ public class BoardController {
 			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
 			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
 			boardService.insertBoard(boardVO, user_id);
-			
-			//--------옥션저장기능--------//
-			if(boardVO.getBoard_sell_category()==2) {
-			
+
+			// --------옥션저장기능--------//
+			if (boardVO.getBoard_sell_category() == 2) {
+
 				AuctionVO auctionVO = new AuctionVO();
 				auctionVO.setAuction_highPrice(boardVO.getBoard_price());
 				boardVO.setAuctionVO(auctionVO);
 			}
-			//---------------------------//
+			// ---------------------------//
 			if (multipartFiles != null) {
 				log.info("BoardController-insertBoardPOST 첨부파일 존재확인");
 				String boardImage_profileName = "";
@@ -126,20 +125,23 @@ public class BoardController {
 		}
 		return "return";
 	}
-	// -----------------입찰기능---------------//
+
+	// ---------------------- 입찰기능 ----------------------//
 	@PostMapping(value = "/insertOrder")
-	public String insertOrder(
-			@RequestHeader(value = "user_id") String user_id,
+	public String insertOrder(@RequestHeader(value = "user_id") String user_id,
 			@RequestPart(value = "boardVO", required = false) BoardVO boardVO,
-			@RequestParam(value = "OrderVO", required = false) OrderVO orderVO)
-			throws JsonProcessingException {
+			@RequestParam(value = "OrderVO", required = false) OrderVO orderVO) throws JsonProcessingException {
+		if (boardVO != null && orderVO != null && user_id != null) {
+			if (boardVO.getBoard_price() < orderVO.getAuctionOrder_used()
+					&& boardVO.getAuctionVO().getAuction_highPrice() < orderVO.getAuctionOrder_used()) {
+
 				auctionService.insertOrder(boardVO, orderVO, user_id);
-				
+			}
+		}
 		return "/insertOrder";
 	}
-	
-	
-	
+
+	// ------------------- 옥션 활성화/비활성화 ---------------------//
 	@PostMapping(value = "/startAuction")
 	public void startAuction(@RequestHeader(value = "user_id") String user_id, @RequestBody BoardVO boardVO)
 			throws JsonProcessingException {
@@ -166,36 +168,24 @@ public class BoardController {
 			}
 		}
 	}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
+	// ------------------- 옥션 비활성화 ---------------------//
+
 	@PostMapping(value = "/endAuction")
-	public void endAuction(
-			@RequestHeader(value = "user_id") String user_id,
-			@RequestBody BoardVO boardVO)
-					throws JsonProcessingException {
+	public void endAuction(@RequestHeader(value = "user_id") String user_id, @RequestBody BoardVO boardVO)
+			throws JsonProcessingException {
 		UserVO loginUserVO = null;
-		if(boardVO != null && user_id != null) {
+		if (boardVO != null && user_id != null) {
 			loginUserVO = userService.selectUserId(user_id);
 			UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
-			if(boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+			if (boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
 				boardService.endAuction(boardVO);
 				auctionService.endAuction(boardVO);
 			}
 		}
 	}
-	
+
 	// -----------------입찰기능---------------//
-	
-	
+
 //	@PostMapping(value = "/updateBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //	public BoardVO updateBoardPOST(@RequestBody BoardVO boardVO, @RequestHeader(value = "user_id") String user_id,
 //			@RequestPart List<MultipartFile> multipartFiles) throws JsonProcessingException {
@@ -292,21 +282,46 @@ public class BoardController {
 	public String test() {
 		return "hi";
 	}
-	
-	
+
+	/*
 	@PostMapping(value = "/deleteOrder")
 	public void deleteOrder(@RequestBody OrderVO orderVO, @RequestHeader(value = "user_id") String user_id)
 			throws JsonProcessingException {
 		UserVO loginUserVO = null;
-		if(user_id != null) {
+		if (user_id != null) {
 			loginUserVO = userService.selectUserId(user_id);
 			UserVO orderUserVO = userService.selectByIdx(orderVO.getUser_idx());
 			if (orderUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
 				auctionService.deleteOrder(orderVO);
 			}
-			
 		}
-		
-	}
+	}*/
 
+	@PostMapping(value = "/updateOrder")
+	public void updateOrder(@RequestBody OrderVO orderVO, @RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		UserVO loginUserVO = null;
+		if (user_id != null) {
+			loginUserVO = userService.selectUserId(user_id);
+			UserVO orderUserVO = userService.selectByIdx(orderVO.getUser_idx());
+			if (orderUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+				auctionService.updateOrder(orderVO);
+				log.info("orderVO 로그 :" + orderVO);
+			}
+		}
+	}
+	
+	@PostMapping(value = "/giveupOrder")
+	public void giveupOrder(@RequestBody OrderVO orderVO, @RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		UserVO loginUserVO = null;
+		if (user_id != null) {
+			loginUserVO = userService.selectUserId(user_id);
+			UserVO orderUserVO = userService.selectByIdx(orderVO.getUser_idx());
+			if (orderUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
+				auctionService.giveupOrder(orderVO);
+				log.info("orderVO 로그 :" + orderVO);
+			}
+		}
+	}
 }

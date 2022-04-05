@@ -1,5 +1,8 @@
 package kr.green.sga.vo;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.AllArgsConstructor;
@@ -23,12 +26,15 @@ auction_endTime		int 				경매종료
 public class AuctionVO {
 	private int auction_idx;
 	private int auction_highPrice;
-	private int auction_endTime;
+	private Date auction_startTime;
+	private Date auction_endTime;
 	private int board_ref;
 	private int reply_idx;
 	private String auctionCol1;
 	private String auctionCol2;
 	private String auctionCol3;
 	
-	private OrderVO orderVO;
+	
+	
+	private List<OrderVO> orderVO;
 }
