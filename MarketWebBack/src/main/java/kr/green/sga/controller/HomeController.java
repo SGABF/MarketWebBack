@@ -16,9 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.ReplyService;
-import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
-import kr.green.sga.vo.ReplyVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -137,18 +135,6 @@ public class HomeController {
 		List<BoardVO> list = boardService.selectSoldoutAuctionBoard();
 		log.info("HomeController-selectSellBoardPOST 리턴 : 경매글 리스트 조회 리턴 " + list);
 		return list;
-	}
-
-
-	@GetMapping("/searchBoardList")
-	private List<BoardVO> searchBoardListGET(
-			@RequestParam(value = "type") String type,
-			@RequestParam(value = "keyword") String keyword
-			) throws Exception{
-		BoardVO boardVO = new BoardVO();
-		boardVO.setType(type);
-		boardVO.setKeyword(keyword);
-		return boardService.searchBoardList(boardVO.getType(), boardVO.getKeyword());
 	}
 	
 	@PostMapping("/updateSoldOut")

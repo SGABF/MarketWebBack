@@ -285,6 +285,6 @@ public class BoardServiceImpl implements BoardService {
 		SoldoutAuctionBoard = boardDAO.selectSoldoutSellBoard();
 		return SoldoutAuctionBoard;
 	}
-  
+
 
 }

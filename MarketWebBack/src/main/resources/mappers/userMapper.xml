@@ -108,6 +108,29 @@
 	<select id="countCheckPassword" parameterType="Hashmap" resultType="int">
 		SELECT count(*) from user WHERE user_id=#{user_id} and user_password=#{user_password}
 	</select>
+		
+	<!-- 나의 판매 -->
+	<select id="showMyBoard" parameterType="int" resultType="BoardVO">
+		select * FROM board
+		WHERE 
+		user_idx = #{user_idx}
+		order by board_regDate DESC
+	</select>
+	
+	<!-- 나의 댓글 -->
+	<select id="showMyReply" parameterType="int" resultType="replyVO">
+		select * FROM reply
+		WHERE 
+		user_idx = #{user_idx}
+		order by reply_regDate DESC
+	</select>
+	
+	<!-- 나의 경매 -->
+	<select id="showMyAuction" parameterType="int" resultType="OrderVO">
+		select * FROM auctionOrder
+		WHERE 
+		user_idx = #{user_idx}
+	</select>
 	
 </mapper>
 

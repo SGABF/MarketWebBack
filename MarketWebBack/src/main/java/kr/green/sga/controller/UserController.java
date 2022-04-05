@@ -1,5 +1,7 @@
 package kr.green.sga.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kr.green.sga.service.BoardService;
 import kr.green.sga.service.UserService;
+import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +29,10 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	
+	@Autowired
+	private BoardService boardService;
+	
 	@Autowired
 	private ObjectMapper mapper;
 
@@ -147,5 +154,35 @@ public class UserController {
 		log.info("UserController-checkPasswordPOST 리턴 : count_" + count);
 		return mapper.writeValueAsString(count);
 	}
-
+	
+	@RequestMapping(value = "/showMyMarket", method = RequestMethod.POST)
+	@PostMapping
+	public List<BoardVO> showMyMarketPOST(@RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		log.info("UserController-showMyBoardPOST 호출 : 현재 로그인 계정 " + user_id);
+		List<BoardVO> myMarketList = null;
+		UserVO dbUserVO = null;
+		if (user_id != null) {
+			dbUserVO = userService.selectUserId(user_id);
+			myMarketList = userService.showMyMarket(dbUserVO.getUser_idx());
+		}
+		log.info("UserController-showMyBoardPOST 리턴 : 마이 마켓 리스트 리턴 " + myMarketList);
+		return myMarketList;
+	}
+	
+	@RequestMapping(value = "/showMyGK", method = RequestMethod.POST)
+	@PostMapping
+	public List<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
+		List<BoardVO> myGKList = null;
+		UserVO dbUserVO = null;
+		if (user_id != null) {
+			dbUserVO = userService.selectUserId(user_id);
+			myGKList = userService.showMyGK(dbUserVO.getUser_idx());
+		}
+		log.info("UserController-showMyReplyPOST 리턴 : 마이 개꿀 리스트 리턴 " + myGKList);
+		return myGKList;
+	}
+	
 }

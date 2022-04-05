@@ -1,5 +1,8 @@
 package kr.green.sga.service;
 
+import java.util.List;
+
+import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 
 public interface UserService {
@@ -58,5 +61,10 @@ public interface UserService {
 	
 	// <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->
 	int countCheckPassword(String user_id, String user_password);
-
+	
+	//	<!-- 마이 마켓 리스트 조회 -->
+	List<BoardVO> showMyMarket(int user_idx);	
+	
+	//	<!-- 마이 개꿀 리스트 조회 -->
+	List<BoardVO> showMyGK(int user_idx);	
 }

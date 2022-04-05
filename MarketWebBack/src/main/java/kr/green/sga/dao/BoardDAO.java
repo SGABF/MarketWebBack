@@ -52,7 +52,6 @@ public interface BoardDAO {
 
 	// <!-- 경매완료된 경매글 보기 -->
 	List<BoardVO> selectSoldoutAuctionBoard();
-
 	
 	// 판매중으로 변경시
 	void updateForSale(int idx);

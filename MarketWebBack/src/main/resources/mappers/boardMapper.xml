@@ -133,7 +133,6 @@
 		board_sell_category=2 AND 
 		board_soldout=0
 	</select>
-
 	
 	<!-- 게시글 상태처리 (0 판매중, 1 예약중 ,2 판매완료 )-->
 	<update id="updateForSale" parameterType="int">
