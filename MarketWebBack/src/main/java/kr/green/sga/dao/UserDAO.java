@@ -1,9 +1,11 @@
 package kr.green.sga.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 
 @Mapper
@@ -58,5 +60,14 @@ public interface UserDAO {
 	// <!-- 55. select_countCheckPassword 비밀번호 일치 여부 확인하기 -->	
 	// 로그인 성공 후 회원정보 수정 페이지 진입하기 전 비번 재확인  
 	int countCheckPassword(String user_id, String user_password);
+	
+	//	<!-- 나의 판매 -->
+	List<BoardVO> showMyBoard(int user_idx);	
+	
+	//	<!-- 나의 댓글 -->
+	List<BoardVO> showMyReply(int user_idx);	
+	
+	//	<!-- 나의 경매 -->
+	List<BoardVO> showMyAuction(int user_idx);	
 	
 }

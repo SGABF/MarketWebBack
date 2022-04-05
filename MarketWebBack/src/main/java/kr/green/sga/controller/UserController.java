@@ -155,49 +155,34 @@ public class UserController {
 		return mapper.writeValueAsString(count);
 	}
 	
-	@RequestMapping(value = "/showMyBoard", method = RequestMethod.POST)
+	@RequestMapping(value = "/showMyMarket", method = RequestMethod.POST)
 	@PostMapping
-	public List<BoardVO> showMyBoardPOST(@RequestHeader(value = "user_id") String user_id)
+	public List<BoardVO> showMyMarketPOST(@RequestHeader(value = "user_id") String user_id)
 			throws JsonProcessingException {
 		log.info("UserController-showMyBoardPOST 호출 : 현재 로그인 계정 " + user_id);
-		List<BoardVO> myBoard = null;
+		List<BoardVO> myMarketList = null;
 		UserVO dbUserVO = null;
 		if (user_id != null) {
 			dbUserVO = userService.selectUserId(user_id);
-			myBoard = boardService.showMyBoard(dbUserVO.getUser_idx());
+			myMarketList = userService.showMyMarket(dbUserVO.getUser_idx());
 		}
-		log.info("UserController-showMyBoardPOST 리턴 : 나의 판매글 목록 리턴 " + myBoard);
-		return myBoard;
+		log.info("UserController-showMyBoardPOST 리턴 : 마이 마켓 리스트 리턴 " + myMarketList);
+		return myMarketList;
 	}
 	
-	@RequestMapping(value = "/showMyReply", method = RequestMethod.POST)
+	@RequestMapping(value = "/showMyGK", method = RequestMethod.POST)
 	@PostMapping
-	public List<BoardVO> showMyReplyPOST(@RequestHeader(value = "user_id") String user_id)
+	public List<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id)
 			throws JsonProcessingException {
 		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
-		List<BoardVO> myReply = null;
+		List<BoardVO> myGKList = null;
 		UserVO dbUserVO = null;
 		if (user_id != null) {
 			dbUserVO = userService.selectUserId(user_id);
-			myReply = boardService.showMyReply(dbUserVO.getUser_idx());
+			myGKList = userService.showMyGK(dbUserVO.getUser_idx());
 		}
-		log.info("UserController-showMyReplyPOST 리턴 : 나의 댓글 목록 리턴 " + myReply);
-		return myReply;
+		log.info("UserController-showMyReplyPOST 리턴 : 마이 개꿀 리스트 리턴 " + myGKList);
+		return myGKList;
 	}
 	
-	@RequestMapping(value = "/showMyAuction", method = RequestMethod.POST)
-	@PostMapping
-	public List<BoardVO> showMyAuctionPOST(@RequestHeader(value = "user_id") String user_id)
-			throws JsonProcessingException {
-		log.info("UserController-showMyAuctionPOST 호출 : 현재 로그인 계정 " + user_id);
-		List<BoardVO> myAuction = null;
-		UserVO dbUserVO = null;
-		if (user_id != null) {
-			dbUserVO = userService.selectUserId(user_id);
-			myAuction = boardService.showMyBoard(dbUserVO.getUser_idx());
-		}
-		log.info("UserController-showMyAuctionPOST 리턴 : 나의 경매글 리턴 " + myAuction);
-		return myAuction;
-	}
-
 }

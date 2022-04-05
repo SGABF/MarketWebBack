@@ -1,6 +1,8 @@
 package kr.green.sga.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.green.sga.dao.UserDAO;
+import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -297,4 +300,44 @@ public class UserServiceImpl implements UserService {
 		return count;
 	}
 
+	@Override
+	public List<BoardVO> showMyMarket(int user_idx) {
+		log.info("BoardServiceImpl-showMyMarket 호출 : 마이페이지 내 마이마켓 리스트 호출 " + user_idx);
+		if (user_idx != 0) {
+			List<BoardVO> myMarket = new ArrayList<BoardVO>();
+			myMarket = userDAO.showMyBoard(user_idx);
+			log.info("BoardServiceImpl-showMyMarket 마이마켓 리스트 리턴 : " + myMarket);
+			return myMarket;
+		} else {
+			log.info("BoardServiceImpl-showMyMarket 오류! 빈 리스트를 리턴합니다!");
+			List<BoardVO> emptyList = new ArrayList<BoardVO>();
+			return emptyList;
+		}
+	}
+
+	@Override
+	public List<BoardVO> showMyGK(int user_idx) {
+		log.info("BoardServiceImpl-showMyGK 호출 : 마이페이지 내 마이개꿀 리스트 호출 " + user_idx);
+		if(user_idx != 0) {
+			List<BoardVO> myGKList = new ArrayList<BoardVO>();
+			
+			log.info("BoardServiceImpl-showMyGK myReplyList 조회 시도");
+			List<BoardVO> myReplyList = new ArrayList<BoardVO>();
+			myReplyList = userDAO.showMyReply(user_idx);
+			log.info("BoardServiceImpl-showMyGK myReplyList 결과 확인" + myReplyList);
+			
+			log.info("BoardServiceImpl-showMyGK myAuctionList 조회 시도");
+			List<BoardVO> myAuctionList = new ArrayList<BoardVO>();
+			myAuctionList = userDAO.showMyAuction(user_idx);
+			log.info("BoardServiceImpl-showMyGK myAuctionList 결과 확인" + myAuctionList);
+			myGKList.addAll(myReplyList);
+			myGKList.addAll(myAuctionList);
+			log.info("BoardServiceImpl-showMyGK myGKList 마이개꿀 리스트 리턴 " + myGKList);
+			return myGKList;
+		} else {
+			log.info("BoardServiceImpl-showMyGK 오류! 빈 리스트를 리턴합니다!");
+			List<BoardVO> emptyList = new ArrayList<BoardVO>();
+			return emptyList;
+		}
+	}
 }

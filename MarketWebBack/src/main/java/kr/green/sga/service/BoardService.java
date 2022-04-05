@@ -47,14 +47,5 @@ public interface BoardService {
 	
 	// <!-- 경매완료된 경매글 보기 -->
 	List<BoardVO> selectSoldoutAuctionBoard();
-	
-	//	<!-- 나의 판매 -->
-	List<BoardVO> showMyBoard(int user_idx);	
-	
-	//	<!-- 나의 댓글 -->
-	List<BoardVO> showMyReply(int user_idx);	
-	
-	//	<!-- 나의 경매 -->
-	List<BoardVO> showMyAuction(int user_idx);	
 
 }
