@@ -242,4 +242,28 @@ public class BoardServiceImpl implements BoardService {
 		SoldoutAuctionBoard = boardDAO.selectSoldoutSellBoard();
 		return SoldoutAuctionBoard;
 	}
+
+	@Override
+	public List<BoardVO> showMyBoard(int user_idx) {
+		log.info("BoardServiceImpl-showMyBoard 호출 : 마이페이지 내 나의 판매 리스트 호출");
+		List<BoardVO> myBoard = new ArrayList<BoardVO>();
+		myBoard = boardDAO.showMyBoard(user_idx);
+		return myBoard;
+	}
+
+	@Override
+	public List<BoardVO> showMyReply(int user_idx) {
+		log.info("BoardServiceImpl-showMyReply 호출 : 마이페이지 내 나의 판매 리스트 호출");
+		List<BoardVO> myReply = new ArrayList<BoardVO>();
+		myReply = boardDAO.showMyReply(user_idx);
+		return myReply;
+	}
+
+	@Override
+	public List<BoardVO> showMyAuction(int user_idx) {
+		log.info("BoardServiceImpl-showMyAuction 호출 : 마이페이지 내 나의 판매 리스트 호출");
+		List<BoardVO> myAuction = new ArrayList<BoardVO>();
+		myAuction = boardDAO.showMyAuction(user_idx);
+		return myAuction;
+	}
 }

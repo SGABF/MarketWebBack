@@ -1,5 +1,7 @@
 package kr.green.sga.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kr.green.sga.service.BoardService;
 import kr.green.sga.service.UserService;
+import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +29,10 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	
+	@Autowired
+	private BoardService boardService;
+	
 	@Autowired
 	private ObjectMapper mapper;
 
@@ -146,6 +153,51 @@ public class UserController {
 		}
 		log.info("UserController-checkPasswordPOST 리턴 : count_" + count);
 		return mapper.writeValueAsString(count);
+	}
+	
+	@RequestMapping(value = "/showMyBoard", method = RequestMethod.POST)
+	@PostMapping
+	public List<BoardVO> showMyBoardPOST(@RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		log.info("UserController-showMyBoardPOST 호출 : 현재 로그인 계정 " + user_id);
+		List<BoardVO> myBoard = null;
+		UserVO dbUserVO = null;
+		if (user_id != null) {
+			dbUserVO = userService.selectUserId(user_id);
+			myBoard = boardService.showMyBoard(dbUserVO.getUser_idx());
+		}
+		log.info("UserController-showMyBoardPOST 리턴 : 나의 판매글 목록 리턴 " + myBoard);
+		return myBoard;
+	}
+	
+	@RequestMapping(value = "/showMyReply", method = RequestMethod.POST)
+	@PostMapping
+	public List<BoardVO> showMyReplyPOST(@RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
+		List<BoardVO> myReply = null;
+		UserVO dbUserVO = null;
+		if (user_id != null) {
+			dbUserVO = userService.selectUserId(user_id);
+			myReply = boardService.showMyReply(dbUserVO.getUser_idx());
+		}
+		log.info("UserController-showMyReplyPOST 리턴 : 나의 댓글 목록 리턴 " + myReply);
+		return myReply;
+	}
+	
+	@RequestMapping(value = "/showMyAuction", method = RequestMethod.POST)
+	@PostMapping
+	public List<BoardVO> showMyAuctionPOST(@RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
+		log.info("UserController-showMyAuctionPOST 호출 : 현재 로그인 계정 " + user_id);
+		List<BoardVO> myAuction = null;
+		UserVO dbUserVO = null;
+		if (user_id != null) {
+			dbUserVO = userService.selectUserId(user_id);
+			myAuction = boardService.showMyBoard(dbUserVO.getUser_idx());
+		}
+		log.info("UserController-showMyAuctionPOST 리턴 : 나의 경매글 리턴 " + myAuction);
+		return myAuction;
 	}
 
 }

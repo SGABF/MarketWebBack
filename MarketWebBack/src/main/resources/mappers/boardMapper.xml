@@ -134,4 +134,29 @@
 		board_soldout=0
 	</select>
 	
+	
+	<!-- 나의 판매 -->
+	<select id="showMyBoard" parameterType="int" resultType="BoardVO">
+		select * FROM board
+		WHERE 
+		user_idx = #{user_idx}
+		order by board_regDate DESC
+	</select>
+	
+	<!-- 나의 댓글 -->
+	<select id="showMyReply" parameterType="int" resultType="replyVO">
+		select * FROM reply
+		WHERE 
+		user_idx = #{user_idx}
+		order by reply_regDate DESC
+	</select>
+	
+	<!-- 나의 경매 -->
+	<select id="showMyAuction" parameterType="int" resultType="AuctionVO">
+		select * FROM auction
+		WHERE 
+		user_idx = #{user_idx}
+		order by auction_idx DESC
+	</select>
+	
 </mapper>
