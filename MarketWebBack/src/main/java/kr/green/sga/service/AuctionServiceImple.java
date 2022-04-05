@@ -13,25 +13,24 @@ import kr.green.sga.vo.UserVO;
 
 @Service("AuctcionService")
 public class AuctionServiceImple implements AuctionService {
-	
+
 	@Autowired
 	private AuctionDAO auctionDAO;
-	
+
 	@Autowired
 	private UserDAO userDAO;
 
 	@Override
 	public void insertOrder(OrderVO orderVO, String user_id) {
-		UserVO dbUserVO = userDAO.selectUserId(user_id); 
+		UserVO dbUserVO = userDAO.selectUserId(user_id);
 		orderVO.setUser_idx(dbUserVO.getUser_idx());
-		
-		
 
-	} 
+	}
 
 	@Override
 	public void deleteOrder(int auctionOrder_idx) {
-		// TODO Auto-generated method stub
+		if (auctionOrder_idx > 0) {
+			auctionDAO.deleteOrder(auctionOrder_idx);
+		}
 	}
-
 }

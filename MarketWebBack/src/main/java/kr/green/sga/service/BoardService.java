@@ -45,7 +45,19 @@ public interface BoardService {
 	// <!-- 판매완료된 판매글 보기 -->
 	List<BoardVO> selectSoldoutSellBoard();
 	
+
+	// (0 판매중, 1 예약중 ,2 판매완료) 판매중이면
+	void updateForSale(int idx, String user_id);
+	
+	// (0 판매중, 1 예약중 ,2 판매완료) 예약중이면
+	void updateReservate(int idx, String user_id);
+	
+	// (0 판매중, 1 예약중 ,2 판매완료) 판매완료면
+	void updateSoldOut(int idx,  String user_id);
+	
+
 	// <!-- 경매완료된 경매글 보기 -->
 	List<BoardVO> selectSoldoutAuctionBoard();
+
 
 }

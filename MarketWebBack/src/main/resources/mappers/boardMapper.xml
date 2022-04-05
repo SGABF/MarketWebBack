@@ -134,4 +134,33 @@
 		board_soldout=0
 	</select>
 	
+	<!-- 게시글 상태처리 (0 판매중, 1 예약중 ,2 판매완료 )-->
+	<update id="updateForSale" parameterType="int">
+		update board
+		set
+		board_soldout = 0
+		where board_idx = #{board_idx}
+	</update>
+	
+	<!-- 게시글 상태처리 (0 판매중, 1 예약중 ,2 판매완료 )-->
+	<update id="updateReservate" parameterType="int">
+		update board
+		set
+		board_soldout = 1
+		where board_idx = #{board_idx}
+	</update>
+	
+	<!-- 게시글 상태처리 (0 판매중, 1 예약중 ,2 판매완료 )-->
+	<update id="updateSoldOut" parameterType="int">
+		update board
+		set
+		board_soldout = 2
+		where board_idx = #{board_idx}
+	</update>
+	
+	<!-- //게시글 번호로 유저idx 가져오기 -->
+	<select id="selectUsId"  parameterType="int" resultType="BoardVO">
+		select * from board where board_idx =#{board_idx}
+	</select>
+	
 </mapper>

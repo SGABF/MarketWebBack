@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import kr.green.sga.service.AuctionService;
 import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.ReplyService;
@@ -45,6 +46,9 @@ public class BoardController {
 
 	@Autowired
 	private ReplyService replyService;
+	
+	@Autowired
+	private AuctionService auctionService;
 
 	private String os = System.getProperty("os.name").toLowerCase();
 
@@ -226,4 +230,10 @@ public class BoardController {
 	
 	
 
+	
+	@PostMapping(value = "deleteAuction")
+	public void deleteAuction(@RequestParam int idx) {
+		log.info("BoardController-deleteAuction 호출 : 현재 게시물 번호 : " + idx);
+		auctionService.deleteOrder(idx);
+	}
 }
