@@ -245,6 +245,32 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+
+	public void updateForSale(int idx, String user_id) {
+		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id );
+		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
+		UserVO userVO = userDAO.selectUserId(user_id); // 받은 ID의 유저정보 유저 idx 가져오기
+		
+		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateForSale(idx); 
+	}
+
+	@Override
+	public void updateReservate(int idx, String user_id) {
+		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id);
+		UserVO userVO = userDAO.selectUserId(user_id); // 받은 ID의 유저정보 유저 idx 가져오기
+		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
+		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateReservate(idx);
+	}
+
+	@Override
+	public void updateSoldOut(int idx, String user_id) {
+		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id);
+		UserVO userVO = userDAO.selectUserId(user_id); // 받은 ID의 유저정보 유저 idx 가져오기
+		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
+		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateSoldOut(idx);
+	}
+
+
 	public List<BoardVO> selectSoldoutSellBoard() {
 		log.info("BoardServiceImpl-selectSoldoutSellBoard 호출 : 판매 게시글 중 판매 완료된 게시글 목록 보기");
 		List<BoardVO> SoldoutSellBoard = new ArrayList<BoardVO>();
@@ -260,4 +286,5 @@ public class BoardServiceImpl implements BoardService {
 		return SoldoutAuctionBoard;
 	}
   
+
 }
