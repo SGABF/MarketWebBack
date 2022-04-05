@@ -138,5 +138,16 @@ public class HomeController {
 		return list;
 	}
 
+
+	@GetMapping("/searchBoardList")
+	private List<BoardVO> searchBoardListGET(
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "keyword") String keyword
+			) throws Exception{
+		BoardVO boardVO = new BoardVO();
+		boardVO.setType(type);
+		boardVO.setKeyword(keyword);
+		return boardService.searchBoardList(boardVO.getType(), boardVO.getKeyword());
+	}
 	
 }

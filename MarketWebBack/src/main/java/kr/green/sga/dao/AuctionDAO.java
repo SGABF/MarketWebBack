@@ -16,6 +16,8 @@ public interface AuctionDAO {
 	void updatePrice(AuctionVO auctionVO);
 	// 최고입찰 유저 가져오기
 	int selectHighUser(int user_idx);
+	// 1개글 가져오기
+	AuctionVO selectByIdx(int board_idx);
 	
 	//-----------AuctionOrder------------//
 	// 입찰 신청

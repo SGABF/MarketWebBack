@@ -49,9 +49,10 @@ public interface BoardDAO {
 	
 	// <!-- 판매완료된 판매글 보기 -->
 	List<BoardVO> selectSoldoutSellBoard();
-	
+
 	// <!-- 경매완료된 경매글 보기 -->
 	List<BoardVO> selectSoldoutAuctionBoard();
+
 	
 	//	<!-- 나의 판매 -->
 	List<BoardVO> showMyBoard(int user_idx);	
