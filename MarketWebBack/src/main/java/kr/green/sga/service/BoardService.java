@@ -42,4 +42,13 @@ public interface BoardService {
 	// <!-- 게시글 검색-->
 	List<BoardVO> searchBoardList(String type, String keyword);
 	
+	// (0 판매중, 1 예약중 ,2 판매완료) 판매중이면
+	void updateForSale(int idx, String user_id);
+	
+	// (0 판매중, 1 예약중 ,2 판매완료) 예약중이면
+	void updateReservate(int idx, String user_id);
+	
+	// (0 판매중, 1 예약중 ,2 판매완료) 판매완료면
+	void updateSoldOut(int idx,  String user_id);
+	
 }

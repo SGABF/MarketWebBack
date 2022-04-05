@@ -49,4 +49,16 @@ public interface BoardDAO {
 	// <!-- 게시글 검색-->
 	List<BoardVO> searchBoardList(String type, String keyword);
 	
+	// 판매중으로 변경시
+	void updateForSale(int idx);
+	
+	// 예약중으로 변경시
+	void updateReservate(int idx);
+	
+	// 판매완료로 변경시
+	void updateSoldOut(int idx);
+	
+	//게시글 번호의 유저 idx 가져오기
+	BoardVO selectUsId(int idx);
+	
 }
