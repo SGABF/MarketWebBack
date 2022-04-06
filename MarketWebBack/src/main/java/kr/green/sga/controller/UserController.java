@@ -24,15 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(name = "/user")
 public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Autowired
 	private ObjectMapper mapper;
 
@@ -154,8 +153,8 @@ public class UserController {
 		log.info("UserController-checkPasswordPOST 리턴 : count_" + count);
 		return mapper.writeValueAsString(count);
 	}
-	
-	@RequestMapping(value = "/showMyMarket", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/myMarket", method = RequestMethod.POST)
 	@PostMapping
 	public List<BoardVO> showMyMarketPOST(@RequestHeader(value = "user_id") String user_id)
 			throws JsonProcessingException {
@@ -169,11 +168,10 @@ public class UserController {
 		log.info("UserController-showMyBoardPOST 리턴 : 마이 마켓 리스트 리턴 " + myMarketList);
 		return myMarketList;
 	}
-	
-	@RequestMapping(value = "/showMyGK", method = RequestMethod.POST)
+  
+	@RequestMapping(value = "/myGK", method = RequestMethod.POST)
 	@PostMapping
-	public List<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id)
-			throws JsonProcessingException {
+	public List<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
 		List<BoardVO> myGKList = null;
 		UserVO dbUserVO = null;
@@ -184,5 +182,5 @@ public class UserController {
 		log.info("UserController-showMyReplyPOST 리턴 : 마이 개꿀 리스트 리턴 " + myGKList);
 		return myGKList;
 	}
-	
+
 }

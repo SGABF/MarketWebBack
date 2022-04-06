@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(name = "/reply")
+@RequestMapping(value = "/reply")
 public class ReplyController {
 
 	@Autowired
@@ -32,21 +34,29 @@ public class ReplyController {
 	private ReplyService replyService;
 
 	@PostMapping(value = "/insertReply")
-	public ReplyVO insertReplyPOST(@RequestBody ReplyVO replyVO, @RequestBody BoardVO boardVO,
-			@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
+	public ReplyVO insertReplyPOST(
+			@RequestPart(value = "ReplyVO", required = false) ReplyVO replyVO, 
+			@RequestHeader(value = "user_id", required = false) String user_id,
+			@RequestParam(value = "board_idx", required = false) int board_idx
+			) throws JsonProcessingException {
 		log.info("ReplyController-insertReplyPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 댓글 : " + replyVO);
-		log.info("ReplyController-insertReplyPOST 호출2 : 댓글이 작성될 게시글 " + boardVO);
+		log.info("ReplyController-insertReplyPOST 호출2 : 댓글이 작성될 게시글번호 " + board_idx);
 		UserVO dbUserVO = null;
 		ReplyVO dbReplyVO = null;
+		BoardVO dbBoardVO = null;
 		int selectMaxIdx = 0;
-		if (replyVO != null && boardVO != null && user_id != null) {
+		if (replyVO != null && board_idx != 0 && user_id != null) {
 			dbUserVO = userService.selectUserId(user_id);
-			replyVO.setBoard_idx(boardVO.getBoard_idx());
-			replyVO.setUser_idx(dbUserVO.getUser_idx());
-			replyService.insertReply(replyVO, boardVO, user_id);
-			selectMaxIdx = replyService.selectMaxIdx();
-			dbReplyVO = replyService.selectByIdx(selectMaxIdx);
-		} // if (boardVO != null && user_id != null) {
+			dbBoardVO = boardService.selectByIdx(board_idx);
+			if(dbUserVO != null && dbBoardVO != null) {
+				log.info("ReplyController-insertReplyPOST : 게시글 DB, 유저DB 정보 확인.");
+				replyVO.setBoard_idx(board_idx);
+				replyVO.setUser_idx(dbUserVO.getUser_idx());
+				replyService.insertReply(replyVO, dbBoardVO, user_id);
+				selectMaxIdx = replyService.selectMaxIdx();
+				dbReplyVO = replyService.selectByIdx(selectMaxIdx);
+			}
+		}
 		log.info("BoardController-insertBoardPOST 리턴 : " + dbReplyVO);
 		return dbReplyVO;
 	}

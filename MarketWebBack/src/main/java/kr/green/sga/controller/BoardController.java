@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(name = "/board")
+@RequestMapping(value = "/board")
 public class BoardController {
 
 	@Autowired
@@ -54,24 +54,25 @@ public class BoardController {
 
 	@PostMapping(value = "/insertBoard")
 	public String insertBoardPOST(
-			@RequestHeader(value = "user_id") String user_id,
+			@RequestHeader(value = "user_id", required = false) String user_id,
 			@RequestPart(value = "BoardVO", required = false) BoardVO boardVO,
 			@RequestParam(value = "file", required = false) List<MultipartFile> multipartFiles)
 			throws JsonProcessingException {
+		log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
+		log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
+		String path = "";
 		if (boardVO != null) {
-			String path = "";
-			log.info("BoardController-insertBoardPOST 호출1 : 현재 로그인 계정 " + user_id + ", 작성 시도 게시글 : " + boardVO);
-			log.info("BoardController-insertBoardPOST 호출2 : 저장 시도 첨부파일 : " + multipartFiles + "\n");
+			log.info("BoardController-insertBoardPOST : 작성 시도 게시글 존재 확인 " + boardVO);
 			boardService.insertBoard(boardVO, user_id);
-			
-			//--------옥션저장기능--------//
-			if(boardVO.getBoard_auctionOnOff()!=0) {
+
+			// --------옥션저장기능--------//
+			if (boardVO.getBoard_auctionOnOff() != 0) {
 				AuctionVO auctionVO = new AuctionVO();
 				auctionVO.setBoard_idx(boardVO.getBoard_idx());
 				auctionVO.setAuction_highPrice(boardVO.getBoard_price());
 				boardVO.setAuctionVO(auctionVO);
 			}
-			//--------옥션저장기능--------//
+			// --------옥션저장기능--------//
 			if (multipartFiles != null) {
 				log.info("BoardController-insertBoardPOST 첨부파일 존재확인");
 				String boardImage_profileName = "";
@@ -121,16 +122,11 @@ public class BoardController {
 				updateBoardVO.setBoard_profile(boardImage_profileName);
 				log.info("BoardController-insertBoardPOST updateBoardVO.setBoard_profile : " + updateBoardVO);
 				boardService.updateBoard(updateBoardVO, user_id);
-				if(updateBoardVO.getBoard_auctionOnOff() == 1) {
-				log.info("BoardController-insertBoardPOST 경매글 확인 및 경매 처리 로직 실행");
-				// 
-				}
 			} // if (multipartFiles != null) {
 		}
 		return "return";
 	}
-	
-	
+
 //	@PostMapping(value = "/updateBoard", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //	public BoardVO updateBoardPOST(@RequestBody BoardVO boardVO, @RequestHeader(value = "user_id") String user_id,
 //			@RequestPart List<MultipartFile> multipartFiles) throws JsonProcessingException {
@@ -199,36 +195,42 @@ public class BoardController {
 //	}
 
 	@PostMapping(value = "/deleteBoard")
-	public void deleteBoardPOST(@RequestBody BoardVO boardVO, @RequestHeader(value = "user_id") String user_id)
-			throws JsonProcessingException {
+	public void deleteBoardPOST(
+			@RequestHeader(value = "user_id", required = false) String user_id,
+			@RequestParam(value = "board_idx", required = false) int board_idx) throws JsonProcessingException {
 		log.info("BoardController-deleteBoardPOST 호출1 : 현재 로그인 계정 " + user_id);
-		log.info("BoardController-deleteBoardPOST 호출2 : 삭제 시도 게시글 " + boardVO);
+		log.info("BoardController-deleteBoardPOST 호출2 : 삭제 시도 게시글 번호 " + board_idx);
 		String path = "";
 		UserVO loginUserVO = null;
-		if (boardVO != null && user_id != null) {
-			loginUserVO = userService.selectUserId(user_id);
-			UserVO boardUserVO = userService.selectByIdx(boardVO.getUser_idx());
-			if (boardUserVO.getUser_id().equals(loginUserVO.getUser_id())) {
-				log.info("BoardController-deleteBoardPOST 게시글의 작성자와 삭제 요청자가 일치합니다.");
-				if (os.contains("win")) {
-					path = "C:/image/";
-					log.info("wind path");
+		BoardVO dbBoardVO = null;
+		if (board_idx != 0 && user_id != null) {
+			dbBoardVO = boardService.selectByIdx(board_idx); // 삭제 시도하려는 BoardVO
+			loginUserVO = userService.selectUserId(user_id); // 삭제 하려는 UserVO
+			if (dbBoardVO != null && loginUserVO != null) {
+				log.info("BoardController-deleteBoardPOST : 일치여부 확인 ");
+				if (dbBoardVO.getUser_idx() == loginUserVO.getUser_idx()) {
+					log.info("BoardController-deleteBoardPOST 게시글의 작성자와 삭제 요청자가 일치합니다.");
+					if (os.contains("win")) {
+						path = "C:/image/";
+						log.info("wind path");
+					} else {
+						path = "/resources/Back/";
+						log.info("linux path");
+					}
+					boardService.deleteBoard(dbBoardVO, path);
+					log.info("BoardController-deleteBoardPOST 리턴 : 삭제 성공 ");
 				} else {
-					path = "/resources/Back/";
-					log.info("linux path");
+					log.info("BoardController-deleteBoardPOST 리턴 : 삭제 실패_게시글작성자와 삭제요청자간 불일치함.  ");
+
 				}
-				boardService.deleteBoard(boardVO, path);
 			}
 		}
-		log.info("BoardController-deleteBoardPOST 리턴 : 삭제 성공 ");
 	}
 
 	@GetMapping(value = "/test")
 	public String test() {
 		return "hi";
 	}
-	
-	
 
 	
 	@PostMapping(value = "deleteAuction")

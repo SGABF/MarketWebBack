@@ -72,15 +72,15 @@ public class BoardServiceImpl implements BoardService {
 			dbBoardVO.setBoardImageList(boardImageList);
 			List<ReplyVO> replyList = replyDAO.selectByRef(dbBoardVO.getBoard_idx());
 			dbBoardVO.setReplyList(replyList);
-			//----------옥션----------------//
-			auctionVO = auctionDAO.selectByIdx(board_idx);
-			//----- 최고입찰자 -------------//
-			int ref = auctionDAO.selectHighUser(auctionVO.getAuction_idx());
-			userVO = userDAO.selectByIdx(ref);
-			auctionVO.setAuction_highUser(userVO.getUser_id());
-			//----- 최고입찰자 -------------//
-			dbBoardVO.setAuctionVO(auctionVO);
-			//----------옥션----------------//
+//			//----------옥션----------------//
+//			auctionVO = auctionDAO.selectByIdx(board_idx);
+//			//----- 최고입찰자 -------------//
+//			int ref = auctionDAO.selectHighUser(auctionVO.getAuction_idx());
+//			userVO = userDAO.selectByIdx(ref);
+//			auctionVO.setAuction_highUser(userVO.getUser_id());
+//			//----- 최고입찰자 -------------//
+//			dbBoardVO.setAuctionVO(auctionVO);
+//			//----------옥션----------------//
 		}
 		log.info("BoardServiceImpl-selectByIdx 리턴 : " + dbBoardVO);
 		return dbBoardVO;
