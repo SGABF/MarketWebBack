@@ -8,12 +8,13 @@
 	<!-- 01. insert_글 쓰기 -->
 	<insert id="insertReply" parameterType="ReplyVO">
 		INSERT into reply (
-		reply_content, board_idx, user_idx
+		reply_content, board_idx, user_idx, user_id
 		)
 		values (
 		#{reply_content},
 		#{board_idx},
-		#{user_idx}
+		#{user_idx},
+		#{user_id}
 		)
 	</insert>
 

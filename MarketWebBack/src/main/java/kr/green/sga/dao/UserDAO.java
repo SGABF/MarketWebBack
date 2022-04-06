@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 
 @Mapper
@@ -65,9 +66,6 @@ public interface UserDAO {
 	List<BoardVO> showMyBoard(int user_idx);	
 	
 	//	<!-- 나의 댓글 -->
-	List<BoardVO> showMyReply(int user_idx);	
-	
-	//	<!-- 나의 경매 -->
-	List<BoardVO> showMyAuction(int user_idx);	
+	List<ReplyVO> showMyReply(String user_id);	
 	
 }
