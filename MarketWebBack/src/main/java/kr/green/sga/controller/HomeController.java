@@ -104,9 +104,8 @@ public class HomeController {
 //	}
 
 	@GetMapping("/searchBoardList")
-	private List<BoardVO> searchBoardListGET(
-			@RequestParam(value = "keyword", required = false) String keyword
-			) throws Exception {
+	private List<BoardVO> searchBoardListGET(@RequestParam(value = "keyword", required = false) String keyword)
+			throws Exception {
 		log.info("HomeController-searchBoardListGET 호출 " + keyword);
 		List<BoardVO> list = null;
 		if (keyword != null) {
@@ -119,15 +118,15 @@ public class HomeController {
 		}
 		return null;
 	}
-	
+
 	@PostMapping(value = "/soldoutSellBoard")
 	public List<BoardVO> selectSoldoutSellBoardPOST() throws JsonProcessingException {
-		log.info("HomeController-selectSellBoardPOST 호출 : 판매글 리스트 조회");
+		log.info("HomeController-selectSellBoardPOST 호출 : 판매글 중 판매중인 리스트 조회");
 		List<BoardVO> list = boardService.selectSoldoutSellBoard();
 		log.info("HomeController-selectSellBoardPOST 리턴 : 판매글 리스트 조회 리턴 " + list);
 		return list;
 	}
-	
+
 	@PostMapping(value = "/soldoutAuctionBoard")
 	public List<BoardVO> selectSoldoutAuctionBoardPOST() throws JsonProcessingException {
 		log.info("HomeController-selectSellBoardPOST 호출 : 경매글 리스트 조회");
@@ -135,5 +134,5 @@ public class HomeController {
 		log.info("HomeController-selectSellBoardPOST 리턴 : 경매글 리스트 조회 리턴 " + list);
 		return list;
 	}
-	
+
 }

@@ -45,6 +45,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	// DB 연결 후
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.info("JwtUserDetailsService-loadUserByUsername 호출 : " + username);
 		UserVO dbVO = null;
 		if (username != null) {
 			dbVO = userService.selectUserId(username);
