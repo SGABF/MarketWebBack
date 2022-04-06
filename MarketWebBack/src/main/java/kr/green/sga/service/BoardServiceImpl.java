@@ -13,7 +13,6 @@ import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.BoardImageDAO;
 import kr.green.sga.dao.ReplyDAO;
 import kr.green.sga.dao.UserDAO;
-import kr.green.sga.vo.AuctionVO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.ReplyVO;
@@ -37,8 +36,8 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private ReplyDAO replyDAO;
 
-	@Autowired
-	private AuctionDAO auctionDAO;
+//	@Autowired
+//	private AuctionDAO auctionDAO;
 	
 	private String os = System.getProperty("os.name").toLowerCase();
 
@@ -62,9 +61,8 @@ public class BoardServiceImpl implements BoardService {
 	public BoardVO selectByIdx(int board_idx) {
 		log.info("BoardServiceImpl-selectByIdx 호출 : " + board_idx);
 		BoardVO dbBoardVO = null;
-		BoardImageVO dbBoardImageVO = null;
-		AuctionVO auctionVO = null;
-		UserVO userVO = null;
+//		AuctionVO auctionVO = null;
+//		UserVO userVO = null;
 		if (board_idx != 0) {
 			// dbBoardVO에 게시글 하나의 객체를 담는다.
 			dbBoardVO = boardDAO.selectByIdx(board_idx);
@@ -131,7 +129,6 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-deleteBoard 호출2 : 삭제 시도 경로 " + path);
 		
 		if (boardVO != null && path != null) {
-			UserVO boardUserVO = userDAO.selectByIdx(boardVO.getUser_idx());
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
 			if (boardImageList != null && boardImageList.size() > 0) {
 				log.info("BoardServiceImpl-deleteBoard 첨부 이미지 리스트 확인 및 삭제 " + boardImageList);
@@ -245,34 +242,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-
-	public void updateForSale(int idx, String user_id) {
-		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id );
-		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
-		UserVO userVO = userDAO.selectUserId(user_id); // 받은 ID의 유저정보 유저 idx 가져오기
-		
-		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateForSale(idx); 
-	}
-
-	@Override
-	public void updateReservate(int idx, String user_id) {
-		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id);
-		UserVO userVO = userDAO.selectUserId(user_id); // 받은 ID의 유저정보 유저 idx 가져오기
-		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
-		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateReservate(idx);
-	}
-
-	@Override
-	public void updateSoldOut(int idx, String user_id) {
-		log.info("BoardServiceImpl-updateSoldOut0 호출 : idx : " + idx + "user id : " + user_id);
-		UserVO userVO = userDAO.selectUserId(user_id); // 받은 ID의 유저정보 유저 idx 가져오기
-		BoardVO boardVO = boardDAO.selectUsId(idx); // 받은 게시물 번호로 유저 idx 가져오기
-		if(boardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateSoldOut(idx);
-	}
-
-
 	public List<BoardVO> selectSoldoutSellBoard() {
-		log.info("BoardServiceImpl-selectSoldoutSellBoard 호출 : 판매 게시글 중 판매 완료된 게시글 목록 보기");
+		log.info("BoardServiceImpl-selectSoldoutSellBoard 호출 : 판매 게시글 중 판매중인 상품만 보기");
 		List<BoardVO> SoldoutSellBoard = new ArrayList<BoardVO>();
 		SoldoutSellBoard = boardDAO.selectSoldoutSellBoard();
 		return SoldoutSellBoard;
@@ -280,11 +251,34 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<BoardVO> selectSoldoutAuctionBoard() {
-		log.info("BoardServiceImpl-selectSoldoutAuctionBoard 호출 : 경매 게시글 중 경매 완료된 게시글 목록 보기");
+		log.info("BoardServiceImpl-selectSoldoutAuctionBoard 호출 : 경매 게시글 중 경매 진행중인 상품만 보기");
 		List<BoardVO> SoldoutAuctionBoard = new ArrayList<BoardVO>();
-		SoldoutAuctionBoard = boardDAO.selectSoldoutSellBoard();
+		SoldoutAuctionBoard = boardDAO.selectAuctionBoard();
 		return SoldoutAuctionBoard;
 	}
 
+	@Override
+	public void updateForSale(int board_idx, String user_id) {
+		log.info("BoardServiceImpl-updateForSale 호출 board_idx : " + board_idx + ", user id : " + user_id);
+		UserVO userVO = userDAO.selectUserId(user_id);
+		BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
+		if(dbBoardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateForSale(board_idx); 
+	}
+
+	@Override
+	public void updateReservate(int board_idx, String user_id) {
+		log.info("BoardServiceImpl-updateReservate 호출 board_idx : " + board_idx + ", user id : " + user_id);
+		UserVO userVO = userDAO.selectUserId(user_id);
+		BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
+		if(dbBoardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateReservate(board_idx);
+	}
+
+	@Override
+	public void updateSoldout(int board_idx, String user_id) {
+		log.info("BoardServiceImpl-updateSoldOut 호출 board_idx : " + board_idx + ", user id : " + user_id);
+		UserVO userVO = userDAO.selectUserId(user_id);
+		BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
+		if(dbBoardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateSoldout(board_idx);
+	}
 
 }

@@ -118,19 +118,14 @@
 	</select>
 	
 	<!-- 나의 댓글 -->
-	<select id="showMyReply" parameterType="int" resultType="replyVO">
-		select * FROM reply
+	<select id="showMyReply" parameterType="String" resultType="replyVO">
+		select * from reply
 		WHERE 
-		user_idx = #{user_idx}
-		order by reply_regDate DESC
+		user_id = #{user_id}
+		order by reply_regDate desc
 	</select>
 	
-	<!-- 나의 경매 -->
-	<select id="showMyAuction" parameterType="int" resultType="OrderVO">
-		select * FROM auctionOrder
-		WHERE 
-		user_idx = #{user_idx}
-	</select>
+	
 	
 </mapper>
 

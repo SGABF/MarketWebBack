@@ -47,22 +47,19 @@ public interface BoardDAO {
 	// <!-- 게시글 검색-->
 	List<BoardVO> searchBoardList(String keyword);
 	
-	// <!-- 판매완료된 판매글 보기 -->
+	// <!-- 현재 판매중인 판매글만 보기 -->
 	List<BoardVO> selectSoldoutSellBoard();
 
-	// <!-- 경매완료된 경매글 보기 -->
+	// <!-- 현재 경매중인 경매글만 보기 -->
 	List<BoardVO> selectSoldoutAuctionBoard();
 	
 	// 판매중으로 변경시
-	void updateForSale(int idx);
+	void updateForSale(int board_idx);
 	
 	// 예약중으로 변경시
-	void updateReservate(int idx);
+	void updateReservate(int board_idx);
 	
 	// 판매완료로 변경시
-	void updateSoldOut(int idx);
-	
-	//게시글 번호의 유저 idx 가져오기
-	BoardVO selectUsId(int idx);
+	void updateSoldout(int board_idx);
 	
 }

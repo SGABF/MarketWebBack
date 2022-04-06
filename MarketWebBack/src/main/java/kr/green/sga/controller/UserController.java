@@ -1,5 +1,6 @@
 package kr.green.sga.controller;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,13 +172,11 @@ public class UserController {
   
 	@RequestMapping(value = "/myGK", method = RequestMethod.POST)
 	@PostMapping
-	public List<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
+	public LinkedHashSet<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
-		List<BoardVO> myGKList = null;
-		UserVO dbUserVO = null;
+		LinkedHashSet<BoardVO> myGKList = null;
 		if (user_id != null) {
-			dbUserVO = userService.selectUserId(user_id);
-			myGKList = userService.showMyGK(dbUserVO.getUser_idx());
+			myGKList = userService.showMyGK(user_id);
 		}
 		log.info("UserController-showMyReplyPOST 리턴 : 마이 개꿀 리스트 리턴 " + myGKList);
 		return myGKList;

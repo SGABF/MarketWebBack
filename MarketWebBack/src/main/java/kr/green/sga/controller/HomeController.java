@@ -5,17 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
-import kr.green.sga.service.ReplyService;
 import kr.green.sga.vo.BoardVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,14 +23,7 @@ public class HomeController {
 	@Autowired
 	private BoardService boardService;
 
-	@Autowired
-	private BoardImageService boardImageService;
-
-	@Autowired
-	private ReplyService replyService;
-
-	@RequestMapping(value = "/boardList", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/boardList")
 	public List<BoardVO> selectListPOST() throws JsonProcessingException {
 		log.info("BoardController-selectListPOST 호출 : ");
 		List<BoardVO> list = boardService.selectList();
@@ -42,8 +31,7 @@ public class HomeController {
 		return list;
 	}
 
-	@RequestMapping(value = "/main", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/main")
 	public List<BoardVO> selectDescLimitPOST() throws JsonProcessingException {
 		log.info("HomeController-selectDescLimitPOST 호출 : ");
 		List<BoardVO> list = boardService.selectDescLimit();
@@ -136,14 +124,4 @@ public class HomeController {
 		return list;
 	}
 
-	@PostMapping("/updateSoldOut")
-	private void updateSoldOut(
-		@RequestParam int board_idx,//몇번 게시글을 
-		@RequestParam int board_soldOut,	//0,1,2 중 하나로
-		@RequestHeader(value = "user_id") String user_id) { // 이 유저가
-		log.info("HomeController-updateSoldOut 호출 ");
-		if(board_soldOut == 0) boardService.updateForSale(board_idx, user_id); 
-		if(board_soldOut == 1) boardService.updateReservate(board_idx, user_id); 
-		if(board_soldOut == 2) boardService.updateSoldOut(board_idx, user_id); 
-	}
 }

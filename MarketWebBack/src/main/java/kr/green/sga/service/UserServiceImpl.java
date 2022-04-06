@@ -2,6 +2,8 @@ package kr.green.sga.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -9,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.UserDAO;
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private BoardDAO boardDAO;
 
 	@Autowired(required = false)
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -302,41 +309,40 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<BoardVO> showMyMarket(int user_idx) {
-		log.info("BoardServiceImpl-showMyMarket 호출 : 마이페이지 내 마이마켓 리스트 호출 " + user_idx);
+		log.info("UserServiceImpl-showMyMarket 호출 : 마이페이지 내 마이마켓 리스트 호출 " + user_idx);
 		if (user_idx != 0) {
 			List<BoardVO> myMarket = new ArrayList<BoardVO>();
 			myMarket = userDAO.showMyBoard(user_idx);
-			log.info("BoardServiceImpl-showMyMarket 마이마켓 리스트 리턴 : " + myMarket);
+			log.info("UserServiceImpl-showMyMarket 마이마켓 리스트 리턴 : " + myMarket);
 			return myMarket;
 		} else {
-			log.info("BoardServiceImpl-showMyMarket 오류! 빈 리스트를 리턴합니다!");
+			log.info("UserServiceImpl-showMyMarket 오류! 빈 리스트를 리턴합니다!");
 			List<BoardVO> emptyList = new ArrayList<BoardVO>();
 			return emptyList;
 		}
 	}
 
 	@Override
-	public List<BoardVO> showMyGK(int user_idx) {
-		log.info("BoardServiceImpl-showMyGK 호출 : 마이페이지 내 마이개꿀 리스트 호출 " + user_idx);
-		if(user_idx != 0) {
-			List<BoardVO> myGKList = new ArrayList<BoardVO>();
-			
-			log.info("BoardServiceImpl-showMyGK myReplyList 조회 시도");
-			List<BoardVO> myReplyList = new ArrayList<BoardVO>();
-			myReplyList = userDAO.showMyReply(user_idx);
-			log.info("BoardServiceImpl-showMyGK myReplyList 결과 확인" + myReplyList);
-			
-			log.info("BoardServiceImpl-showMyGK myAuctionList 조회 시도");
-			List<BoardVO> myAuctionList = new ArrayList<BoardVO>();
-			myAuctionList = userDAO.showMyAuction(user_idx);
-			log.info("BoardServiceImpl-showMyGK myAuctionList 결과 확인" + myAuctionList);
-			myGKList.addAll(myReplyList);
-			myGKList.addAll(myAuctionList);
-			log.info("BoardServiceImpl-showMyGK myGKList 마이개꿀 리스트 리턴 " + myGKList);
-			return myGKList;
+	public LinkedHashSet<BoardVO> showMyGK(String user_id) {
+		log.info("UserServiceImpl-showMyGK 호출 현재 로그인 계정 : " + user_id);
+		if(user_id != null) {
+			log.info("UserServiceImpl-showMyGK myReplyList 조회 시도");
+			List<ReplyVO> myReplyList = userDAO.showMyReply(user_id);
+			log.info("UserServiceImpl-showMyGK myReplyList 조회 완료 " + myReplyList);
+			LinkedHashSet<BoardVO> board_idxs = new LinkedHashSet<BoardVO>();
+			for(ReplyVO vo : myReplyList) {
+				int board_idx = vo.getBoard_idx();
+				log.info("UserServiceImpl-showMyGK myReplyList board_idx " + board_idx);
+				BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
+				log.info("UserServiceImpl-showMyGK myReplyList dbBoardVO " + dbBoardVO);
+				board_idxs.add(dbBoardVO);
+				log.info("UserServiceImpl-showMyGK myReplyList myGKList " + board_idxs);
+			}
+			log.info("UserServiceImpl-showMyGK myReplyList 결과 확인" + board_idxs);
+			return board_idxs;
 		} else {
-			log.info("BoardServiceImpl-showMyGK 오류! 빈 리스트를 리턴합니다!");
-			List<BoardVO> emptyList = new ArrayList<BoardVO>();
+			log.info("UserServiceImpl-showMyGK 오류! 빈 리스트를 리턴합니다!");
+			LinkedHashSet<BoardVO> emptyList = new LinkedHashSet<BoardVO>();
 			return emptyList;
 		}
 	}

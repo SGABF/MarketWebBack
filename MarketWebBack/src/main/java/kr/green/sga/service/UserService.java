@@ -1,5 +1,6 @@
 package kr.green.sga.service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import kr.green.sga.vo.BoardVO;
@@ -66,5 +67,5 @@ public interface UserService {
 	List<BoardVO> showMyMarket(int user_idx);	
 	
 	//	<!-- 마이 개꿀 리스트 조회 -->
-	List<BoardVO> showMyGK(int user_idx);	
+	LinkedHashSet<BoardVO> showMyGK(String user_id);	
 }
