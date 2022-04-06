@@ -227,11 +227,18 @@ public class BoardController {
 		}
 	}
 
-	@GetMapping(value = "/test")
-	public String test() {
-		return "hi";
+	@PostMapping("/updateSoldout")
+	private void updateSoldout(
+		@RequestParam int board_idx,//몇번 게시글을 
+		@RequestParam int board_soldout,	//0,1,2 중 하나로
+		@RequestHeader(value = "user_id") String user_id) { // 이 유저가
+		log.info("BoardController-updateSoldout 호출1 board_idx : " + board_idx);
+		log.info("BoardController-updateSoldout 호출2 board_soldout 0판매중/1예약중/2판매완료: " + board_soldout);
+		log.info("BoardController-updateSoldout 호출3 user_id : " + user_id);
+		if(board_soldout == 0) boardService.updateForSale(board_idx, user_id); 
+		if(board_soldout == 1) boardService.updateReservate(board_idx, user_id); 
+		if(board_soldout == 2) boardService.updateSoldout(board_idx, user_id); 
 	}
-
 	
 	@PostMapping(value = "deleteAuction")
 	public void deleteAuction(@RequestParam int idx) {
