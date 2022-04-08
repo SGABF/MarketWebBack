@@ -50,8 +50,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 		if (username != null) {
 			dbVO = userService.selectUserId(username);
 			if (dbVO.getUser_banned() != 0) {
-				log.info("JwtUserDetailsService-loadUserByUsername 호출 : 정지된 계정의 로그인 시도 \n");
-				throw new UsernameNotFoundException("정지된 계정의 로그인 시도 : " + username);
+				log.info("JwtUserDetailsService-loadUserByUsername 호출 : 정지된 계정의 로그인 시도 " + username + " \n");
+				return null;
+//				throw new UsernameNotFoundException("정지된 계정의 로그인 시도 : " + username);
 			} else {
 				if (dbVO.getUser_id().equals(username)) {
 					// if()

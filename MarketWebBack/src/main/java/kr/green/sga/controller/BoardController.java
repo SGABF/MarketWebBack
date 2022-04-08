@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,11 +21,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.green.sga.service.AuctionService;
 import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
-import kr.green.sga.service.ReplyService;
 import kr.green.sga.service.UserService;
 import kr.green.sga.vo.AuctionVO;
 import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,9 +43,6 @@ public class BoardController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private ReplyService replyService;
-	
 	@Autowired
 	private AuctionService auctionService;
 
@@ -229,15 +225,14 @@ public class BoardController {
 
 	@PostMapping("/updateSoldout")
 	private void updateSoldout(
-		@RequestParam int board_idx,//몇번 게시글을 
-		@RequestParam int board_soldout,	//0,1,2 중 하나로
+		@RequestBody BoardVO boardVO,
 		@RequestHeader(value = "user_id") String user_id) { // 이 유저가
-		log.info("BoardController-updateSoldout 호출1 board_idx : " + board_idx);
-		log.info("BoardController-updateSoldout 호출2 board_soldout 0판매중/1예약중/2판매완료: " + board_soldout);
+		log.info("BoardController-updateSoldout 호출1 board_idx : " + boardVO.getBoard_idx());
+		log.info("BoardController-updateSoldout 호출2 board_soldout 0판매중/1예약중/2판매완료: " + boardVO.getBoard_soldout());
 		log.info("BoardController-updateSoldout 호출3 user_id : " + user_id);
-		if(board_soldout == 0) boardService.updateForSale(board_idx, user_id); 
-		if(board_soldout == 1) boardService.updateReservate(board_idx, user_id); 
-		if(board_soldout == 2) boardService.updateSoldout(board_idx, user_id); 
+		if(boardVO.getBoard_soldout() == 0) boardService.updateForSale(boardVO.getBoard_idx(), user_id); 
+		if(boardVO.getBoard_soldout() == 1) boardService.updateReservate(boardVO.getBoard_idx(), user_id); 
+		if(boardVO.getBoard_soldout() == 2) boardService.updateSoldout(boardVO.getBoard_idx(), user_id); 
 	}
 	
 	@PostMapping(value = "deleteAuction")

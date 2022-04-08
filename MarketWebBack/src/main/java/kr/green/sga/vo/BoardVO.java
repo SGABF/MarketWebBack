@@ -49,6 +49,8 @@ public class BoardVO {
 	private String boardCol2;
 	private String boardCol3;
 	private int user_idx;
+	// 판매자 아이디
+	private String user_id;
 	// 첨부파일을 담을 컬럼.
 	private List<BoardImageVO> boardImageList;
 	// 댓글을 담을 컬럼.
@@ -59,4 +61,5 @@ public class BoardVO {
 	//----옥션컬럼(가져오기)-----//
 	private AuctionVO auctionVO;
 	private String highUser_id;
+	
 }

@@ -38,7 +38,7 @@ public class BoardServiceImpl implements BoardService {
 
 //	@Autowired
 //	private AuctionDAO auctionDAO;
-	
+
 	private String os = System.getProperty("os.name").toLowerCase();
 
 	@Override
@@ -61,8 +61,9 @@ public class BoardServiceImpl implements BoardService {
 	public BoardVO selectByIdx(int board_idx) {
 		log.info("BoardServiceImpl-selectByIdx 호출 : " + board_idx);
 		BoardVO dbBoardVO = null;
+		String user_id = null;
 //		AuctionVO auctionVO = null;
-//		UserVO userVO = null;
+		UserVO dbUserVO = null;
 		if (board_idx != 0) {
 			// dbBoardVO에 게시글 하나의 객체를 담는다.
 			dbBoardVO = boardDAO.selectByIdx(board_idx);
@@ -70,6 +71,11 @@ public class BoardServiceImpl implements BoardService {
 			dbBoardVO.setBoardImageList(boardImageList);
 			List<ReplyVO> replyList = replyDAO.selectByRef(dbBoardVO.getBoard_idx());
 			dbBoardVO.setReplyList(replyList);
+			// 유저 아이디 찾기
+			dbUserVO = userDAO.selectByIdx(dbBoardVO.getUser_idx());
+			user_id = dbUserVO.getUser_id();
+			log.info("BoardServiceImpl-selectByIdx 글 작성자 확인 : " + user_id);
+			dbBoardVO.setUser_id(user_id);
 //			//----------옥션----------------//
 //			auctionVO = auctionDAO.selectByIdx(board_idx);
 //			//----- 최고입찰자 -------------//
@@ -127,7 +133,7 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteBoard(BoardVO boardVO, String path) {
 		log.info("BoardServiceImpl-deleteBoard 호출1 : 삭제 시도 게시글 " + boardVO);
 		log.info("BoardServiceImpl-deleteBoard 호출2 : 삭제 시도 경로 " + path);
-		
+
 		if (boardVO != null && path != null) {
 			List<BoardImageVO> boardImageList = boardImageDAO.selectByRef(boardVO.getBoard_idx());
 			if (boardImageList != null && boardImageList.size() > 0) {
@@ -178,7 +184,7 @@ public class BoardServiceImpl implements BoardService {
 			list = new ArrayList<BoardVO>();
 		}
 		log.info("BoardServiceImpl-selectList 리턴 : " + list);
-		return list; 
+		return list;
 	}
 
 	@Override
@@ -233,6 +239,10 @@ public class BoardServiceImpl implements BoardService {
 			List<BoardVO> searchList = new ArrayList<BoardVO>();
 			searchList = boardDAO.searchBoardList(keyword);
 			log.info("BoardServiceImpl-searchBoardList 리턴 : " + searchList);
+			if (searchList.size() == 0) {
+				log.info("BoardServiceImpl-searchBoardList 검색결과 없음 : null을 리턴합니다.");
+				return null;
+			}
 			return searchList;
 		} else {
 			log.info("BoardServiceImpl-searchBoardList 오류 발생! 빈 List<BoardVO> 를 리턴합니다.");
@@ -262,7 +272,8 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-updateForSale 호출 board_idx : " + board_idx + ", user id : " + user_id);
 		UserVO userVO = userDAO.selectUserId(user_id);
 		BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
-		if(dbBoardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateForSale(board_idx); 
+		if (dbBoardVO.getUser_idx() == userVO.getUser_idx())
+			boardDAO.updateForSale(board_idx);
 	}
 
 	@Override
@@ -270,7 +281,8 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-updateReservate 호출 board_idx : " + board_idx + ", user id : " + user_id);
 		UserVO userVO = userDAO.selectUserId(user_id);
 		BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
-		if(dbBoardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateReservate(board_idx);
+		if (dbBoardVO.getUser_idx() == userVO.getUser_idx())
+			boardDAO.updateReservate(board_idx);
 	}
 
 	@Override
@@ -278,7 +290,8 @@ public class BoardServiceImpl implements BoardService {
 		log.info("BoardServiceImpl-updateSoldOut 호출 board_idx : " + board_idx + ", user id : " + user_id);
 		UserVO userVO = userDAO.selectUserId(user_id);
 		BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
-		if(dbBoardVO.getUser_idx()==userVO.getUser_idx()) boardDAO.updateSoldout(board_idx);
+		if (dbBoardVO.getUser_idx() == userVO.getUser_idx())
+			boardDAO.updateSoldout(board_idx);
 	}
 
 }
