@@ -66,7 +66,8 @@
 
 	<!-- 51. select_한페이지 글 목록 가져오기 -->
 	<select id="selectList" parameterType="hashmap" resultType="BoardVO">
-		select * from board order by board_idx desc
+		select * from board
+		order by board_regDate desc 
 	</select>
 	
 	<!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
@@ -76,22 +77,25 @@
 	
 	<!-- selectDescLimit -->
 	<select id="selectDescLimit" parameterType="hashmap" resultType="BoardVO">
-		SELECT * FROM board WHERE board_profile is NOT NULL and board_sell_category = 0 ORDER BY board_idx DESC LIMIT 0, 8 
+		SELECT * FROM board WHERE board_sell_category = 0 ORDER BY board_idx DESC LIMIT 0, 8 
 	</select>
 	
 	<!-- selectSellBoard -->
 	<select id="selectSellBoard" resultType="BoardVO">
-		select * from board where board_sell_category=0
+		select * from board where board_sell_category=0 and (board_soldout=0 or board_soldout=1)
+		order by board_regDate desc
 	</select>
 	
 	<!-- selectBuyBoard -->
 	<select id="selectBuyBoard" resultType="BoardVO">
 		select * from board where board_sell_category=1
+		order by board_regDate desc 
 	</select>
 	
 	<!-- selectAuctionBoard -->
 	<select id="selectAuctionBoard" resultType="BoardVO">
 		select * from board where board_auctionOnOff=1
+		order by board_regDate desc 
 	</select>
 	
 	<!-- 게시글 검색-->
