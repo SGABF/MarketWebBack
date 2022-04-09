@@ -7,7 +7,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +33,21 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDAO userDAO;
-	
+
 	@Autowired
 	private BoardDAO boardDAO;
 
 	@Autowired(required = false)
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+	
+	@Autowired
+	JavaMailSender mailSender;
+		
+	@Value("${spring.mail.username}")
+	String sendFrom;
+		
+	@Autowired 
+	Environment env;
 
 	@Override
 	public UserVO getUser(UserVO userVO) {
@@ -131,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	// <!-- 08. select_아디 찾기 // user_name과 user_email로 VO 가져오기 -->
-	// 53. selectByUserNameEmail 사용
+	// selectByUserNameEmail 사용
 	public String findId(String user_name, String user_email) {
 		log.info("UserServiceImpl-findId 호출 : " + user_name + ", " + user_email);
 		UserVO dbVO = null;
@@ -149,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	// <!-- 09. select_비번 찾기 // user_id, user_email, user_name로 VO 가져오기 -->
-	// 54. selectByUserIdNameEmail 사용
+	// selectCountUserIdNameEmail 사용
 	public int findPw(String user_id, String user_email, String user_name) {
 		log.info("UserServiceImpl-findPw 호출 : " + user_id + ", " + user_email + ", " + user_name);
 		int count = 0;
@@ -226,7 +244,8 @@ public class UserServiceImpl implements UserService {
 		}
 		return dbUserVO;
 	}
-
+	
+	@Override
 	// 임시비밀번호를 만들어주는 메서드
 	public String makePassword(int length) {
 		Random random = new Random();
@@ -325,12 +344,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public LinkedHashSet<BoardVO> showMyGK(String user_id) {
 		log.info("UserServiceImpl-showMyGK 호출 현재 로그인 계정 : " + user_id);
-		if(user_id != null) {
+		if (user_id != null) {
 			log.info("UserServiceImpl-showMyGK myReplyList 조회 시도");
 			List<ReplyVO> myReplyList = userDAO.showMyReply(user_id);
 			log.info("UserServiceImpl-showMyGK myReplyList 조회 완료 " + myReplyList);
 			LinkedHashSet<BoardVO> board_idxs = new LinkedHashSet<BoardVO>();
-			for(ReplyVO vo : myReplyList) {
+			for (ReplyVO vo : myReplyList) {
 				int board_idx = vo.getBoard_idx();
 				log.info("UserServiceImpl-showMyGK myReplyList board_idx " + board_idx);
 				BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
@@ -346,4 +365,52 @@ public class UserServiceImpl implements UserService {
 			return emptyList;
 		}
 	}
+
+	@Override
+	public boolean sendMail(UserVO userVO, String new_password) {
+		log.info("UserServiceImpl-sendMail 호출 : 메일 발송 로직 시작");
+		log.info("UserServiceImpl-sendMail 호출 : userVO " + userVO);
+		log.info("UserServiceImpl-sendMail 호출 : new_password " + new_password);
+		String sendTo = userVO.getUser_email();
+		String mailTitle = "[개꿀마켓] GK Market 고객센터에서 고객님의 임시 비밀번호를 발송해드립니다.";
+		String mailContent = 
+				"안녕하세요 " + userVO.getUser_name() + "님. <br/>"
+				+ "개꿀마켓 고객센터입니다. <br/>"
+				+ "<br/>개꿀마켓 고객센터에서 고객님의 임시 비밀번호를 발송해드립니다. "
+				+ "<br/>고객님의 임시 비밀번호는 아래와 같습니다. "
+				+ "<br/>"
+				+ "<br/><Strong>" + new_password + "</Strong></p>"
+				+ "<br/>"
+				+ "<br/>로그인 및 비밀번호 변경 후 서비스 이용바랍니다. "
+				+ "<br/>이용해주셔서 감사합니다. ";
+		
+
+		MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+				message.setTo(sendTo);
+				message.setFrom(sendFrom); // env.getProperty("spring.mail.username")
+				message.setSubject(mailTitle);
+				message.setText(mailContent, true); // ture : html 형식 사용
+
+//				// Mail에 img 삽입
+//				ClassPathResource resource = new ClassPathResource("img 주소/img 이름.png");
+//				message.addInline("img", resource.getFile());
+			}
+		};
+
+		try {
+			log.info("UserServiceImpl-sendMail 호출 : 메일 발송중!");
+			mailSender.send(preparator);
+		} catch (MailException e) {
+			log.info("UserServiceImpl-sendMail 호출 : 메일 발송 최종 실패");
+			return false;
+		}
+		log.info("UserServiceImpl-sendMail 호출 : 메일 발송 최종 성공");
+		return true;
+	}
+
 }

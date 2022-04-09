@@ -49,6 +49,9 @@ public interface UserService {
 	// <!-- 12. String_임시 비밀번호 생성하기 -->
 	String makePassword(int length);
 	
+	// <!-- 13. 메일 발송하기 -->
+	boolean sendMail(UserVO userVO, String new_password);
+	
 	// ---------------------------------------------
 	
 	// <!-- 50. select_이름과 전화번호로 가져오기(아디찾기 사용) -->
@@ -67,5 +70,6 @@ public interface UserService {
 	List<BoardVO> showMyMarket(int user_idx);	
 	
 	//	<!-- 마이 개꿀 리스트 조회 -->
-	LinkedHashSet<BoardVO> showMyGK(String user_id);	
+	LinkedHashSet<BoardVO> showMyGK(String user_id);
+
 }
