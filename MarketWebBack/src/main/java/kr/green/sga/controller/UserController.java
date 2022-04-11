@@ -36,8 +36,7 @@ public class UserController {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 	@GetMapping(value = "/updateUser")
 	public String updateUserGET(@RequestBody UserVO userVO) throws JsonProcessingException {

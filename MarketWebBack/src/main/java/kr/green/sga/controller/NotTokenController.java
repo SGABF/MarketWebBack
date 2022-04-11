@@ -27,8 +27,7 @@ public class NotTokenController {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 	@GetMapping(value = "/insertUser")
 	public String insertUserGET(@RequestParam(required = false) UserVO userVO) {
