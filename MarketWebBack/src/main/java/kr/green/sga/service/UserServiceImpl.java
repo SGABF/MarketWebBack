@@ -372,18 +372,24 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-sendMail 호출 : userVO " + userVO);
 		log.info("UserServiceImpl-sendMail 호출 : new_password " + new_password);
 		String sendTo = userVO.getUser_email();
-		String mailTitle = "[개꿀마켓] GK Market 고객센터에서 고객님의 임시 비밀번호를 발송해드립니다.";
+		String mailTitle = "[개꿀마켓] GK Market 고객센터에서 " + userVO.getUser_name() + "님의 임시 비밀번호를 발송해드립니다.";
 		String mailContent = 
-				"안녕하세요 " + userVO.getUser_name() + "님. <br/>"
+				"안녕하세요 <Strong>" + userVO.getUser_name() + "</Strong>님. <br/>"
 				+ "개꿀마켓 고객센터입니다. <br/>"
 				+ "<br/>개꿀마켓 고객센터에서 고객님의 임시 비밀번호를 발송해드립니다. "
 				+ "<br/>고객님의 임시 비밀번호는 아래와 같습니다. "
 				+ "<br/>"
-				+ "<br/><Strong>" + new_password + "</Strong></p>"
+				+ "<br/>"
+				+ "<input type='text' style='text-align: center; font-weight:bold;' value=" + new_password + ">" 
 				+ "<br/>"
 				+ "<br/>로그인 및 비밀번호 변경 후 서비스 이용바랍니다. "
-				+ "<br/>이용해주셔서 감사합니다. ";
-		
+				+ "<br/>감사합니다. "
+				+ "<br/>"
+				+ "<hr>"
+				+ "<br/>"
+				+ "<a href=\"https://github.com/SGABF/MarketWeb\">"
+				+ "<img src=\"https://user-images.githubusercontent.com/94984063/155962173-e46894da-c522-4b6c-a174-24ffcdb29836.png\" width=\"368\" height=\"156\">"
+				+ "</a>";
 
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
@@ -395,10 +401,6 @@ public class UserServiceImpl implements UserService {
 				message.setFrom(sendFrom); // env.getProperty("spring.mail.username")
 				message.setSubject(mailTitle);
 				message.setText(mailContent, true); // ture : html 형식 사용
-
-//				// Mail에 img 삽입
-//				ClassPathResource resource = new ClassPathResource("img 주소/img 이름.png");
-//				message.addInline("img", resource.getFile());
 			}
 		};
 
