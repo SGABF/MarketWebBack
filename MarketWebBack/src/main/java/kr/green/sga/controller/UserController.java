@@ -39,16 +39,14 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@RequestMapping(value = "/updateUser", method = RequestMethod.GET)
-	@GetMapping
+	@GetMapping(value = "/updateUser")
 	public String updateUserGET(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updateUserGET 호출 : " + userVO);
 		return "";
 	}
 
 	// 회원정보 수정 페이지 진입할 경우 user_id 값으로 userVO 리턴하여 보내기
-	@RequestMapping(value = "/updateUserPage", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/updateUserPage")
 	public String updateUserPagePOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-updateUserPagePOST 호출 : " + user_id);
 		UserVO dbUserVO = null;
@@ -61,8 +59,7 @@ public class UserController {
 		return mapper.writeValueAsString(dbUserVO);
 	}
 
-	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/updateUser")
 	public String updateUserPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updateUserPOST 호출 : " + userVO);
 		if (userVO != null && userVO.getUser_id() != null && userVO.getUser_name() != null
@@ -75,15 +72,13 @@ public class UserController {
 		return "0";
 	}
 
-	@RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
-	@GetMapping
+	@GetMapping(value = "/deleteUser")
 	public String deleteUserGET(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserGET 호출 : " + user_id);
 		return "";
 	}
 
-	@RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/deleteUser")
 	public void deleteUserPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
 		UserVO dbUserVO = userService.selectUserId(user_id);
@@ -95,15 +90,13 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/BannedUser", method = RequestMethod.GET)
-	@GetMapping
+	@GetMapping(value = "/BannedUser")
 	public String BannedUserGET(@RequestParam(required = false) int user_idx) {
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
 
-	@RequestMapping(value = "/BannedUser", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/BannedUser")
 	public String BannedUserPOST(@RequestParam(required = false) int user_idx) throws JsonProcessingException {
 		log.info("UserController-BannedUserPOST 호출 : " + user_idx);
 		UserVO userVO = userService.selectByIdx(user_idx);
@@ -112,14 +105,12 @@ public class UserController {
 	}
 
 	// 비밀번호 변경
-	@RequestMapping(value = "/updatePassword", method = RequestMethod.GET)
-	@GetMapping
+	@GetMapping(value = "/updatePassword")
 	public void updatePasswordGET(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updatePasswordGET 호출 : " + userVO);
 	}
 
-	@RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/updatePassword")
 	public void updatePasswordPOST(@RequestBody UserVO userVO) throws JsonProcessingException {
 		log.info("UserController-updatePasswordPOST 호출 : userVO_" + userVO);
 		if (userVO != null) {
@@ -130,15 +121,13 @@ public class UserController {
 	}
 
 	// 비밀번호 확인
-	@RequestMapping(value = "/checkPassword", method = RequestMethod.GET)
-	@GetMapping
+	@GetMapping(value = "/checkPassword")
 	public String checkPasswordGET(@RequestBody UserVO userVO) throws JsonProcessingException {
 		// 추후 업데이트 예정 "잘못된 접근입니다."
 		return "";
 	}
 
-	@RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/checkPassword")
 	public String checkPasswordPOST(@RequestBody UserVO userVO, @RequestHeader(value = "user_id") String user_id)
 			throws JsonProcessingException {
 		log.info("UserController-checkPasswordPOST 호출 : " + user_id);
@@ -155,8 +144,7 @@ public class UserController {
 		return mapper.writeValueAsString(count);
 	}
 
-	@RequestMapping(value = "/myMarket", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/myMarket")
 	public List<BoardVO> showMyMarketPOST(@RequestHeader(value = "user_id") String user_id)
 			throws JsonProcessingException {
 		log.info("UserController-showMyBoardPOST 호출 : 현재 로그인 계정 " + user_id);
@@ -170,8 +158,7 @@ public class UserController {
 		return myMarketList;
 	}
   
-	@RequestMapping(value = "/myGK", method = RequestMethod.POST)
-	@PostMapping
+	@PostMapping(value = "/myGK")
 	public LinkedHashSet<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
 		LinkedHashSet<BoardVO> myGKList = null;

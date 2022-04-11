@@ -107,18 +107,20 @@ public class NotTokenController {
 		int count = 0;
 		String new_password = "";
 		UserVO dbUserVO = null;
-		count = userService.findPw(user_id, user_email, user_name);
-		dbUserVO = userService.selectUserId(user_id);
-		if (count == 1) {
-			new_password = userService.makePassword(10);
-			log.info("NotTokenController-findPwPOST-임시 비밀번호 생성 : " + new_password);
-			dbUserVO.setUser_password(new_password);
-			userService.updatePassword(dbUserVO);
-			log.info("NotTokenController-findPwPOST-임시 비밀번호 메일 발송 : " + dbUserVO.getUser_email());
-			userService.sendMail(dbUserVO, new_password);
-			log.info("NotTokenController-findPwPOST 리턴 : " + new_password);
-		} else {
-			log.info("NotTokenController-findPwPOST 고객 정보 없음.");
+		if (userVO != null) {
+			count = userService.findPw(user_id, user_email, user_name);
+			dbUserVO = userService.selectUserId(user_id);
+			if (count == 1) {
+				new_password = userService.makePassword(10);
+				log.info("NotTokenController-findPwPOST-임시 비밀번호 생성 : " + new_password);
+				dbUserVO.setUser_password(new_password);
+				userService.updatePassword(dbUserVO);
+				log.info("NotTokenController-findPwPOST-임시 비밀번호 메일 발송 : " + dbUserVO.getUser_email());
+				userService.sendMail(dbUserVO, new_password);
+				log.info("NotTokenController-findPwPOST 리턴 : " + new_password);
+			} else {
+				log.info("NotTokenController-findPwPOST 고객 정보 없음.");
+			}
 		}
 		return mapper.writeValueAsString(new_password);
 	}
