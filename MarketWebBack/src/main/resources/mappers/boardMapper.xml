@@ -36,6 +36,11 @@
 		select * from board where board_idx= #{board_idx}
 	</select>
 
+	<!-- 02. select_글 1개 가져오기 -->
+	<select id="selectByUserRef" parameterType="int" resultType="BoardVO">
+		select * from board where user_idx= #{user_idx}
+	</select>
+
 	<!-- 03. update_글 수정하기 -->
 	<update id="updateBoard" parameterType="BoardVO">
 		update board
