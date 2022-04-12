@@ -21,7 +21,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.green.sga.dao.BoardDAO;
+import kr.green.sga.dao.BoardImageDAO;
+import kr.green.sga.dao.ReplyDAO;
 import kr.green.sga.dao.UserDAO;
+import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
@@ -35,18 +38,24 @@ public class UserServiceImpl implements UserService {
 	private UserDAO userDAO;
 
 	@Autowired
+	private ReplyDAO replyDAO;
+
+	@Autowired
 	private BoardDAO boardDAO;
+	
+	@Autowired
+	private BoardImageDAO boardImageDAO;
 
 	@Autowired(required = false)
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-	
+
 	@Autowired
 	JavaMailSender mailSender;
-		
+
 	@Value("${spring.mail.username}")
 	String sendFrom;
-		
-	@Autowired 
+
+	@Autowired
 	Environment env;
 
 	@Override
@@ -126,9 +135,31 @@ public class UserServiceImpl implements UserService {
 	// <!-- 04. delete_삭제하기(회원탈퇴하기) -->
 	public void deleteUser(UserVO userVO) {
 		log.info("UserServiceImpl-deleteUser 호출 : " + userVO);
+		BoardVO dbBoardVO = null;
+		UserVO dbUserVO = null;
+		BoardImageVO boardImageVO = null;
+		ReplyVO dbReplyVO = null;
 		// 넘겨받은 userVO가 있다면
 		if (userVO != null) {
 			// 회원탈퇴
+			List<BoardImageVO> userBoardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
+			if(userBoardImageList!=null) {
+				for(BoardImageVO vo : userBoardImageList) {
+					boardImageDAO.deleteByIdx(vo.getBoardImage_idx());
+				}
+			}
+			List<ReplyVO> userReplyList = replyDAO.selectByUserRef(userVO.getUser_idx());
+			if(userReplyList != null) {
+				for(ReplyVO vo : userReplyList) {
+					replyDAO.deleteByIdx(vo.getReply_idx());
+				}
+			}
+			List<BoardVO> userBoardList = boardDAO.selectByUserRef(userVO.getUser_idx());
+			if(userBoardList != null) {
+				for(BoardVO vo : userBoardList) {
+					boardDAO.deleteBoard(vo.getBoard_idx());
+				}
+			}
 			userDAO.deleteUser(userVO.getUser_idx());
 			log.info("UserServiceImpl-deleteUser 회원정보삭제됨 : " + userVO);
 		}
@@ -244,7 +275,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return dbUserVO;
 	}
-	
+
 	@Override
 	// 임시비밀번호를 만들어주는 메서드
 	public String makePassword(int length) {
@@ -348,17 +379,17 @@ public class UserServiceImpl implements UserService {
 			log.info("UserServiceImpl-showMyGK myReplyList 조회 시도");
 			List<ReplyVO> myReplyList = userDAO.showMyReply(user_id);
 			log.info("UserServiceImpl-showMyGK myReplyList 조회 완료 " + myReplyList);
-			LinkedHashSet<BoardVO> board_idxs = new LinkedHashSet<BoardVO>();
+			LinkedHashSet<BoardVO> myGKList = new LinkedHashSet<BoardVO>();
 			for (ReplyVO vo : myReplyList) {
 				int board_idx = vo.getBoard_idx();
 				log.info("UserServiceImpl-showMyGK myReplyList board_idx " + board_idx);
 				BoardVO dbBoardVO = boardDAO.selectByIdx(board_idx);
 				log.info("UserServiceImpl-showMyGK myReplyList dbBoardVO " + dbBoardVO);
-				board_idxs.add(dbBoardVO);
-				log.info("UserServiceImpl-showMyGK myReplyList myGKList " + board_idxs);
+				myGKList.add(dbBoardVO);
+				log.info("UserServiceImpl-showMyGK myReplyList myGKList " + myGKList);
 			}
-			log.info("UserServiceImpl-showMyGK myReplyList 결과 확인" + board_idxs);
-			return board_idxs;
+			log.info("UserServiceImpl-showMyGK myReplyList 결과 확인" + myGKList);
+			return myGKList;
 		} else {
 			log.info("UserServiceImpl-showMyGK 오류! 빈 리스트를 리턴합니다!");
 			LinkedHashSet<BoardVO> emptyList = new LinkedHashSet<BoardVO>();
@@ -373,20 +404,10 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-sendMail 호출 : new_password " + new_password);
 		String sendTo = userVO.getUser_email();
 		String mailTitle = "[개꿀마켓] GK Market 고객센터에서 " + userVO.getUser_name() + "님의 임시 비밀번호를 발송해드립니다.";
-		String mailContent = 
-				"안녕하세요 <Strong>" + userVO.getUser_name() + "</Strong>님. <br/>"
-				+ "개꿀마켓 고객센터입니다. <br/>"
-				+ "<br/>개꿀마켓 고객센터에서 고객님의 임시 비밀번호를 발송해드립니다. "
-				+ "<br/>고객님의 임시 비밀번호는 아래와 같습니다. "
-				+ "<br/>"
-				+ "<br/>"
-				+ "<input type='text' style='text-align: center; font-weight:bold;' value=" + new_password + ">" 
-				+ "<br/>"
-				+ "<br/>로그인 및 비밀번호 변경 후 서비스 이용바랍니다. "
-				+ "<br/>감사합니다. "
-				+ "<br/>"
-				+ "<hr>"
-				+ "<br/>"
+		String mailContent = "안녕하세요 <Strong>" + userVO.getUser_name() + "</Strong>님. <br/>" + "개꿀마켓 고객센터입니다. <br/>"
+				+ "<br/>개꿀마켓 고객센터에서 고객님의 임시 비밀번호를 발송해드립니다. " + "<br/>고객님의 임시 비밀번호는 아래와 같습니다. " + "<br/>" + "<br/>"
+				+ "<input type='text' style='text-align: center; font-weight:bold;' value=" + new_password + ">"
+				+ "<br/>" + "<br/>로그인 및 비밀번호 변경 후 서비스 이용바랍니다. " + "<br/>감사합니다. " + "<br/>" + "<hr>" + "<br/>"
 				+ "<a href=\"https://github.com/SGABF/MarketWeb\">"
 				+ "<img src=\"https://user-images.githubusercontent.com/94984063/155962173-e46894da-c522-4b6c-a174-24ffcdb29836.png\" width=\"368\" height=\"156\">"
 				+ "</a>";

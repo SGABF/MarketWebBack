@@ -25,6 +25,9 @@ public interface BoardDAO {
 
 	// <!-- 50. select_전체 개수얻기 -->
 	int selectCount();
+	
+	// <!-- 02. select_글 1개 가져오기 -->
+	List<BoardVO> selectByUserRef(int user_idx);
 
 	// <!-- 51. 전체 글 목록 가져오기 -->
 	List<BoardVO> selectList();

@@ -26,8 +26,11 @@ public interface ReplyDAO {
 
 	// --------------------------------------------------
 	
-	// <!-- 04. 해당 board_idx의 첨부 이미지 가져오기 --> 
+	// <!-- 04. 해당 board_idx의 댓글 가져오기 --> 
 	List<ReplyVO> selectByRef(int board_idx);
+	
+	// <!-- 04. 해당 user_idx의 댓글 가져오기 --> 
+	List<ReplyVO> selectByUserRef(int user_idx);
 	
 	// <!-- 05.	전체 댓글 가져오기 -->
 	List<ReplyVO> selectList();
