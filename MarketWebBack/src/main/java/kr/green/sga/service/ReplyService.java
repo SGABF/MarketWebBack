@@ -25,10 +25,13 @@ public interface ReplyService {
 
 	// --------------------------------------------------
 
-	// <!-- 05. 해당 board_idx의 첨부 이미지 가져오기 -->
+	// <!-- 05. 해당 board_idx의 댓글 가져오기 -->
 	List<ReplyVO> selectByRef(int board_idx);
 
-	// <!-- 06. 전체 첨부파일 가져오기 -->
+	// <!-- 06. 해당 user_idx의 댓글 가져오기 -->
+	List<ReplyVO> selectByUserRef(int user_idx);
+	
+	// <!-- 07. 전체 첨부파일 가져오기 -->
 	List<ReplyVO> selectList();
 
 	// <!-- 52. 가장 마지막 idx값 가져오기 -->

@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private BoardDAO boardDAO;
-	
+
 	@Autowired
 	private BoardImageDAO boardImageDAO;
 
@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	Environment env;
+	
+	private String os = System.getProperty("os.name").toLowerCase();
 
 	@Override
 	public UserVO getUser(UserVO userVO) {
@@ -139,29 +141,53 @@ public class UserServiceImpl implements UserService {
 		UserVO dbUserVO = null;
 		BoardImageVO boardImageVO = null;
 		ReplyVO dbReplyVO = null;
+		String path = "";
 		// 넘겨받은 userVO가 있다면
 		if (userVO != null) {
 			// 회원탈퇴
-			List<BoardImageVO> userBoardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
-			if(userBoardImageList!=null) {
-				for(BoardImageVO vo : userBoardImageList) {
-					boardImageDAO.deleteByIdx(vo.getBoardImage_idx());
-				}
-			}
 			List<ReplyVO> userReplyList = replyDAO.selectByUserRef(userVO.getUser_idx());
-			if(userReplyList != null) {
-				for(ReplyVO vo : userReplyList) {
-					replyDAO.deleteByIdx(vo.getReply_idx());
+			log.info("UserServiceImpl-deleteUser 유저의 모든 댓글 " + userReplyList);
+			if (userReplyList != null) {
+				log.info("UserServiceImpl-deleteUser 유저의 모든 댓글 삭제중");
+				for (ReplyVO vo : userReplyList) {
+//					replyDAO.deleteByIdx(vo.getReply_idx());
 				}
+				log.info("UserServiceImpl-deleteUser 유저의 모든 댓글 삭제완료 ");
 			}
 			List<BoardVO> userBoardList = boardDAO.selectByUserRef(userVO.getUser_idx());
-			if(userBoardList != null) {
-				for(BoardVO vo : userBoardList) {
-					boardDAO.deleteBoard(vo.getBoard_idx());
-				}
+			log.info("UserServiceImpl-deleteUser 작성 글 확인 : " + userBoardList);
+			if (os.contains("win")) {
+				path = "C:/image/";
+				log.info("wind path");
+			} else {
+				path = "/resources/Back/";
+				log.info("linux path");
 			}
-			userDAO.deleteUser(userVO.getUser_idx());
-			log.info("UserServiceImpl-deleteUser 회원정보삭제됨 : " + userVO);
+			boardService.deleteBoard(dbBoardVO, path);
+//			myMarketList = 
+//			List<BoardImageVO> userBoardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
+//			log.info("UserServiceImpl-deleteUser 첨부글의 이미지 확인 : " + userBoardImageList);
+			
+//			for(BoardImageVO vo : userBoardImageList) {
+//				
+//			}
+			
+//			userBoardImageList = boardImageDAO.selectByRef(userBoardList.get(0).getBoard_idx());
+//			log.info("UserServiceImpl-deleteUser 첨부글의 이미지 확인 : " + userBoardImageList);
+//			
+//			if (userBoardList != null) {
+//				if (userBoardImageList != null) {
+//					for (BoardImageVO vo : userBoardImageList) {
+//						boardImageDAO.deleteByBoardIdx(vo.getBoardImage_idx());
+//					}
+//				}
+//				for (BoardVO vo : userBoardList) {
+//					boardDAO.deleteBoard(vo.getBoard_idx());
+//				}
+//			}
+//			userDAO.deleteUser(userVO.getUser_idx());
+//			dbUserVO = userDAO.selectByIdx(userVO.getUser_idx());
+//			log.info("UserServiceImpl-deleteUser 회원정보삭제됨 : " + dbUserVO);
 		}
 	}
 

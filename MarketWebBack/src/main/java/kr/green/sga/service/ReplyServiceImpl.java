@@ -54,7 +54,7 @@ public class ReplyServiceImpl implements ReplyService {
 		log.info("ReplyServiceImpl-selectByIdx 리턴 : " + dbReplyVO);
 		return dbReplyVO;
 	}
-
+	
 	@Override
 	public void updateReply(ReplyVO replyVO) {
 		log.info("ReplyServiceImpl-updateReply 호출 : 수정 시도 댓글 " + replyVO);
@@ -95,25 +95,36 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public List<ReplyVO> selectByRef(int board_idx) {
 		log.info("ReplyServiceImpl-selectByRef 호출 : " + board_idx);
-		List<ReplyVO> list = null;
+		List<ReplyVO> dbBoardReplyList = null;
 		if (board_idx != 0) {
-			list = replyDAO.selectByRef(board_idx);
+			dbBoardReplyList = replyDAO.selectByRef(board_idx);
 		}
-		log.info("ReplyServiceImpl-selectByRef 리턴 : " + list);
-		return list;
+		log.info("ReplyServiceImpl-selectByRef 리턴 : " + dbBoardReplyList);
+		return dbBoardReplyList;
+	}
+	
+	@Override
+	public List<ReplyVO> selectByUserRef(int user_idx) {
+		log.info("ReplyServiceImpl-selectByUserRef 호출 : " + user_idx);
+		List<ReplyVO> dbUserReplyList = null;
+		if (user_idx != 0) {
+			dbUserReplyList = replyDAO.selectByUserRef(user_idx);
+		}
+		log.info("ReplyServiceImpl-selectByUserRef 리턴 : " + dbUserReplyList);
+		return dbUserReplyList;
 	}
 
 	@Override
 	public List<ReplyVO> selectList() {
 		log.info("ReplyServiceImpl-selectList 호출");
-		List<ReplyVO> list = null;
-		list = replyDAO.selectList();
-		if (list == null) {
+		List<ReplyVO> dbReplylist = null;
+		dbReplylist = replyDAO.selectList();
+		if (dbReplylist == null) {
 			log.info("ReplyServiceImpl-selectList 빈 VO객체 리턴함.");
-			list = new ArrayList<ReplyVO>();
+			dbReplylist = new ArrayList<ReplyVO>();
 		}
-		log.info("ReplyServiceImpl-selectList 리턴 : " + list);
-		return list;
+		log.info("ReplyServiceImpl-selectList 리턴 : " + dbReplylist);
+		return dbReplylist;
 	}
 
 	@Override
@@ -128,5 +139,6 @@ public class ReplyServiceImpl implements ReplyService {
 		log.info("ReplyServiceImpl-selectMaxIdx 리턴 " + maxIdx);
 		return maxIdx;
 	}
+
 
 }

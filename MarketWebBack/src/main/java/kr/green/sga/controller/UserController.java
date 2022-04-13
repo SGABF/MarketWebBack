@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
+import kr.green.sga.service.ReplyService;
 import kr.green.sga.service.UserService;
+import kr.green.sga.vo.BoardImageVO;
 import kr.green.sga.vo.BoardVO;
+import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +36,12 @@ public class UserController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private BoardImageService boardImageService;
+	
+	@Autowired
+	private ReplyService replyService;
 
 	@Autowired
 	private ObjectMapper mapper;
@@ -81,7 +91,28 @@ public class UserController {
 	public void deleteUserPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
 		UserVO dbUserVO = userService.selectUserId(user_id);
+		List<ReplyVO> dbUserReplyList = null;
+		List<BoardImageVO> dbUserBoardImageList = null;
+		List<BoardVO> dbUserBoardList = null;
 		if (dbUserVO != null) {
+			// 댓글 삭제 
+			dbUserReplyList = replyService.selectByUserRef(dbUserVO.getUser_idx());
+			if(dbUserReplyList != null) {
+				for(ReplyVO vo : dbUserReplyList) {
+					replyService.deleteByIdx(vo.getReply_idx());
+				}
+			}
+			
+//			dbUserBoardImageList = boardImageService.selectByRef(dbBoard)
+			
+			// 보드 삭제 코드
+			// 보드 이미지 삭제 
+//			userMyMarketList = userService.showMyMarket(dbUserVO.getUser_idx());
+//			if(userMyMarketList != null) {
+//				for(BoardVO vo : userMyMarketList) {
+//					
+//				}
+//			}
 			userService.deleteUser(dbUserVO);
 			log.info("UserController-deleteUserPOST 리턴 : 회원정보 삭제완료");
 		} else {
