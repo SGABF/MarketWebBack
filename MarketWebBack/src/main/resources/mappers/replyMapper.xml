@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.green.sga.dao.ReplyDAO">
 
-	<!-- 01. insert_글 쓰기 -->
+	<!-- insert_글 쓰기 -->
 	<insert id="insertReply" parameterType="ReplyVO">
 		INSERT into reply (
 		reply_content, board_idx, user_idx, user_id
@@ -18,12 +18,12 @@
 		)
 	</insert>
 
-	<!-- 02. select_글 1개 가져오기 -->
+	<!-- select_글 1개 가져오기 -->
 	<select id="selectByIdx" parameterType="int" resultType="ReplyVO">
 		select * from reply where reply_idx = #{reply_idx}
 	</select>
 
-	<!-- 03. update_글 수정하기 -->
+	<!-- update_글 수정하기 -->
 	<update id="updateReply" parameterType="ReplyVO">
 		update reply
 		set
@@ -32,34 +32,39 @@
 		reply_idx = #{reply_idx}
 	</update>
 
-	<!-- 04. delete_글 삭제하기 -->
+	<!-- delete_글 삭제하기 -->
 	<delete id="deleteByIdx" parameterType="int">
 		delete from reply where reply_idx = #{reply_idx}
 	</delete>
 	
-	<!-- 04. delete_board_idx -->
+	<!-- delete reply board_idx -->
 	<delete id="deleteByBoardIdx" parameterType="int">
 		delete from reply where board_idx=#{board_idx}
 	</delete>
 	
-	<!-- 05. 해당 board_idx의 첨부 이미지 가져오기 --> 
+	<!-- delete reply user_idx -->
+	<delete id="deleteByUserIdx" parameterType="int">
+		delete from reply where user_idx=#{user_idx} 
+	</delete>
+		
+	<!-- 해당 board_idx의 댓글 가져오기 --> 
 	<select id="selectByRef" parameterType="int" resultType="ReplyVO">
 		select * from reply where board_idx = #{board_idx}
 	</select>
 	
-	<!-- 05. 해당 board_idx의 첨부 이미지 가져오기 --> 
+	<!-- 해당 user_idx의 댓글 가져오기 --> 
 	<select id="selectByUserRef" parameterType="int" resultType="ReplyVO">
 		select * from reply where user_idx = #{user_idx}
 	</select>
 	
 	<!-- ========================================================================= -->
 
-	<!-- 06. select_한페이지 글 목록 가져오기 -->
+	<!-- select_한페이지 글 목록 가져오기 -->
 	<select id="selectList" parameterType="hashmap" resultType="ReplyVO">
 		select * from reply order by reply_idx desc
 	</select>
 	
-	<!-- 52. 마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
+	<!--  마지막에 저장한 글의 idx를 읽어오는 쿼리 -->
 	<select id="selectMaxIdx" resultType="int">
 		select max(reply_idx) from reply	
 	</select>
