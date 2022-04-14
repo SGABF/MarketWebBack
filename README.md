@@ -1,9 +1,9 @@
 ## MarketWebBack
 개꿀마켓 사용자 포털 BE repository 입니다. <br/>
 
-<a href="https://github.com/SGABF/MarketWeb">사용자 포털 FE repository 보러가기</a> <br/>
-<a href="https://github.com/SGABF/MarketAdminPage">관리자 포털 BE repository 보러가기</a> <br/>
-
+[사용자 포털 FE repository](https://github.com/SGABF/MarketWeb) <br>
+[사용자 포털 BE repository](https://github.com/SGABF/MarketWebBack) <br>
+[관리자 포털 BE repository](https://github.com/SGABF/MarketAdminPage) <br>
 
 #### 주요 기능
 
