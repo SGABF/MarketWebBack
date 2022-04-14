@@ -137,57 +137,10 @@ public class UserServiceImpl implements UserService {
 	// <!-- 04. delete_삭제하기(회원탈퇴하기) -->
 	public void deleteUser(UserVO userVO) {
 		log.info("UserServiceImpl-deleteUser 호출 : " + userVO);
-		BoardVO dbBoardVO = null;
-		UserVO dbUserVO = null;
-		BoardImageVO boardImageVO = null;
-		ReplyVO dbReplyVO = null;
-		String path = "";
 		// 넘겨받은 userVO가 있다면
 		if (userVO != null) {
-			// 회원탈퇴
-			List<ReplyVO> userReplyList = replyDAO.selectByUserRef(userVO.getUser_idx());
-			log.info("UserServiceImpl-deleteUser 유저의 모든 댓글 " + userReplyList);
-			if (userReplyList != null) {
-				log.info("UserServiceImpl-deleteUser 유저의 모든 댓글 삭제중");
-				for (ReplyVO vo : userReplyList) {
-//					replyDAO.deleteByIdx(vo.getReply_idx());
-				}
-				log.info("UserServiceImpl-deleteUser 유저의 모든 댓글 삭제완료 ");
-			}
-			List<BoardVO> userBoardList = boardDAO.selectByUserRef(userVO.getUser_idx());
-			log.info("UserServiceImpl-deleteUser 작성 글 확인 : " + userBoardList);
-			if (os.contains("win")) {
-				path = "C:/image/";
-				log.info("wind path");
-			} else {
-				path = "/resources/Back/";
-				log.info("linux path");
-			}
-			boardService.deleteBoard(dbBoardVO, path);
-//			myMarketList = 
-//			List<BoardImageVO> userBoardImageList = boardImageDAO.selectByRef(dbBoardVO.getBoard_idx());
-//			log.info("UserServiceImpl-deleteUser 첨부글의 이미지 확인 : " + userBoardImageList);
-			
-//			for(BoardImageVO vo : userBoardImageList) {
-//				
-//			}
-			
-//			userBoardImageList = boardImageDAO.selectByRef(userBoardList.get(0).getBoard_idx());
-//			log.info("UserServiceImpl-deleteUser 첨부글의 이미지 확인 : " + userBoardImageList);
-//			
-//			if (userBoardList != null) {
-//				if (userBoardImageList != null) {
-//					for (BoardImageVO vo : userBoardImageList) {
-//						boardImageDAO.deleteByBoardIdx(vo.getBoardImage_idx());
-//					}
-//				}
-//				for (BoardVO vo : userBoardList) {
-//					boardDAO.deleteBoard(vo.getBoard_idx());
-//				}
-//			}
-//			userDAO.deleteUser(userVO.getUser_idx());
-//			dbUserVO = userDAO.selectByIdx(userVO.getUser_idx());
-//			log.info("UserServiceImpl-deleteUser 회원정보삭제됨 : " + dbUserVO);
+			userDAO.deleteUser(userVO.getUser_idx());
+			log.info("UserServiceImpl-deleteUser 회원정보 삭제완료");
 		}
 	}
 

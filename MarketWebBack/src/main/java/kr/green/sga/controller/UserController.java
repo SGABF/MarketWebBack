@@ -42,11 +42,13 @@ public class UserController {
 	
 	@Autowired
 	private ReplyService replyService;
-
+	
 	@Autowired
 	private ObjectMapper mapper;
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+	private String os = System.getProperty("os.name").toLowerCase();
 
 	@GetMapping(value = "/updateUser")
 	public String updateUserGET(@RequestBody UserVO userVO) throws JsonProcessingException {
@@ -91,28 +93,28 @@ public class UserController {
 	public void deleteUserPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
 		UserVO dbUserVO = userService.selectUserId(user_id);
-		List<ReplyVO> dbUserReplyList = null;
-		List<BoardImageVO> dbUserBoardImageList = null;
-		List<BoardVO> dbUserBoardList = null;
+		List<BoardVO> dbUserMyMarket = null;
+		String path = "";
 		if (dbUserVO != null) {
-			// 댓글 삭제 
-			dbUserReplyList = replyService.selectByUserRef(dbUserVO.getUser_idx());
-			if(dbUserReplyList != null) {
-				for(ReplyVO vo : dbUserReplyList) {
-					replyService.deleteByIdx(vo.getReply_idx());
+			log.info("UserController-deleteUserPOST dbUserVO : " + dbUserVO);
+			// 내가 작성한 게시글 모두 삭제
+			dbUserMyMarket = userService.showMyMarket(dbUserVO.getUser_idx());
+			if(dbUserMyMarket != null) {
+				log.info("UserController-deleteUserPOST 유저의 작성한 게시글리스트 확인_dbUserMyMarket : " + dbUserMyMarket);
+				for(BoardVO vo : dbUserMyMarket) {
+					if (os.contains("win")) {
+						path = "C:/image/";
+						log.info("wind path");
+					} else {
+						path = "/resources/Back/";
+						log.info("linux path");
+					}
+					boardService.deleteBoard(vo, path);
 				}
 			}
-			
-//			dbUserBoardImageList = boardImageService.selectByRef(dbBoard)
-			
-			// 보드 삭제 코드
-			// 보드 이미지 삭제 
-//			userMyMarketList = userService.showMyMarket(dbUserVO.getUser_idx());
-//			if(userMyMarketList != null) {
-//				for(BoardVO vo : userMyMarketList) {
-//					
-//				}
-//			}
+			log.info("UserController-deleteUserPOST 내가 작성한 댓글 삭제 시작");
+			replyService.deleteByUserIdx(dbUserVO.getUser_idx());
+			log.info("UserController-deleteUserPOST 회원정보 삭제");
 			userService.deleteUser(dbUserVO);
 			log.info("UserController-deleteUserPOST 리턴 : 회원정보 삭제완료");
 		} else {
