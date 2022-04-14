@@ -59,7 +59,7 @@
 
 	<!-- 04. delete_글 삭제하기 -->
 	<delete id="deleteBoard" parameterType="int">
-		delete from board where board_Idx = #{board_Idx}
+		delete from board where board_idx = #{board_idx}
 	</delete>
 
 	<!-- ========================================================================= -->
