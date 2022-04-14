@@ -91,6 +91,22 @@ public class ReplyServiceImpl implements ReplyService {
 			log.info("ReplyServiceImpl-deleteByBoardIdx 리턴 : '게시물 삭제요청자'와 '게시물 작성인원' 불일치");
 		}
 	}
+	
+	@Override
+	public void deleteByUserIdx(int user_idx) {
+		log.info("ReplyServiceImpl-deleteByUserIdx 호출1 user_idx : " + user_idx + " 해당 user_idx의 댓글 전체삭제 시도중");
+		log.info("ReplyServiceImpl-deleteByUserIdx 해당 user_idx의 댓글 전체삭제");
+		UserVO dbUserVO = null;
+		if(user_idx != 0) {
+			dbUserVO = userDAO.selectByIdx(user_idx);
+			if(dbUserVO != null) {
+				log.info("ReplyServiceImpl-deleteByUserIdx dbUserVO 확인 및 삭제 시작 : " + dbUserVO);
+				replyDAO.deleteByUserIdx(user_idx);
+				log.info("ReplyServiceImpl-deleteByUserIdx 해당 user_idx의 댓글 전체삭제 완료");
+			}
+		}
+	}
+	
 
 	@Override
 	public List<ReplyVO> selectByRef(int board_idx) {
@@ -139,6 +155,7 @@ public class ReplyServiceImpl implements ReplyService {
 		log.info("ReplyServiceImpl-selectMaxIdx 리턴 " + maxIdx);
 		return maxIdx;
 	}
+
 
 
 }

@@ -23,6 +23,9 @@ public interface ReplyDAO {
 	
 	// <!-- 03. delete_board_idx -->
 	void deleteByBoardIdx(int board_idx);
+	
+	// <!-- delete reply user_idx -->
+	void deleteByUserIdx(int user_idx);
 
 	// --------------------------------------------------
 	

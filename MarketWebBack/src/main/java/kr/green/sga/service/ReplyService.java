@@ -22,6 +22,9 @@ public interface ReplyService {
 
 	// <!-- 04. delete_board_idx -->
 	void deleteByBoardIdx(BoardVO boardVO, UserVO userVO);
+	
+	// <!-- 04. delete_board_idx -->
+	void deleteByUserIdx(int user_idx);
 
 	// --------------------------------------------------
 
