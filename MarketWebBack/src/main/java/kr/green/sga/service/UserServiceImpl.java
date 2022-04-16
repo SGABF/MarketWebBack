@@ -2,7 +2,6 @@ package kr.green.sga.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
@@ -12,7 +11,6 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -24,7 +22,7 @@ import kr.green.sga.dao.BoardDAO;
 import kr.green.sga.dao.BoardImageDAO;
 import kr.green.sga.dao.ReplyDAO;
 import kr.green.sga.dao.UserDAO;
-import kr.green.sga.vo.BoardImageVO;
+import kr.green.sga.vo.BackQnaVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
@@ -341,7 +339,7 @@ public class UserServiceImpl implements UserService {
 		log.info("UserServiceImpl-showMyMarket 호출 : 마이페이지 내 마이마켓 리스트 호출 " + user_idx);
 		if (user_idx != 0) {
 			List<BoardVO> myMarket = new ArrayList<BoardVO>();
-			myMarket = userDAO.showMyBoard(user_idx);
+			myMarket = userDAO.showMyMarket(user_idx);
 			log.info("UserServiceImpl-showMyMarket 마이마켓 리스트 리턴 : " + myMarket);
 			return myMarket;
 		} else {
@@ -375,6 +373,22 @@ public class UserServiceImpl implements UserService {
 			return emptyList;
 		}
 	}
+
+	@Override
+	public List<BackQnaVO> showMyQna(int user_idx) {
+		log.info("UserServiceImpl-showMyQna 호출 : 마이페이지 내 나의 문의 리스트 호출 " + user_idx);
+		if (user_idx != 0) {
+			List<BackQnaVO> myQnaList = new ArrayList<BackQnaVO>();
+			myQnaList = userDAO.showMyQna(user_idx);
+			log.info("UserServiceImpl-showMyQna 나의 문의 리스트 리턴 : " + myQnaList);
+			return myQnaList;
+		} else {
+			log.info("UserServiceImpl-showMyQna 오류! 빈 리스트를 리턴합니다!");
+			List<BackQnaVO> emptyList = new ArrayList<BackQnaVO>();
+			return emptyList;
+		}
+	}
+
 
 	@Override
 	public boolean sendMail(UserVO userVO, String new_password) {

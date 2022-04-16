@@ -9,21 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kr.green.sga.service.BackQnaService;
 import kr.green.sga.service.BoardImageService;
 import kr.green.sga.service.BoardService;
 import kr.green.sga.service.ReplyService;
 import kr.green.sga.service.UserService;
-import kr.green.sga.vo.BoardImageVO;
+import kr.green.sga.vo.BackQnaVO;
 import kr.green.sga.vo.BoardVO;
-import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,13 +34,16 @@ public class UserController {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Autowired
 	private BoardImageService boardImageService;
-	
+
 	@Autowired
 	private ReplyService replyService;
 	
+	@Autowired
+	private BackQnaService backQnaService;
+
 	@Autowired
 	private ObjectMapper mapper;
 
@@ -94,14 +95,15 @@ public class UserController {
 		log.info("UserController-deleteUserPOST 호출 : user_id " + user_id);
 		UserVO dbUserVO = userService.selectUserId(user_id);
 		List<BoardVO> dbUserMyMarket = null;
+		List<BackQnaVO> dbUserQnaList = null;
 		String path = "";
 		if (dbUserVO != null) {
 			log.info("UserController-deleteUserPOST dbUserVO : " + dbUserVO);
 			// 내가 작성한 게시글 모두 삭제
 			dbUserMyMarket = userService.showMyMarket(dbUserVO.getUser_idx());
-			if(dbUserMyMarket != null) {
+			if (dbUserMyMarket != null) {
 				log.info("UserController-deleteUserPOST 유저의 작성한 게시글리스트 확인_dbUserMyMarket : " + dbUserMyMarket);
-				for(BoardVO vo : dbUserMyMarket) {
+				for (BoardVO vo : dbUserMyMarket) {
 					if (os.contains("win")) {
 						path = "C:/image/";
 						log.info("wind path");
@@ -110,6 +112,20 @@ public class UserController {
 						log.info("linux path");
 					}
 					boardService.deleteBoard(vo, path);
+				}
+			}
+			dbUserQnaList = userService.showMyQna(dbUserVO.getUser_idx());
+			if (dbUserQnaList != null) {
+				log.info("UserController-deleteUserPOST 유저의 작성한 게시글리스트 확인_dbUserQnaList : " + dbUserQnaList);
+				for (BackQnaVO vo : dbUserQnaList) {
+					if (os.contains("win")) {
+						path = "C:/image/";
+						log.info("wind path");
+					} else {
+						path = "/resources/Back/";
+						log.info("linux path");
+					}
+					backQnaService.delete(vo, path);
 				}
 			}
 			log.info("UserController-deleteUserPOST 내가 작성한 댓글 삭제 시작");
@@ -189,9 +205,10 @@ public class UserController {
 		log.info("UserController-showMyBoardPOST 리턴 : 마이 마켓 리스트 리턴 " + myMarketList);
 		return myMarketList;
 	}
-  
+
 	@PostMapping(value = "/myGK")
-	public LinkedHashSet<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id) throws JsonProcessingException {
+	public LinkedHashSet<BoardVO> showMyGKPOST(@RequestHeader(value = "user_id") String user_id)
+			throws JsonProcessingException {
 		log.info("UserController-showMyReplyPOST 호출 : 현재 로그인 계정 " + user_id);
 		LinkedHashSet<BoardVO> myGKList = null;
 		if (user_id != null) {
