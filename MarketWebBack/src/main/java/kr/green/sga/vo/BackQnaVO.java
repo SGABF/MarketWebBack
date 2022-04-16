@@ -1,6 +1,7 @@
 package kr.green.sga.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,4 +23,19 @@ public class BackQnaVO {
 	private String back_Qna_Col1;
 	private String back_Qna_Col2;
 	private String back_Qna_Col3;
+
+	private BackQnaFileVO file;
+	private BackQnaReplyVO reply;
+	
+	private int back_Qnafile_Idx;
+	private String back_Qnafile_SaveName;
+	private String back_Qnafile_OriName;
+	private int back_Qna_FileIdx;
+	
+	private int back_Qna_Reply_Idx;
+	private String back_Qna_Reply_Content;
+	private int back_Qna_ReplyIdx;
+	
+	private String user_Name;
+	
 }
