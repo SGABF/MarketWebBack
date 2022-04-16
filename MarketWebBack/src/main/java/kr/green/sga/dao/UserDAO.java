@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.green.sga.vo.BackQnaVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.ReplyVO;
 import kr.green.sga.vo.UserVO;
@@ -63,9 +64,12 @@ public interface UserDAO {
 	int countCheckPassword(String user_id, String user_password);
 	
 	//	<!-- 나의 판매 -->
-	List<BoardVO> showMyBoard(int user_idx);	
+	List<BoardVO> showMyMarket(int user_idx);	
 	
 	//	<!-- 나의 댓글 -->
 	List<ReplyVO> showMyReply(String user_id);	
+	
+	//	<!-- 나의 문의 -->
+	List<BackQnaVO> showMyQna(int user_idx);	
 	
 }

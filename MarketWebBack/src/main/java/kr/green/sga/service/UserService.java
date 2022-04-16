@@ -3,6 +3,7 @@ package kr.green.sga.service;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import kr.green.sga.vo.BackQnaVO;
 import kr.green.sga.vo.BoardVO;
 import kr.green.sga.vo.UserVO;
 
@@ -71,5 +72,10 @@ public interface UserService {
 	
 	//	<!-- 마이 개꿀 리스트 조회 -->
 	LinkedHashSet<BoardVO> showMyGK(String user_id);
+	
+	//	<!-- 마이 문의 리스트 조회 -->
+	List<BackQnaVO> showMyQna(int user_idx);	
+	
+	
 
 }
